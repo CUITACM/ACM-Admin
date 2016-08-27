@@ -1,6 +1,7 @@
+/*eslint-disable*/
 var webpack = require('webpack');
 var WebpackDevServer = require('webpack-dev-server');
-var config = require('./webpack.config');
+var config = require('./webpack.dev.config');
 
 new WebpackDevServer(webpack(config), {
   contentBase: config.output.path,

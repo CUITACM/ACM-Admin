@@ -4,8 +4,8 @@
   "description": "ACM Meter Web",
   "main": "index.js",
   "scripts": {
-    "build": "export NODE_ENV=production && webpack --progress --colors --config config/webpack.config.js",
-    "dev": "export NODE_ENV=development && node config/dev-server.js",
+    "build": "webpack --progress --colors --config config/webpack.prod.config.js",
+    "dev": "node config/dev-server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -39,14 +39,20 @@
     "less": "^2.7.1",
     "less-loader": "^2.2.3",
     "postcss-loader": "^0.10.1",
-    "react-hot-loader": "^3.0.0-beta.2",
+    "shelljs": "^0.7.4",
     "style-loader": "^0.13.1",
     "url-loader": "^0.5.7",
     "webpack": "^1.13.2",
-    "webpack-dev-server": "^1.15.0"
+    "react-hot-loader": "^3.0.0-beta.2",
+    "webpack-dev-server": "^1.15.0",
+    "webpack-merge": "^0.14.1"
   },
   "dependencies": {
+    "babel-polyfill": "^6.13.0",
+    "isomorphic-fetch": "^2.2.1",
     "react": "^15.3.1",
-    "react-dom": "^15.3.1"
+    "react-dom": "^15.3.1",
+    "react-redux": "^4.4.5",
+    "redux": "^3.5.2"
   }
 }

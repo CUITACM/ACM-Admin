@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 
 export default class Hello extends React.Component {
-  render () {
+  render() {
     return (
       <h1>Hello from {this.props.framework}!</h1>
     );
@@ -9,5 +9,5 @@ export default class Hello extends React.Component {
 }
 
 Hello.propTypes = {
-  framework: PropTypes.string
+  framework: PropTypes.string,
 };

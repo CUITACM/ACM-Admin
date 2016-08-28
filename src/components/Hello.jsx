@@ -11,3 +11,7 @@ export default class Hello extends React.Component {
 Hello.propTypes = {
   framework: PropTypes.string,
 };
+
+Hello.defaultProps = {
+  framework: "React"
+};

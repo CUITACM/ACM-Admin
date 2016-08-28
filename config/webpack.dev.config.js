@@ -8,9 +8,8 @@ process.env.NODE_ENV = 'development';
 
 Object.keys(baseConfig.entry).forEach(function (name) {
   baseConfig.entry[name].unshift(
-    'react-hot-loader/patch',
     'webpack-dev-server/client?http://localhost:' + baseConfig.devPort,
-    'webpack/hot/only-dev-server'
+    'webpack/hot/dev-server'
   );
 });
 

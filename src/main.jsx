@@ -1,11 +1,16 @@
+import 'babel-polyfill';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { AppContainer } from 'react-hot-loader';
-import App from './application';
+import { browserHistory } from 'react-router';
+import { syncHistoryWithStore } from 'react-router-redux';
+import Root from './views';
+import configureStore from './store/configureStore';
+
+
+const store = configureStore();
+const history = syncHistoryWithStore(browserHistory, store);
 
 ReactDOM.render(
-  <AppContainer>
-    <App />
-  </AppContainer>,
+  <Root store={store} history={history} />,
   document.getElementById('app-root')
 );

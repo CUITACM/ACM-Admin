@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router';
 import routes from './routes';
-import DevTools from 'src/helpers/devTools';
+import DevTools from '../helpers/devTools';
 
 export default class Root extends React.Component {
   renderDev() {
@@ -10,7 +10,7 @@ export default class Root extends React.Component {
     return (
       <div>
         <Router history={history} routes={routes} />
-        <DevTools />
+        { /* <DevTools /> */ }
       </div>
     );
   }

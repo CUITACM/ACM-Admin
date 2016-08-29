@@ -13,5 +13,5 @@ Hello.propTypes = {
 };
 
 Hello.defaultProps = {
-  framework: "React"
+  framework: 'React',
 };

@@ -8,7 +8,7 @@ new WebpackDevServer(webpack(config), {
   hot: true,
   inline: true,
   host: '0.0.0.0',
-  historyApiFallback: false,
+  historyApiFallback: true,
   stats: {
     colors: true,
     chunks: false,
@@ -18,5 +18,5 @@ new WebpackDevServer(webpack(config), {
   if (err) {
     return console.log(err);
   }
-  console.log('Listening at http://localhost:' + config.devPort);
+  console.log('==> 🌎  Listening at http://localhost:' + config.devPort);
 });

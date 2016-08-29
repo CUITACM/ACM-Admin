@@ -8,5 +8,5 @@ export default function configureStore(initState) {
     rootReducer,
     initState,
     applyMiddleware(thunk, apiMiddleware)
-  )
+  );
 }

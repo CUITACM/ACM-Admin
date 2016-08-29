@@ -15,7 +15,6 @@ Object.keys(baseConfig.entry).forEach(function (name) {
 
 module.exports = webpackMerge(baseConfig, {
   plugins: [
-    new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin(),
     new HtmlWebpackPlugin({

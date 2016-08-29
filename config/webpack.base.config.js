@@ -10,7 +10,7 @@ module.exports = {
 
   output: {
     path: path.resolve(__dirname, '../dist'),
-    filename: '[name].js'
+    filename: '[name].bundle.js'
   },
 
   module: {
@@ -43,11 +43,13 @@ module.exports = {
 
   resolve: {
     extensions: ['', '.js', '.jsx'],
-    fallback: [path.join(__dirname, '../node_modules')],
-    alias: {
-      'src': path.resolve(__dirname, '../src'),
-      'assets': path.resolve(__dirname, '../src/assets'),
-      'components': path.resolve(__dirname, '../src/components')
-    }
-  }
+    fallback: [path.join(__dirname, '../node_modules')]
+  },
+
+  plugins: [
+    new webpack.DllReferencePlugin({
+      context: path.join(__dirname, '../'),
+      manifest: require('../dist/vendor-manifest.json')
+    }),
+  ]
 };

@@ -13,6 +13,8 @@ module.exports = {
     "comma-dangle": 0,
     "quote-props": 0,
     "linebreak-style": 0,
-    "global-require": 0
+    "global-require": 0,
+    "import/no-unresolved": 0,
+    "import/no-extraneous-dependencies": 0
   }
 };

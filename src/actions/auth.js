@@ -7,18 +7,16 @@ export function login(nickname, password) {
     [CALL_API]: {
       endpoint: LOGIN.endpoint,
       method: LOGIN.method,
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
       body: JSON.stringify({
         nickname, password
       }),
       types: [
         actionTypes.LOGIN_REQUEST,
-        {
-          type: actionTypes.LOGIN_SUCCESS,
-          payload: (action, state, res) => {
-            console.log(res);
-            return res;
-          }
-        },
+        actionTypes.LOGIN_SUCCESS,
         actionTypes.LOGIN_FAILURE
       ]
     }

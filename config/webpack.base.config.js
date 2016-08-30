@@ -9,6 +9,7 @@ module.exports = {
   },
 
   output: {
+    publicPath: '/',
     path: path.resolve(__dirname, '../dist'),
     filename: '[name].bundle.js'
   },
@@ -26,7 +27,7 @@ module.exports = {
       },
       {
         test: /\.less$/,
-        loaders: ['style', 'css', 'less', 'postcss']
+        loaders: ['style', 'css', 'postcss', 'less']
       },
       {
         test: /\.(gif|jpg|png|woff|svg|eot|ttf)\??.*$/,
@@ -43,7 +44,16 @@ module.exports = {
 
   resolve: {
     extensions: ['', '.js', '.jsx'],
-    fallback: [path.join(__dirname, '../node_modules')]
+    fallback: [path.join(__dirname, '../node_modules')],
+    alias: {
+      'src': path.resolve(__dirname, '../src'),
+      'assets': path.resolve(__dirname, '../src/assets'),
+      'components': path.resolve(__dirname, '../src/components'),
+      'actions': path.resolve(__dirname, '../src/actions'),
+      'reducers': path.resolve(__dirname, '../src/reducers'),
+      'helpers': path.resolve(__dirname, '../src/helpers'),
+      'constants': path.resolve(__dirname, '../src/constants')
+    }
   },
 
   plugins: [

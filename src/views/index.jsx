@@ -14,6 +14,7 @@ export default class Root extends React.Component {
       </div>
     );
   }
+
   render() {
     const { store, history } = this.props;
     const isProduction = process.env.NODE_ENV === 'production';

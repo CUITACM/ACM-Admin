@@ -1,8 +1,20 @@
 
-export function keepCurrentUser(currentUser) {
-  window.localStorage.setItem('currentUser', currentUser);
+export function keepObject(key, value) {
+  window.localStorage.setItem(key, JSON.stringify(value));
 }
 
-export function takeCurrentUser() {
-  window.localStorage.getItem('currentUser');
+export function takeObject(key) {
+  return JSON.parse(window.localStorage.getItem(key));
+}
+
+export function keep(key, value) {
+  window.localStorage.setItem(key, value);
+}
+
+export function take(key) {
+  return window.localStorage.getItem(key);
+}
+
+export function remove(key) {
+  window.localStorage.removeItem(key);
 }

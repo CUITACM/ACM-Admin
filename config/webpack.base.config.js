@@ -52,7 +52,8 @@ module.exports = {
       'actions': path.resolve(__dirname, '../src/actions'),
       'reducers': path.resolve(__dirname, '../src/reducers'),
       'helpers': path.resolve(__dirname, '../src/helpers'),
-      'constants': path.resolve(__dirname, '../src/constants')
+      'constants': path.resolve(__dirname, '../src/constants'),
+      'views': path.resolve(__dirname, '../src/views')
     }
   },
 

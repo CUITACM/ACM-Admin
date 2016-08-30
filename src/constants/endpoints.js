@@ -1,5 +1,5 @@
 // api root
-const API_ROOT = 'http://192.168.40.187:3000';
+const API_ROOT = 'http://localhost:3000';
 
 // http method
 const HttpMethod = {

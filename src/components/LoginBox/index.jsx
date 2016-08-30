@@ -32,28 +32,24 @@ class LoginBox extends React.Component {
         { required: true, whitespace: true, message: '请填写密码' }
       ],
     });
+    const formItemCol = { span: 18, offset: 3 };
     return (
-      <Col xs={{ span: 20 }} sm={{ span: 12 }}>
+      <Col xs={{ span: 20 }} sm={{ span: 12 }} md={{ span: 8 }}>
         <Form horizontal onSubmit={this.onSubmit} className="login-form">
-          <FormItem
-            label="用户名："
-            labelCol={{ span: 6 }}
-            wrapperCol={{ span: 14 }}
-            hasFeedback
-          >
-            <Input placeholder="用户名" {...nicknameProps} />
+          <FormItem wrapperCol={formItemCol} >
+            <Input size="large" placeholder="用户名"  {...nicknameProps} />
           </FormItem>
-          <FormItem
-            label="密码："
-            labelCol={{ span: 6 }}
-            wrapperCol={{ span: 14 }}
-            hasFeedback
-          >
-            <Input type="password" placeholder="密码" {...passwordProps} />
+          <FormItem wrapperCol={formItemCol} >
+            <Input size="large" type="password" placeholder="密码" {...passwordProps} />
           </FormItem>
           <Row>
-            <Col span="16" offset="6">
-              <Button type="primary" htmlType="submit">确定</Button>
+            <Col span="18" offset="3">
+              <Button
+                className="btn-login" type="primary" htmlType="submit"
+                loading={this.props.loading}
+              >
+                登陆
+              </Button>
             </Col>
           </Row>
         </Form>
@@ -64,6 +60,7 @@ class LoginBox extends React.Component {
 
 LoginBox.propTypes = {
   form: PropTypes.object,
+  loading: PropTypes.bool,
   handleLogin: PropTypes.func.isRequired
 };
 

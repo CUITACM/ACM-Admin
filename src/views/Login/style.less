@@ -1,5 +1,47 @@
 @bg-color: #f7fafc;
+@primary-color: #0f88eb;
 
-body {
+.login-page {
   background-color: @bg-color;
+}
+
+.login-row {
+  padding: 80px 10px;
+  text-align: center;
+
+  .ant-form-item {
+    text-align: left;
+    margin-bottom: 18px;
+    input {
+      font-size: 17px;
+      border-radius: 0;
+    }
+  }
+
+  .figure {
+    font-family: 'Verdana';
+    padding: 20px 0;
+    h1 {
+      font-weight: normal;
+      font-size: 36px;
+    }
+    p {
+      font-size: 18px;
+      margin: 5px 0;
+    }
+  }
+}
+
+
+.btn-login {
+  display: block;
+  width: 100%;
+  font-size: 16px;
+  border-radius: 1%;
+  background: @primary-color;
+  border-color: @primary-color;
+
+  &:hover {
+    background-color: #55abed;
+  }
 }

@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import { Row, notification } from 'antd';
+import { Row, Col, notification } from 'antd';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { login as loginAction } from 'actions/auth';
@@ -10,11 +10,24 @@ import './style.less';
 class Login extends React.Component {
   constructor(props) {
     super(props);
-    this.handleLogin = this.handleLogin.bind(this);
+    this.state = {
+      pageHeight: document.body.clientHeight
+    }
+    this.handleLogin = (nickname, password) => {
+      console.log(this);
+      this.props.login(nickname, password);
+    }
+    this.handleResize = () => {
+      this.setState({ pageHeight: document.body.clientHeight });
+    }
   }
 
-  componentWillMount() {
-    console.log(takeCurrentUser());
+  componentDidMount() {
+    window.addEventListener('resize', this.handleResize);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.handleResize);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -43,16 +56,19 @@ class Login extends React.Component {
     }
   }
 
-  handleLogin(nickname, password) {
-    console.log(this);
-    this.props.login(nickname, password);
-  }
-
   render() {
+    const { pageHeight } = this.state;
+    const { waitLoginIn } = this.props;
     return (
-      <Row className="login-row" type="flex" justify="space-around" align="middle">
-        <LoginBox handleLogin={this.handleLogin} />
-      </Row>
+      <div className="login-page" style={{ minHeight: pageHeight }} >
+        <Row className="login-row" type="flex" justify="space-around" align="middle" >
+          <Col className="figure" xs={{ span: 24 }} sm={{ span: 24 }}>
+            <h1>CUIT <b>ACM</b> Team</h1>
+            <p>与世界分享你的zhuangbi</p>
+          </Col>
+          <LoginBox loading={waitLoginIn} handleLogin={this.handleLogin} />
+        </Row>
+      </div>
     );
   }
 }

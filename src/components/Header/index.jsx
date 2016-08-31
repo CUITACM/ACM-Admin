@@ -11,10 +11,9 @@ export default class Header extends React.PureComponent {
         theme="dark" mode="horizontal"
         defaultSelectedKeys={['2']} style={{ lineHeight: '64px' }}
       >
-        {menus.map(data => {
-          console.log(data);
-          return <Menu.Item key={data.key}><Link to={data.to}>{data.text}</Link></Menu.Item>
-        })}
+        {menus.map(data => (
+          <Menu.Item key={data.key}><Link to={data.to}>{data.text}</Link></Menu.Item>
+        ))}
       </Menu>
     );
   }

@@ -23,7 +23,17 @@ export function login(nickname, password) {
   };
 }
 
-export function checkToken() {
-  // TODO
+export function loadCurrentUser(currentUser) {
+  return {
+    type: actionTypes.LOAD_CURRENT_USER,
+    payload: {
+      user: currentUser
+    }
+  };
 }
 
+export function logout() {
+  return {
+    type: actionTypes.LOGOUT
+  };
+}

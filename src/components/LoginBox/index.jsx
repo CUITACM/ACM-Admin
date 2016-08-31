@@ -34,7 +34,7 @@ class LoginBox extends React.PureComponent {
     });
     const formItemCol = { span: 18, offset: 3 };
     return (
-      <Col className="login-box" xs={{ span: 24 }} sm={{ span: 12 }} md={{ span: 7 }}>
+      <Col className="login-box" xs={24} sm={10} md={7} lg={6} >
         <Form horizontal onSubmit={this.onSubmit} className="login-form">
           <FormItem wrapperCol={formItemCol} >
             <Input size="large" placeholder="用户名或学号或邮箱" {...nicknameProps} />

@@ -1,10 +1,11 @@
 import React, { PropTypes } from 'react';
-import { Row, Col, notification } from 'antd';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { login as loginAction } from 'actions/auth';
+import { Row, Col, notification } from 'antd';
+import * as authActions from 'actions/auth';
+import * as authHelpers from 'helpers/auth';
 import LoginBox from 'components/LoginBox';
-import { keepCurrentUser } from 'helpers/auth';
+
 import './style.less';
 
 class Login extends React.PureComponent {
@@ -14,12 +15,18 @@ class Login extends React.PureComponent {
       pageHeight: document.body.clientHeight
     };
     this.handleLogin = (nickname, password) => {
-      console.log(this);
       this.props.login(nickname, password);
     };
     this.handleResize = () => {
       this.setState({ pageHeight: document.body.clientHeight });
     };
+  }
+
+  componentWillMount() {
+    if (authHelpers.hasLogin()) {
+      this.props.loadCurrentUser(authHelpers.takeCurrentUser());
+      this.context.router.replace('/');
+    }
   }
 
   componentDidMount() {
@@ -32,23 +39,20 @@ class Login extends React.PureComponent {
     const currentUser = nextProps.currentUser;
 
     if (error !== this.props.loginErrors && error) {
-      notification.error({
-        message: '登录失败',
-        description: error
-      });
+      notification.error({ message: '登录失败', description: error });
     }
 
-    if (!waitLoginIn && !error && currentUser) {
+    if (!waitLoginIn && !error && currentUser && currentUser.token) {
       notification.success({
         message: '登录成功',
-        description: `Welcome ${currentUser.name}`
+        description: `欢迎 ${currentUser.name}, 2秒后自动跳转首页`
       });
-    }
-
-    if (currentUser && currentUser.token) {
       console.log(currentUser);
-      keepCurrentUser(currentUser);
-      // this.context.router.replace('/home');
+      authHelpers.keepCurrentUser(currentUser);
+      setTimeout(() => {
+        this.context.router.replace('/');
+      }, 2000);
+      
     }
   }
 
@@ -96,7 +100,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    login: bindActionCreators(loginAction, dispatch)
+    login: bindActionCreators(authActions.login, dispatch),
+    loadCurrentUser: bindActionCreators(authActions.loadCurrentUser, dispatch)
   };
 }
 

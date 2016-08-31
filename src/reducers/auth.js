@@ -1,4 +1,4 @@
-import * as actionTypes from '../constants/actionTypes';
+import * as actionTypes from 'constants/actionTypes';
 
 const initState = {
   currentUser: null,
@@ -29,6 +29,16 @@ export default function auth(state = initState, action) {
         waitLoginIn: false,
         loginErrors: action.error ? action.payload.message : null
       };
+    case actionTypes.LOAD_CURRENT_USER:
+      return {
+        ...state,
+        currentUser: action.payload.user
+      }
+    case actionTypes.LOGOUT:
+      return {
+        ...state,
+        currentUser: null
+      }
     default:
       return state;
   }

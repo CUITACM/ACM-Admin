@@ -6,7 +6,7 @@
   "scripts": {
     "build": "cross-env NODE_ENV=production webpack --config config/webpack.prod.config.js",
     "dev": "cross-env NODE_ENV=development node config/dev-server.js",
-    "test": "cross-env NODE_ENV=test mocha --compilers js:babel/register --recursive",
+    "test": "cross-env NODE_ENV=test mocha --compilers js:babel/register --require ./tests/testRunner.js --recursive ./tests",
     "test:watch": "npm test -- --watch"
   },
   "repository": {
@@ -54,6 +54,7 @@
     "redux-devtools-dock-monitor": "^1.1.1",
     "redux-devtools-log-monitor": "^1.0.11",
     "shelljs": "^0.7.4",
+    "sinon": "^1.17.5",
     "style-loader": "^0.13.1",
     "url-loader": "^0.5.7",
     "webpack": "^1.13.2",

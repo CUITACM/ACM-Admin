@@ -1,4 +1,4 @@
-import merge from 'lodash/merge';
+import _merge from 'lodash/merge';
 
 const initState = {
   users: {},
@@ -6,7 +6,7 @@ const initState = {
 
 export default function entities(state = initState, action) {
   if (action.response && action.response.entities) {
-    return merge({}, state, action.response.entities);
+    return _merge({}, state, action.response.entities);
   }
   return state;
 }

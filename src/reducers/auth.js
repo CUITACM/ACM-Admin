@@ -12,7 +12,7 @@ export default function auth(state = initState, action) {
     case actionTypes.LOGIN_REQUEST:
       return {
         ...state,
-        waitLoginIn: true,
+        waitLoginIn: !action.error,
         loginErrors: action.error ? action.payload.message : null
       };
     case actionTypes.LOGIN_SUCCESS:

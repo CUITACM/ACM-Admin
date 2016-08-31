@@ -1,29 +1,21 @@
-@bg-color: #f7fafc;
-@primary-color: #0f88eb;
+@import '../../styles/color.less';
+@bg-color: #333;
 
 .login-page {
   background-color: @bg-color;
 }
 
 .login-row {
-  padding: 80px 10px;
+  padding: 40px 10px;
   text-align: center;
-
-  .ant-form-item {
-    text-align: left;
-    margin-bottom: 18px;
-    input {
-      font-size: 17px;
-      border-radius: 0;
-    }
-  }
 
   .figure {
     font-family: 'Verdana';
     padding: 20px 0;
+    color: #f5f5f5;
     h1 {
       font-weight: normal;
-      font-size: 36px;
+      font-size: 42px;
     }
     p {
       font-size: 18px;
@@ -38,6 +30,7 @@
   width: 100%;
   font-size: 16px;
   border-radius: 1%;
+  // color: @primary-color;
   background: @primary-color;
   border-color: @primary-color;
 

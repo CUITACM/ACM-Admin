@@ -4,30 +4,26 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { login as loginAction } from 'actions/auth';
 import LoginBox from 'components/LoginBox';
-import { keepCurrentUser, takeCurrentUser } from 'helpers/auth';
+import { keepCurrentUser } from 'helpers/auth';
 import './style.less';
 
-class Login extends React.Component {
+class Login extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
       pageHeight: document.body.clientHeight
-    }
+    };
     this.handleLogin = (nickname, password) => {
       console.log(this);
       this.props.login(nickname, password);
-    }
+    };
     this.handleResize = () => {
       this.setState({ pageHeight: document.body.clientHeight });
-    }
+    };
   }
 
   componentDidMount() {
     window.addEventListener('resize', this.handleResize);
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.handleResize);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -56,6 +52,10 @@ class Login extends React.Component {
     }
   }
 
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.handleResize);
+  }
+
   render() {
     const { pageHeight } = this.state;
     const { waitLoginIn } = this.props;
@@ -63,7 +63,7 @@ class Login extends React.Component {
       <div className="login-page" style={{ minHeight: pageHeight }} >
         <Row className="login-row" type="flex" justify="space-around" align="middle" >
           <Col className="figure" xs={{ span: 24 }} sm={{ span: 24 }}>
-            <h1>CUIT <b>ACM</b> Team</h1>
+            <h1>CUIT ACM Team</h1>
             <p>与世界分享你的zhuangbi</p>
           </Col>
           <LoginBox loading={waitLoginIn} handleLogin={this.handleLogin} />

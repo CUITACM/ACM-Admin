@@ -1,11 +1,25 @@
 import React, { PropTypes } from 'react';
+import Header from 'components/Header';
+import Footer from 'components/Footer';
+import './style.less';
 
-export default class AdminApp extends React.Component {
+const NavbarMenu = [
+  {
+    key: 'admin_user',
+    to: '/admin/users',
+    text: '用户管理'
+  }
+];
+
+export default class AdminApp extends React.PureComponent {
   render() {
     return (
       <div>
-        <h2>AdminApp</h2>
-        <div>{this.props.children}</div>
+        <Header menus={NavbarMenu} />
+        <section className="layout-container">
+          {this.props.children}
+        </section>
+        <Footer />
       </div>
     );
   }

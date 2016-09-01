@@ -45,14 +45,12 @@ class Login extends React.PureComponent {
     if (!waitLoginIn && !error && currentUser && currentUser.token) {
       notification.success({
         message: '登录成功',
-        description: `欢迎 ${currentUser.name}, 2秒后自动跳转首页`
+        description: `欢迎 ${currentUser.name}, 即将自动跳转`
       });
-      console.log(currentUser);
       authHelpers.keepCurrentUser(currentUser);
       setTimeout(() => {
-        this.context.router.replace('/');
-      }, 2000);
-      
+        this.context.router.replace(this.props.location.query.next || '/');
+      }, 1000);
     }
   }
 
@@ -84,6 +82,8 @@ Login.contextTypes = {
 
 Login.propTypes = {
   login: PropTypes.func,
+  loadCurrentUser: PropTypes.func,
+  location: PropTypes.object,
   currentUser: PropTypes.object,
   waitLoginIn: PropTypes.bool,
   loginErrors: PropTypes.string

@@ -25,10 +25,9 @@ class AdminApp extends React.PureComponent {
     const { currentUser } = this.props;
     return (
       <div>
-        <Header menus={NavbarMenu} />
+        <Header menus={NavbarMenu} currentUser={currentUser} />
         <section className="layout-container">
           {this.props.children}
-          {currentUser ? currentUser.nickname : null }
         </section>
         <Footer />
       </div>
@@ -37,7 +36,8 @@ class AdminApp extends React.PureComponent {
 }
 
 AdminApp.propTypes = {
-  currentUser: PropTypes.object,
+  loadCurrentUser: PropTypes.func,
+  currentUser: PropTypes.object.isRequired,
   children: PropTypes.element.isRequired
 };
 
@@ -48,7 +48,7 @@ AdminApp.contextTypes = {
 
 function mapStateToProps(state) {
   return {
-    currentUser: state.auth.currentUser
+    currentUser: state.auth.currentUser || {}
   };
 }
 

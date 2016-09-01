@@ -1,6 +1,6 @@
 import { CALL_API } from 'redux-api-middleware';
-import { LOGIN } from '../constants/endpoints';
-import * as actionTypes from '../constants/actionTypes';
+import { LOGIN } from 'constants/endpoints';
+import * as actionTypes from 'constants/actionTypes';
 
 export function login(nickname, password) {
   return {

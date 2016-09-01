@@ -4,8 +4,8 @@ import { validateLogin } from 'helpers/auth';
 import Login from './Login';
 import Register from './Register';
 import Home from './Home';
-import AdminApp from './AdminApp';
-import AdminUser from './AdminUser';
+import AdminApp from './admin/AdminApp';
+import AdminUser from './admin/AdminUser';
 
 export default (
   <Route path="/" >

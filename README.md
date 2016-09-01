@@ -6,6 +6,8 @@ ACM 水表系统 2.0 **前端部分**
 
 ### 技术栈
 * React
+* React-Router
+* Redux
 * Less
 * Babel
 * Webpack

@@ -1,4 +1,4 @@
-import * as persistence from 'helpers/persistence';
+import * as persistence from './persistence';
 
 const currentUserKey = 'acm_meter_current_user';
 const threeDays = 259200000;

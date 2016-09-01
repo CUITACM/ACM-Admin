@@ -27,18 +27,18 @@ export default function auth(state = initState, action) {
         ...state,
         currentUser: null,
         waitLoginIn: false,
-        loginErrors: action.error ? action.payload.message : null
+        loginErrors: action.payload.message
       };
     case actionTypes.LOAD_CURRENT_USER:
       return {
         ...state,
         currentUser: action.payload.user
-      }
+      };
     case actionTypes.LOGOUT:
       return {
         ...state,
         currentUser: null
-      }
+      };
     default:
       return state;
   }

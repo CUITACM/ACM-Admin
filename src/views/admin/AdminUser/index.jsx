@@ -9,12 +9,12 @@ const columns = [{
   title: '姓名',
   dataIndex: 'name',
   sorter: true,
-  width: '20%',
+  width: '20%'
 }, {
   title: '性别',
   dataIndex: 'gender',
   render: isMale => (isMale ? '男' : '女'),
-  width: '20%',
+  width: '20%'
 }, {
   title: '邮箱',
   dataIndex: 'email',
@@ -66,6 +66,7 @@ class AdminUser extends React.PureComponent {
 
 AdminUser.propTypes = {
   users: PropTypes.array.isRequired,
+  pagination: PropTypes.object.isRequired,
   loading: PropTypes.bool.isRequired,
   fetchUsers: PropTypes.func.isRequired
 };
@@ -75,6 +76,7 @@ function mapStateToProps(state) {
   return {
     users: userState.data || [],
     pagination: {
+      total: userState.pagination.total_count,
       current: userState.pagination.current_page,
       pageSize: userState.pageSize
     },

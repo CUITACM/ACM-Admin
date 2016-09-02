@@ -20,7 +20,9 @@ export default class Header extends React.PureComponent {
         style={{ lineHeight: '64px', display: 'inline-block' }}
       >
         {this.props.menus.map(data => (
-          <Menu.Item key={data.key}><Link to={data.to}>{data.text}</Link></Menu.Item>
+          <Menu.Item key={data.key} >
+            <Link to={data.to} activeClassName="selected" onlyActiveOnIndex>{data.text}</Link>
+          </Menu.Item>
         ))}
       </Menu>
     );

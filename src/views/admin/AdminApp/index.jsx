@@ -9,9 +9,14 @@ import './style.less';
 
 const NavbarMenu = [
   {
-    key: 'admin_user',
+    key: 'admin_users',
     to: '/admin/users',
     text: '用户管理'
+  },
+  {
+    key: 'admin_articles',
+    to: '/admin/articles',
+    text: '文章管理'
   }
 ];
 

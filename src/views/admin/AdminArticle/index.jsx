@@ -6,27 +6,23 @@ import * as adminArticleActions from 'actions/admin/article';
 import './style.less';
 
 const columns = [{
-  title: '姓名',
-  dataIndex: 'name',
-  sorter: true,
-  width: '20%',
-}, {
-  title: '性别',
-  dataIndex: 'gender',
-  render: isMale => (isMale ? '男' : '女'),
-  width: '20%',
-}, {
-  title: '邮箱',
-  dataIndex: 'email',
+  title: '标题',
+  dataIndex: 'title',
   sorter: true
+}, {
+  title: '状态',
+  dataIndex: 'status'
+}, {
+  title: '类型',
+  dataIndex: 'type'
+}, {
+  title: '正文',
+  dataIndex: 'content'
 }];
 
 class AdminArtcile extends React.PureComponent {
   constructor(props) {
     super(props);
-    this.state = {
-      pagination: {}
-    };
     this.handleTableChange = this.handleTableChange.bind(this);
   }
 
@@ -56,7 +52,7 @@ class AdminArtcile extends React.PureComponent {
         columns={columns}
         rowKey={record => record.id}
         dataSource={this.props.articles}
-        pagination={this.state.pagination}
+        pagination={this.props.pagination}
         loading={this.props.loading}
         onChange={this.handleTableChange}
       />
@@ -66,6 +62,7 @@ class AdminArtcile extends React.PureComponent {
 
 AdminArtcile.propTypes = {
   articles: PropTypes.array.isRequired,
+  pagination: PropTypes.object.isRequired,
   loading: PropTypes.bool.isRequired,
   fetchArticles: PropTypes.func.isRequired
 };
@@ -75,6 +72,7 @@ function mapStateToProps(state) {
   return {
     articles: articleState.data || [],
     pagination: {
+      total: articleState.pagination.total_count,
       current: articleState.pagination.current_page,
       pageSize: articleState.pageSize
     },

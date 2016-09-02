@@ -3,8 +3,11 @@ import * as actionTypes from 'constants/actionTypes';
 const initState = {
   currentUser: null,
   waitLoginIn: false,
-  waitLoginOut: false,
-  loginErrors: null
+  loginSuccess: false,
+  loginErrors: null,
+  waitRegister: false,
+  registerSuccess: false,
+  registerErrors: null
 };
 
 export default function auth(state = initState, action) {
@@ -28,6 +31,18 @@ export default function auth(state = initState, action) {
         currentUser: null,
         waitLoginIn: false,
         loginErrors: action.payload.message
+      };
+    case actionTypes.REGISTER_REQUEST:
+      return {
+        ...state
+      };
+    case actionTypes.REGISTER_SUCCESS:
+      return {
+        ...state
+      };
+    case actionTypes.REGISTER_FAILURE:
+      return {
+        ...state
       };
     case actionTypes.LOAD_CURRENT_USER:
       return {

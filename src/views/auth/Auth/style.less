@@ -1,11 +1,11 @@
-@import '../../styles/color.less';
+@import '../../../styles/color.less';
 @bg-color: #333;
 
-.login-page {
+.auth-page {
   background-color: @bg-color;
 }
 
-.login-row {
+.auth-row {
   padding: 40px 10px;
   text-align: center;
 
@@ -22,10 +22,35 @@
       margin: 5px 0;
     }
   }
+
 }
 
+.auth-box {
+  padding: 20px 0;
+  border-radius: 1%;
+  max-width: 400px;
+  background-color: #fff;
 
-.btn-login {
+  h1 {
+    margin-bottom: 15px;
+  } 
+
+  .ant-form-item {
+    text-align: left;
+    margin-bottom: 18px;
+    input {
+      color: #333;
+      font-size: 17px;
+      border-radius: 0;
+    }
+  }
+
+  input::-webkit-input-placeholder {
+    color: #777;
+  }
+}
+
+.btn-auth {
   display: block;
   width: 100%;
   font-size: 16px;

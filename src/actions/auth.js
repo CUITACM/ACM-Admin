@@ -1,5 +1,5 @@
 import { CALL_API } from 'redux-api-middleware';
-import { LOGIN } from 'constants/endpoints';
+import { LOGIN, REGISTER } from 'constants/endpoints';
 import * as actionTypes from 'constants/actionTypes';
 
 export function login(nickname, password) {
@@ -23,6 +23,25 @@ export function login(nickname, password) {
   };
 }
 
+export function register(params) {
+  return {
+    [CALL_API]: {
+      endpoint: REGISTER.endpoint,
+      method: REGISTER.method,
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(params),
+      types: [
+        actionTypes.REGISTER_REQUEST,
+        actionTypes.REGISTER_SUCCESS,
+        actionTypes.REGISTER_FAILURE
+      ]
+    }
+  };
+}
+
 export function loadCurrentUser(currentUser) {
   return {
     type: actionTypes.LOAD_CURRENT_USER,
@@ -37,3 +56,5 @@ export function logout() {
     type: actionTypes.LOGOUT
   };
 }
+
+

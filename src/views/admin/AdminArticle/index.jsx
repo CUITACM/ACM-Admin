@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Table } from 'antd';
-import * as adminUserActions from 'actions/admin/user';
+import * as adminArticleActions from 'actions/admin/article';
 import './style.less';
 
 const columns = [{
@@ -21,7 +21,7 @@ const columns = [{
   sorter: true
 }];
 
-class AdminUser extends React.PureComponent {
+class AdminArtcile extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -31,7 +31,7 @@ class AdminUser extends React.PureComponent {
   }
 
   componentDidMount() {
-    this.props.fetchUsers();
+    this.props.fetchArticles();
   }
 
   handleTableChange(pagination, filters, sorter) {
@@ -44,7 +44,7 @@ class AdminUser extends React.PureComponent {
       params.sort_field = sorter.field;
       params.sort_order = sorter.order;
     }
-    this.props.fetchUsers({
+    this.props.fetchArticles({
       ...params,
       filters
     });
@@ -55,7 +55,7 @@ class AdminUser extends React.PureComponent {
       <Table
         columns={columns}
         rowKey={record => record.id}
-        dataSource={this.props.users}
+        dataSource={this.props.articles}
         pagination={this.state.pagination}
         loading={this.props.loading}
         onChange={this.handleTableChange}
@@ -64,28 +64,28 @@ class AdminUser extends React.PureComponent {
   }
 }
 
-AdminUser.propTypes = {
-  users: PropTypes.array.isRequired,
+AdminArtcile.propTypes = {
+  articles: PropTypes.array.isRequired,
   loading: PropTypes.bool.isRequired,
-  fetchUsers: PropTypes.func.isRequired
+  fetchArticles: PropTypes.func.isRequired
 };
 
 function mapStateToProps(state) {
-  const userState = state.admin.user;
+  const articleState = state.admin.article;
   return {
-    users: userState.data || [],
+    articles: articleState.data || [],
     pagination: {
-      current: userState.pagination.current_page,
-      pageSize: userState.pageSize
+      current: articleState.pagination.current_page,
+      pageSize: articleState.pageSize
     },
-    loading: userState.waitFetch
+    loading: articleState.waitFetch
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    fetchUsers: bindActionCreators(adminUserActions.fetchUsers, dispatch)
+    fetchArticles: bindActionCreators(adminArticleActions.fetchArticles, dispatch)
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AdminUser);
+export default connect(mapStateToProps, mapDispatchToProps)(AdminArtcile);

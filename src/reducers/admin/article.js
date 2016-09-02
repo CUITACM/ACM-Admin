@@ -10,7 +10,7 @@ const initState = {
   fetchErrors: null
 };
 
-export default function user(state = initState, action) {
+export default function article(state = initState, action) {
   switch (action.type) {
     case actionTypes.FETCH_USERS_REQUEST:
       return {

@@ -4,7 +4,7 @@ import { withToken } from 'helpers/auth';
 import { withParams } from 'helpers/utils';
 import * as actionTypes from 'constants/actionTypes';
 
-export function fetchUsers({ page = 1, per = 20, ...args } = {}) {
+export function fetchArticles({ page = 1, per = 20, ...args } = {}) {
   return {
     [CALL_API]: {
       endpoint: withParams(FETCH_USERS.endpoint, {

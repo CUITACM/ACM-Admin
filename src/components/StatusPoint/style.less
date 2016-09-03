@@ -1,0 +1,33 @@
+
+.status-point {
+  line-height: 18px;
+  padding: 5px;
+  vertical-align: middle;
+  
+  &.gray::before {
+    background-color: #CCCCCC;
+  }
+  &.light-blue::before {
+    background-color: #2DB7F5;
+  }
+  &.blue::before {
+    background-color: #2196F3;
+  }
+  &.green::before {
+    background-color: #87D068;
+  }
+  &.yellow::before {
+    background-color: #FFAA00;
+  }
+  &.red::before {
+    background-color: #FF5500;
+  }
+  &::before {
+    content: "";
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 7px;
+  }
+}

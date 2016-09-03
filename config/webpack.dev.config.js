@@ -3,6 +3,7 @@ var webpack = require('webpack');
 var webpackMerge = require('webpack-merge');
 var baseConfig = require('./webpack.base.config');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
+var DashboardPlugin = require('webpack-dashboard/plugin');
 
 process.env.NODE_ENV = 'development';
 
@@ -15,6 +16,7 @@ Object.keys(baseConfig.entry).forEach(function (name) {
 
 module.exports = webpackMerge(baseConfig, {
   plugins: [
+    new DashboardPlugin(),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin(),
     new HtmlWebpackPlugin({

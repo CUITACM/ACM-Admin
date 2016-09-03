@@ -27,22 +27,22 @@ class Login extends React.PureComponent {
   }
 
   componentWillReceiveProps(nextProps) {
+    const success = nextProps.loginSuccess;
     const error = nextProps.loginErrors;
-    const waitLoginIn = nextProps.waitLoginIn;
     const currentUser = nextProps.currentUser;
 
-    if (error !== this.props.loginErrors && error) {
+    if (error) {
       notification.error({ message: '登录失败', description: error });
     }
 
-    if (!waitLoginIn && !error && currentUser && currentUser.token) {
+    if (success && currentUser && currentUser.token) {
       notification.success({
         message: '登录成功',
         description: `欢迎 ${currentUser.name}, 即将自动跳转`
       });
       authHelpers.keepCurrentUser(currentUser);
       setTimeout(() => {
-        // this.context.router.replace(this.props.location.query.next || '/');
+        this.context.router.replace(this.props.location.query.next || '/');
       }, 1000);
     }
   }
@@ -63,7 +63,8 @@ class Login extends React.PureComponent {
     const formItemCol = { span: 18, offset: 3 };
     return (
       <Col className="auth-box" xs={24} sm={10} md={7} lg={6} >
-        <Form horizontal onSubmit={this.onSubmit} className="login-form">
+        <h1>登录</h1>
+        <Form horizontal onSubmit={this.onSubmit} className="auth-form">
           <FormItem wrapperCol={formItemCol} >
             <Input size="large" placeholder="用户名或学号或邮箱" {...nicknameProps} />
           </FormItem>
@@ -93,9 +94,11 @@ Login.contextTypes = {
 
 Login.propTypes = {
   form: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired,
   actions: PropTypes.object.isRequired,
   currentUser: PropTypes.object,
   loading: PropTypes.bool.isRequired,
+  loginSuccess: PropTypes.bool.isRequired,
   loginErrors: PropTypes.string
 };
 
@@ -104,6 +107,7 @@ function mapStateToProps(state) {
   return {
     currentUser: auth.currentUser,
     loading: auth.waitLoginIn,
+    loginSuccess: auth.loginSuccess,
     loginErrors: auth.loginErrors
   };
 }

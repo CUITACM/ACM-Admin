@@ -39,10 +39,11 @@ export function hasLogin() {
 }
 
 export function validateLogin(nextState, replace, callback) {
+  console.log(nextState);
   const isLogin = hasLogin();
-  if (!isLogin && nextState.location.pathname !== '/login') {
+  if (!isLogin && nextState.location.pathname !== '/auth/login') {
     replace({
-      pathname: '/login',
+      pathname: '/auth/login',
       query: { next: nextState.location.pathname }
     });
   }

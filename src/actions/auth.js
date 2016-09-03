@@ -1,6 +1,7 @@
 import { CALL_API } from 'redux-api-middleware';
 import { LOGIN, REGISTER } from 'constants/endpoints';
 import * as actionTypes from 'constants/actionTypes';
+import * as authHelpers from 'helpers/auth';
 
 export function login(nickname, password) {
   return {
@@ -42,7 +43,8 @@ export function register(params) {
   };
 }
 
-export function loadCurrentUser(currentUser) {
+export function loadCurrentUser() {
+  const currentUser = authHelpers.takeCurrentUser();
   return {
     type: actionTypes.LOAD_CURRENT_USER,
     payload: {
@@ -52,6 +54,7 @@ export function loadCurrentUser(currentUser) {
 }
 
 export function logout() {
+  authHelpers.removeCurrentUser();
   return {
     type: actionTypes.LOGOUT
   };

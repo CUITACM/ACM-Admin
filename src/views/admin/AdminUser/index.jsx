@@ -53,6 +53,7 @@ class AdminUser extends React.PureComponent {
   render() {
     return (
       <Table
+        bordered
         columns={columns}
         rowKey={record => record.id}
         dataSource={this.props.users}

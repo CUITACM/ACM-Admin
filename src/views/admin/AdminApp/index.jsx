@@ -1,8 +1,8 @@
 import React, { PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { notification } from 'antd';
 import * as authActions from 'actions/auth';
-import { takeCurrentUser } from 'helpers/auth';
 import Header from 'components/Header';
 import Footer from 'components/Footer';
 import './style.less';
@@ -23,14 +23,27 @@ const NavbarMenu = [
 class AdminApp extends React.PureComponent {
 
   componentWillMount() {
-    this.props.loadCurrentUser(takeCurrentUser());
+    this.props.actions.loadCurrentUser();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { currentUser, logoutSuccess } = nextProps;
+    if (logoutSuccess && currentUser.token == null) {
+      notification.success({
+        message: '注销成功'
+      });
+      this.context.router.replace('/auth/login');
+    }
   }
 
   render() {
-    const { currentUser } = this.props;
+    const { currentUser, actions } = this.props;
     return (
       <div>
-        <Header menus={NavbarMenu} currentUser={currentUser} />
+        <Header
+          authActions={actions} menus={NavbarMenu}
+          currentUser={currentUser}
+        />
         <section className="layout-container">
           {this.props.children}
         </section>
@@ -41,8 +54,9 @@ class AdminApp extends React.PureComponent {
 }
 
 AdminApp.propTypes = {
-  loadCurrentUser: PropTypes.func,
+  actions: PropTypes.object.isRequired,
   currentUser: PropTypes.object.isRequired,
+  logoutSuccess: PropTypes.bool.isRequired,
   children: PropTypes.element.isRequired
 };
 
@@ -53,13 +67,14 @@ AdminApp.contextTypes = {
 
 function mapStateToProps(state) {
   return {
-    currentUser: state.auth.currentUser || {}
+    currentUser: state.auth.currentUser || {},
+    logoutSuccess: state.auth.logoutSuccess
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    loadCurrentUser: bindActionCreators(authActions.loadCurrentUser, dispatch)
+    actions: bindActionCreators(authActions, dispatch)
   };
 }
 

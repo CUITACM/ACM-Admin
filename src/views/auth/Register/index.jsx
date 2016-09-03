@@ -63,8 +63,8 @@ class Register extends React.PureComponent {
     const formItemCol = { span: 18, offset: 3 };
     return (
       <Col className="auth-box" xs={24} sm={10} md={7} lg={6} >
-        <h1>注册</h1>
-        <Form horizontal onSubmit={this.onSubmit} className="login-form">
+        <h1>加入我们</h1>
+        <Form horizontal onSubmit={this.onSubmit} className="auth-form">
           <FormItem wrapperCol={formItemCol} >
             <Input size="large" placeholder="真实姓名" {...nameProps} />
           </FormItem>

@@ -3,15 +3,6 @@ import { Link } from 'react-router';
 import { Menu, Dropdown, Icon } from 'antd';
 import './style.less';
 
-const dropdownMenu = (
-  <Menu>
-    <Menu.Item key="0">
-      <a href="#app-root">个人主页</a>
-    </Menu.Item>
-    <Menu.Item key="2">注销</Menu.Item>
-  </Menu>
-);
-
 export default class Header extends React.PureComponent {
   renderMenu() {
     return (
@@ -21,9 +12,32 @@ export default class Header extends React.PureComponent {
       >
         {this.props.menus.map(data => (
           <Menu.Item key={data.key} >
-            <Link to={data.to} activeClassName="selected" onlyActiveOnIndex>{data.text}</Link>
+            <Link to={data.to} activeClassName="selected" onlyActiveOnIndex>
+              {data.text}
+            </Link>
           </Menu.Item>
         ))}
+      </Menu>
+    );
+  }
+
+  renderDropdownMenu() {
+    const { logout } = this.props.authActions;
+    const onMenuSelect = ({ key }) => {
+      switch (key) {
+        case 'logout':
+          logout();
+          break;
+        default:
+          break;
+      }
+    };
+    return (
+      <Menu onSelect={onMenuSelect}>
+        <Menu.Item key="user_home">
+          <a href="#app-root">个人主页</a>
+        </Menu.Item>
+        <Menu.Item key="logout">注销</Menu.Item>
       </Menu>
     );
   }
@@ -37,7 +51,7 @@ export default class Header extends React.PureComponent {
           {this.renderMenu()}
           <ul className="nav nav-right">
             <li>
-              <Dropdown overlay={dropdownMenu} trigger={['click']}>
+              <Dropdown overlay={this.renderDropdownMenu()} trigger={['click']}>
                 <a className="ant-dropdown-link" href="#app-root">
                   <img alt="avatar" src="https://avatars3.githubusercontent.com/u/9291692?v=3&s=460" />
                   {currentUser.name} <Icon type="down" />
@@ -53,5 +67,6 @@ export default class Header extends React.PureComponent {
 
 Header.propTypes = {
   menus: PropTypes.array,
-  currentUser: PropTypes.object
+  authActions: PropTypes.object.isRequired,
+  currentUser: PropTypes.object.isRequired
 };

@@ -3,6 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Table, Tag, Icon, Button } from 'antd';
 import StatusPoint from 'components/StatusPoint';
+import SearchInput from 'components/SearchInput';
 import * as adminArticleActions from 'actions/admin/article';
 import './style.less';
 
@@ -67,23 +68,35 @@ class AdminArtcile extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
+      searchKey: '',
       selectedRowKeys: []
     };
     this.handleTableChange = this.handleTableChange.bind(this);
     this.onSelectChange = (selectedRowKeys) => {
       this.setState({ selectedRowKeys });
     };
+    this.onSearch = this.onSearch.bind(this);
   }
 
   componentDidMount() {
     this.props.fetchArticles();
   }
 
+  onSearch(value) {
+    const { pagination } = this.props;
+    this.setState({ searchKey: value });
+    this.props.fetchArticles({
+      page: pagination.current,
+      per: pagination.pageSize,
+      search: value
+    });
+  }
+
   handleTableChange(pagination, filters, sorter) {
-    console.log(pagination, sorter, filters);
     const params = {
       page: pagination.current,
-      per: pagination.pageSize
+      per: pagination.pageSize,
+      search: this.state.searchKey
     };
     if (sorter && sorter.field) {
       params.sort_field = sorter.field;
@@ -97,7 +110,6 @@ class AdminArtcile extends React.PureComponent {
 
   render() {
     const { selectedRowKeys } = this.state;
-    console.log(selectedRowKeys);
     const hasSelected = selectedRowKeys.length > 0;
     const rowSelection = {
       selectedRowKeys,
@@ -105,18 +117,18 @@ class AdminArtcile extends React.PureComponent {
     };
     return (
       <div>
-        <div className="table-operations">
+        <div className="table-operations clear-fix">
+          <Button type="primary">发布新闻</Button>
           <Button disabled={!hasSelected}>删除</Button>
+          <div className="pull-right">
+            <SearchInput onSearch={this.onSearch} style={{ width: 200 }} />
+          </div>
         </div>
         <Table
-          bordered
-          columns={columns}
-          rowSelection={rowSelection}
-          rowKey={record => record.id}
-          dataSource={this.props.articles}
-          pagination={this.props.pagination}
-          loading={this.props.loading}
-          onChange={this.handleTableChange}
+          bordered onChange={this.handleTableChange}
+          columns={columns} dataSource={this.props.articles}
+          rowSelection={rowSelection} rowKey={record => record.id}
+          pagination={this.props.pagination} loading={this.props.loading}
         />
       </div>
     );

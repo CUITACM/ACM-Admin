@@ -6,3 +6,20 @@ body {
   position: relative;
   min-height: 100%;
 }
+
+.clear-fix {
+  &::before, &::after {
+    display: block;
+    content: "";
+    height: 0;
+    clear: both;
+  }
+}
+
+.pull-right {
+  float: right;
+}
+
+.text-center {
+  text-align: center;
+}

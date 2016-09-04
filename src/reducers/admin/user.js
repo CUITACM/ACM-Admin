@@ -2,7 +2,7 @@ import * as actionTypes from 'constants/actionTypes';
 
 const initState = {
   data: [],
-  pageSize: 20,
+  pageSize: 10,
   pagination: {
     current_page: 1
   },

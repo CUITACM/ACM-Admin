@@ -66,6 +66,7 @@
   "dependencies": {
     "antd": "^1.10.0",
     "babel-polyfill": "^6.13.0",
+    "classnames": "^2.2.5",
     "isomorphic-fetch": "^2.2.1",
     "lodash": "^4.15.0",
     "normalizr": "^2.2.1",

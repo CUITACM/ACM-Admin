@@ -1,22 +1,12 @@
 import React, { PropTypes } from 'react';
 import Header from 'components/Header';
 import Footer from 'components/Footer';
-import './style.less';
 
 const NavbarMenu = [
-  {
-    key: 'admin_users',
-    to: '/admin/users',
-    text: '用户管理'
-  },
-  {
-    key: 'admin_articles',
-    to: '/admin/articles',
-    text: '文章管理'
-  }
 ];
 
-export default function AdminApp(props) {
+
+export default function PrincipalApp(props) {
   return (
     <div>
       <Header menus={NavbarMenu} />
@@ -28,6 +18,7 @@ export default function AdminApp(props) {
   );
 }
 
-AdminApp.propTypes = {
-  children: PropTypes.element
+
+PrincipalApp.propTypes = {
+  children: PropTypes.element.isRequired
 };

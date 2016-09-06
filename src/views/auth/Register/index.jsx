@@ -19,7 +19,7 @@ class Register extends React.PureComponent {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     if (authHelpers.hasLogin()) {
       this.props.actions.loadCurrentUser(authHelpers.takeCurrentUser());
     }

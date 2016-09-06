@@ -15,6 +15,10 @@ export function takeCurrentUser() {
   return persistence.takeObject(currentUserKey);
 }
 
+export function isAdmin(user) {
+  return user && user.role >= 4;
+}
+
 export function removeCurrentUser() {
   persistence.remove(currentUserKey);
 }

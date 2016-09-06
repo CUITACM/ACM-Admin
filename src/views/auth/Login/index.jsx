@@ -20,7 +20,7 @@ class Login extends React.PureComponent {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     if (authHelpers.hasLogin()) {
       this.props.actions.loadCurrentUser(authHelpers.takeCurrentUser());
     }
@@ -31,7 +31,7 @@ class Login extends React.PureComponent {
     const error = nextProps.loginErrors;
     const currentUser = nextProps.currentUser;
 
-    if (error) {
+    if (error && error !== this.props.loginErrors) {
       notification.error({ message: '登录失败', description: error });
     }
 
@@ -42,7 +42,8 @@ class Login extends React.PureComponent {
       });
       authHelpers.keepCurrentUser(currentUser);
       setTimeout(() => {
-        this.context.router.replace(this.props.location.query.next || '/');
+        this.context.router.replace(this.props.location.query.next ||
+          `/principal/profile/${currentUser.id}`);
       }, 1000);
     }
   }

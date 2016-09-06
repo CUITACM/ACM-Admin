@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Table, Tag, Icon, Button } from 'antd';
 import StatusPoint from 'components/StatusPoint';
 import SearchInput from 'components/SearchInput';
-import * as adminArticleActions from 'actions/admin/article';
+import * as articleActions from 'actions/entity/article';
 import './style.less';
 
 const columns = [{
@@ -143,7 +143,7 @@ AdminArtcile.propTypes = {
 };
 
 function mapStateToProps(state) {
-  const articleState = state.admin.article;
+  const articleState = state.entity.article;
   return {
     articles: articleState.data || [],
     pagination: {
@@ -157,7 +157,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    fetchArticles: bindActionCreators(adminArticleActions.fetchArticles, dispatch)
+    fetchArticles: bindActionCreators(articleActions.fetchArticles, dispatch)
   };
 }
 

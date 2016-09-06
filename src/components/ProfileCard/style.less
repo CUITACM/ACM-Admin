@@ -1,0 +1,27 @@
+@avatar-bg: #333;
+@light-gray: #1e3948;
+
+.custom-card-avatar {
+  width: 100%;
+  background-color: @avatar-bg;
+  text-align: center;
+  img {
+    transform: translateY(50%);
+    border-radius: 50%;
+    width: 50%;
+  }
+}
+
+.custom-card-body {
+  text-align: center;
+  padding-bottom: 10px;
+
+  h3 {
+    font-size: 20px;
+  }
+
+  p.description {
+    color: @light-gray;
+    margin: 5px;
+  }
+}

@@ -1,7 +1,8 @@
 import * as actionTypes from 'constants/actionTypes';
 
 const initState = {
-  data: [],
+  one: null,
+  datas: [],
   pageSize: 10,
   pagination: {
     current_page: 1
@@ -22,11 +23,30 @@ export default function user(state = initState, action) {
       return {
         ...state,
         pagination: action.payload.meta,
-        data: action.payload.users,
+        datas: action.payload.users,
         waitFetch: false,
         fetchErrors: null
       };
     case actionTypes.FETCH_USERS_FAILURE:
+      return {
+        ...state,
+        waitFetch: false,
+        fetchErrors: action.payload.message
+      };
+    case actionTypes.FETCH_ONE_USER_REQUEST:
+      return {
+        ...state,
+        waitFetch: !action.error,
+        fetchErrors: action.error ? action.payload.message : null
+      };
+    case actionTypes.FETCH_ONE_USER_SUCCESS:
+      return {
+        ...state,
+        one: action.payload.user,
+        waitFetch: false,
+        fetchErrors: null
+      };
+    case actionTypes.FETCH_ONE_USER_FAILURE:
       return {
         ...state,
         waitFetch: false,

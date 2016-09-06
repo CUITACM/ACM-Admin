@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Table, Button, Tag } from 'antd';
 import SearchInput from 'components/SearchInput';
-import * as adminUserActions from 'actions/admin/user';
+import * as userActions from 'actions/entity/user';
 import './style.less';
 
 const columns = [{
@@ -138,9 +138,9 @@ AdminUser.propTypes = {
 };
 
 function mapStateToProps(state) {
-  const userState = state.admin.user;
+  const userState = state.entity.user;
   return {
-    users: userState.data || [],
+    users: userState.datas || [],
     pagination: {
       total: userState.pagination.total_count,
       current: userState.pagination.current_page,
@@ -152,7 +152,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    fetchUsers: bindActionCreators(adminUserActions.fetchUsers, dispatch)
+    fetchUsers: bindActionCreators(userActions.fetchUsers, dispatch)
   };
 }
 

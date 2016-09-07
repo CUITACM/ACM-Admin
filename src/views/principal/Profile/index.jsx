@@ -23,9 +23,9 @@ class Profile extends React.PureComponent {
         <ProfileCard width={240} user={user} />
         <div className="profile-tab" >
           <Tabs defaultActiveKey="1">
-            <TabPane tab="选项卡一" key="1">选项卡一内容</TabPane>
-            <TabPane tab="选项卡二" key="2">选项卡二内容</TabPane>
-            <TabPane tab="选项卡三" key="3">选项卡三内容</TabPane>
+            <TabPane tab="信息" key="1">选项卡三内容</TabPane>
+            <TabPane tab="文章" key="2">选项卡一内容</TabPane>
+            <TabPane tab="提交" key="3">选项卡二内容</TabPane>
           </Tabs>
         </div>
       </div>

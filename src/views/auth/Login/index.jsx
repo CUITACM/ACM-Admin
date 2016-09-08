@@ -89,8 +89,7 @@ class Login extends React.PureComponent {
 }
 
 Login.contextTypes = {
-  router: PropTypes.object.isRequired,
-  store: PropTypes.object.isRequired
+  router: PropTypes.object.isRequired
 };
 
 Login.propTypes = {

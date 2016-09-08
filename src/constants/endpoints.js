@@ -29,6 +29,10 @@ export const FETCH_ONE_USER = {
   method: HttpMethod.GET
 };
 
+export const UPDATE_USER = {
+  endpoint: (id) => `${API_ROOT}/api/v1/users/${id}`,
+  method: HttpMethod.POST
+};
 
 export const FETCH_ARTICLES = {
   endpoint: `${API_ROOT}/api/v1/articles`,

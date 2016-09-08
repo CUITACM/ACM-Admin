@@ -28,7 +28,7 @@ export function getToken() {
   return currentUser && currentUser.token;
 }
 
-export function withToken(headers) {
+export function withToken(headers = {}) {
   return {
     ...headers,
     'Authorization': `Token token=${getToken()}`
@@ -43,7 +43,6 @@ export function hasLogin() {
 }
 
 export function validateLogin(nextState, replace, callback) {
-  console.log(nextState);
   const isLogin = hasLogin();
   if (!isLogin && nextState.location.pathname !== '/auth/login') {
     replace({

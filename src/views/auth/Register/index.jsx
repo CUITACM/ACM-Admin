@@ -91,8 +91,7 @@ class Register extends React.PureComponent {
 }
 
 Register.contextTypes = {
-  router: PropTypes.object.isRequired,
-  store: PropTypes.object.isRequired
+  router: PropTypes.object.isRequired
 };
 
 Register.propTypes = {

@@ -3,7 +3,6 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Tabs } from 'antd';
 import ProfileCard from 'components/ProfileCard';
-import { isAdmin } from 'helpers/auth';
 import * as userActions from 'actions/entity/user';
 import './style.less';
 

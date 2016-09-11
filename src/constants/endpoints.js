@@ -38,3 +38,18 @@ export const FETCH_ARTICLES = {
   endpoint: `${API_ROOT}/api/v1/articles`,
   method: HttpMethod.GET
 };
+
+export const FETCH_ONE_ARTICLE = {
+  endpoint: (id) => `${API_ROOT}/api/v1/articles/${id}`,
+  method: HttpMethod.GET
+};
+
+export const CREATE_ARTICLE = {
+  endpoint: `${API_ROOT}/api/v1/articles`,
+  method: HttpMethod.POST
+};
+
+export const UPDATE_ARTICLE = {
+  endpoint: (id) => `${API_ROOT}/api/v1/articles/${id}`,
+  method: HttpMethod.PUT
+};

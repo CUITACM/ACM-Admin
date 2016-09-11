@@ -17,11 +17,12 @@ export default class ProfileCard extends React.PureComponent {
     this.hideEditUserModal = () => {
       this.setState({ visibleEditUserModal: false });
     };
-    this.onSubmitUserInfo = this.onSubmitUserInfo.bind(this);
   }
 
-  onSubmitUserInfo(form) {
-    console.log(form);
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.user !== this.props.user) {
+      this.hideEditUserModal();
+    }
   }
 
   renderUserInfo(user) {
@@ -29,15 +30,19 @@ export default class ProfileCard extends React.PureComponent {
     return (
       <ul className="user-info">
         <li>
-          <span className="icon"><Icon type="user" /></span>
+          <span className="icon"><Icon type="smile" /></span>
           <span className="content">{user.gender ? '男' : '女'}</span>
+        </li>
+        <li>
+          <span className="icon"><Icon type="team" /></span>
+          <span className="content">{user.stu_id || notWrite}</span>
         </li>
         <li>
           <span className="icon"><Icon type="mail" /></span>
           <span className="content">{user.email || notWrite}</span>
         </li>
         <li>
-          <span className="icon"><Icon type="team" /></span>
+          <span className="icon"><Icon type="environment" /></span>
           <span className="content">{user.school} {user.college} {user.major} {user.grade}</span>
         </li>
       </ul>
@@ -45,7 +50,7 @@ export default class ProfileCard extends React.PureComponent {
   }
 
   render() {
-    const { width, user } = this.props;
+    const { width, user, actions } = this.props;
     const avatarBottom = (width / 4) + 10;
     const cardStyle = {
       width,
@@ -72,9 +77,9 @@ export default class ProfileCard extends React.PureComponent {
         </Card>
         <Modal
           title="修改用户信息" visible={this.state.visibleEditUserModal} footer={null}
-          onCancel={this.hideEditUserModal}
+          onCancel={this.hideEditUserModal} style={{ top: 20 }}
         >
-          <UserForm onSubmit={this.onSubmitUserInfo} user={user} />
+          <UserForm onSubmit={actions.updateUser} user={user} />
         </Modal>
       </div>
     );
@@ -83,7 +88,8 @@ export default class ProfileCard extends React.PureComponent {
 
 ProfileCard.propTypes = {
   width: PropTypes.number.isRequired,
-  user: PropTypes.object.isRequired
+  user: PropTypes.object.isRequired,
+  actions: PropTypes.object.isRequired
 };
 
 ProfileCard.defaultProps = {

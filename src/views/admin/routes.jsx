@@ -5,22 +5,26 @@ export default {
   path: 'admin',
   component: AdminApp,
   onEnter: validateLogin,
-  childRoutes: [
-    {
-      path: 'users',
-      getComponent(partialNextState, callback) {
-        require.ensure([], (require) => {
-          callback(null, require('./AdminUser').default);
-        }, 'admin.user');
-      }
-    },
-    {
-      path: 'articles',
-      getComponent(partialNextState, callback) {
-        require.ensure([], (require) => {
-          callback(null, require('./AdminArticle').default);
-        }, 'admin.article');
-      }
-    }
-  ]
+  getChildRoutes(partialNextState, callback) {
+    require.ensure([], (require) => {
+      callback(null, [
+        {
+          path: 'users',
+          component: require('./AdminUser').default
+        },
+        {
+          path: 'articles',
+          component: require('./AdminArticle').default
+        },
+        {
+          path: 'articles/create',
+          component: require('./ArticleCreate').default
+        },
+        {
+          path: 'articles/edit/:id',
+          component: require('./ArticleEdit').default
+        }
+      ]);
+    }, 'admin');
+  }
 };

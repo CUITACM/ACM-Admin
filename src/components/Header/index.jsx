@@ -43,9 +43,7 @@ class Header extends React.PureComponent {
       >
         {this.props.menus.map(data => (
           <Menu.Item key={data.key} >
-            <Link to={data.to}>
-              {data.text}
-            </Link>
+            <Link to={data.to}>{data.text}</Link>
           </Menu.Item>
         ))}
       </Menu>

@@ -3,22 +3,18 @@ import Auth from './Auth';
 export default {
   path: 'auth',
   component: Auth,
-  childRoutes: [
-    {
-      path: 'login',
-      getComponent(partialNextState, callback) {
-        require.ensure([], (require) => {
-          callback(null, require('./Login').default);
-        }, 'auth.login');
-      }
-    },
-    {
-      path: 'register',
-      getComponent(partialNextState, callback) {
-        require.ensure([], (require) => {
-          callback(null, require('./Register').default);
-        }, 'auth.register');
-      }
-    }
-  ]
+  getChildRoutes(partialNextState, callback) {
+    require.ensure([], (require) => {
+      callback(null, [
+        {
+          path: 'login',
+          component: require('./Login').default
+        },
+        {
+          path: 'register',
+          component: require('./Register').default
+        }
+      ]);
+    }, 'auth');
+  }
 };

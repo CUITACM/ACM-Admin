@@ -1,8 +1,10 @@
 import { CALL_API } from 'redux-api-middleware';
-import { FETCH_USERS, FETCH_ONE_USER } from 'constants/endpoints';
 import { withToken } from 'helpers/auth';
 import { withParams } from 'helpers/utils';
 import * as actionTypes from 'constants/actionTypes';
+import {
+  FETCH_USERS, FETCH_ONE_USER, UPDATE_USER
+} from 'constants/endpoints';
 
 export function fetchUsers({ page = 1, per = 20, ...args } = {}) {
   return {
@@ -37,6 +39,25 @@ export function fetchOneUser(id) {
         actionTypes.FETCH_ONE_USER_REQUEST,
         actionTypes.FETCH_ONE_USER_SUCCESS,
         actionTypes.FETCH_ONE_USER_FAILURE
+      ]
+    }
+  };
+}
+
+export function updateUser(id, params) {
+  return {
+    [CALL_API]: {
+      endpoint: UPDATE_USER.endpoint(id),
+      method: UPDATE_USER.method,
+      headers: withToken({
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }),
+      body: JSON.stringify(params),
+      types: [
+        actionTypes.UPDATE_USER_REQUEST,
+        actionTypes.UPDATE_USER_SUCCESS,
+        actionTypes.UPDATE_USER_FAILURE
       ]
     }
   };

@@ -64,5 +64,9 @@ module.exports = {
       context: path.join(__dirname, '../'),
       manifest: require('../dist/vendor-manifest.json')
     }),
-  ]
+  ],
+
+  node: {
+    fs: "empty"
+  }
 };

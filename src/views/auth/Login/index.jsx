@@ -14,7 +14,6 @@ class Login extends React.PureComponent {
         if (!errors) {
           const data = this.props.form.getFieldsValue();
           this.props.actions.login(data.nickname, data.password);
-          return;
         }
       });
     };

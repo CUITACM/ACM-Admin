@@ -5,14 +5,14 @@ export default {
   path: 'principal',
   component: PrincipalApp,
   onEnter: validateLogin,
-  childRoutes: [
-    {
-      path: 'profile/:userId',
-      getComponent(partialNextState, callback) {
-        require.ensure([], (require) => {
-          callback(null, require('./Profile').default);
-        }, 'principal.profile');
-      }
-    }
-  ]
+  getChildRoutes(partialNextState, callback) {
+    require.ensure([], (require) => {
+      callback(null, [
+        {
+          path: 'profile/:userId',
+          component: require('./Profile').default
+        }
+      ]);
+    }, 'principal');
+  }
 };

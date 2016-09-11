@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react';
+import { Link } from 'react-router';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Table, Tag, Icon, Button } from 'antd';
@@ -55,9 +56,9 @@ const columns = [{
   key: 'operation',
   render: (text, record) => (
     <span>
-      <a href="#">修改</a>
-      <span className="ant-divider"></span>
-      <a href="#" className="ant-dropdown-link">
+      <Link to={`/admin/articles/edit/${record.id}`}>修改</Link>
+      <span className="ant-divider" />
+      <a className="ant-dropdown-link">
         更多 <Icon type="down" />
       </a>
     </span>
@@ -118,7 +119,12 @@ class AdminArtcile extends React.PureComponent {
     return (
       <div>
         <div className="table-operations clear-fix">
-          <Button type="primary">发布新闻</Button>
+          <Button
+            type="primary"
+            onClick={() => this.context.router.push('/admin/articles/create')}
+          >
+            发布新闻
+          </Button>
           <Button disabled={!hasSelected}>删除</Button>
           <div className="pull-right">
             <SearchInput onSearch={this.onSearch} style={{ width: 200 }} />
@@ -134,6 +140,10 @@ class AdminArtcile extends React.PureComponent {
     );
   }
 }
+
+AdminArtcile.contextTypes = {
+  router: PropTypes.object.isRequired
+};
 
 AdminArtcile.propTypes = {
   articles: PropTypes.array.isRequired,

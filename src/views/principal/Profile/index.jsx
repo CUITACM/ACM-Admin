@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Tabs } from 'antd';
+import { Tabs, notification } from 'antd';
 import ProfileCard from 'components/ProfileCard';
 import * as userActions from 'actions/entity/user';
 import './style.less';
@@ -12,14 +12,26 @@ class Profile extends React.PureComponent {
 
   componentDidMount() {
     const { userId } = this.props.params;
-    this.props.userActions.fetchOneUser(userId);
+    this.props.actions.fetchOneUser(userId);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const user = nextProps.user;
+    const success = nextProps.updateSuccess;
+    const errors = nextProps.updateErrors;
+    if (errors && errors !== this.props.updateErrors) {
+      notification.error({ message: '修改失败', description: errors });
+    }
+    if (success && user && user.updated_at > this.props.user.updated_at) {
+      notification.success({ message: '修改成功' });
+    }
   }
 
   render() {
-    const { user } = this.props;
+    const { user, actions } = this.props;
     return (
       <div className="profile-container">
-        <ProfileCard width={240} user={user} />
+        <ProfileCard width={240} user={user} actions={actions} />
         <div className="profile-tab" >
           <Tabs defaultActiveKey="1">
             <TabPane tab="信息" key="1">选项卡三内容</TabPane>
@@ -34,20 +46,27 @@ class Profile extends React.PureComponent {
 
 Profile.propTypes = {
   params: PropTypes.object.isRequired,
-  userActions: PropTypes.object.isRequired,
-  user: PropTypes.object.isRequired
+  actions: PropTypes.object.isRequired,
+  user: PropTypes.object.isRequired,
+  waitUpdate: PropTypes.bool.isRequired,
+  updateSuccess: PropTypes.bool.isRequired,
+  updateErrors: PropTypes.string
 };
 
 
 function mapStateToProps(state) {
+  const userState = state.entity.user;
   return {
-    user: state.entity.user.one || {},
+    user: userState.one || {},
+    waitUpdate: userState.waitUpdate,
+    updateSuccess: userState.updateSuccess,
+    updateErrors: userState.updateErrors
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    userActions: bindActionCreators(userActions, dispatch)
+    actions: bindActionCreators(userActions, dispatch)
   };
 }
 

@@ -3,7 +3,8 @@ import { withToken } from 'helpers/auth';
 import { withParams } from 'helpers/utils';
 import * as actionTypes from 'constants/actionTypes';
 import {
-  FETCH_ARTICLES, FETCH_ONE_ARTICLE, CREATE_ARTICLE, UPDATE_ARTICLE
+  FETCH_ARTICLES, FETCH_ONE_ARTICLE, CREATE_ARTICLE,
+  UPDATE_ARTICLE, DELETE_ARTICLE
 } from 'constants/endpoints';
 
 export function fetchArticles({ page = 1, per = 20, ...args } = {}) {
@@ -77,6 +78,24 @@ export function updateArticle(params, id) {
         actionTypes.UPDATE_ARTICLE_REQUEST,
         actionTypes.UPDATE_ARTICLE_SUCCESS,
         actionTypes.UPDATE_ARTICLE_FAILURE
+      ]
+    }
+  };
+}
+
+export function deleteArticle(id) {
+  return {
+    [CALL_API]: {
+      endpoint: DELETE_ARTICLE.endpoint(id),
+      method: DELETE_ARTICLE.method,
+      headers: withToken({
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }),
+      types: [
+        actionTypes.DELETE_ARTICLE_REQUEST,
+        actionTypes.DELETE_ARTICLE_SUCCESS,
+        actionTypes.DELETE_ARTICLE_FAILURE
       ]
     }
   };

@@ -53,3 +53,8 @@ export const UPDATE_ARTICLE = {
   endpoint: (id) => `${API_ROOT}/api/v1/articles/${id}`,
   method: HttpMethod.PUT
 };
+
+export const DELETE_ARTICLE = {
+  endpoint: (id) => `${API_ROOT}/api/v1/articles/${id}`,
+  method: HttpMethod.DELETE
+};

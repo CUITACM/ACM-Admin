@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "cross-env NODE_ENV=production webpack --config config/webpack.prod.config.js",
+    "dll": "cross-env NODE_ENV=development webpack --config config/webpack.dll.config.js",
     "dev": "cross-env NODE_ENV=development node config/dev-server.js",
     "dev:dashboard": "cross-env NODE_ENV=development webpack-dashboard -- node config/dev-server.js",
     "test": "cross-env NODE_ENV=test mocha --compilers js:babel/register --require ./tests/testRunner.js --recursive ./tests",

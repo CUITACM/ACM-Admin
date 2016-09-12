@@ -3,12 +3,8 @@ var webpack = require('webpack');
 var webpackMerge = require('webpack-merge');
 var baseConfig = require('./webpack.base.config');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
-require('shelljs/global');
 
 process.env.NODE_ENV = 'production';
-
-rm('-rf', 'dist');
-mkdir('dist');
 
 module.exports = webpackMerge(baseConfig, {
   plugins: [

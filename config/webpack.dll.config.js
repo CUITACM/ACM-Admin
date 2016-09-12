@@ -1,6 +1,10 @@
 /*eslint-disable*/
 var path = require('path');
 var webpack = require('webpack');
+require('shelljs/global');
+
+rm('-rf', 'dist');
+mkdir('dist');
 
 module.exports = {
   entry: {

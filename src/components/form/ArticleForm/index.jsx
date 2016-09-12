@@ -1,28 +1,21 @@
 import React, { PropTypes } from 'react';
 import { Form, Input, Button } from 'antd';
-import SimpleMDE from 'simplemde';
-import 'simplemde/dist/simplemde.min.css';
 import { ArticleType, ArticleStatus } from 'constants/article';
+import MarkdownInput from 'components/MarkdownInput';
 
 const FormItem = Form.Item;
 
 class ArticleForm extends React.PureComponent {
   constructor(props) {
     super(props);
+    this.state = {
+      contentValue: ''
+    };
     this.onSubmit = this.onSubmit.bind(this);
     this.onSubmitDraft = this.onSubmitDraft.bind(this);
-  }
-
-  componentDidMount() {
-    this.contentEditor = new SimpleMDE({
-      element: document.getElementById('content'),
-      showIcons: ['code', 'table']
-    });
-  }
-
-  componentWillReceiveProps(nextProps) {
-    const { article } = nextProps;
-    this.contentEditor.value(article && article.content);
+    this.onContentChange = (value) => {
+      this.setState({ contentValue: value });
+    };
   }
 
   onSubmit(e) {
@@ -35,7 +28,7 @@ class ArticleForm extends React.PureComponent {
           ...params,
           article_type: ArticleType.NEWS,
           status: ArticleStatus.PUBLISH,
-          content: this.state.contentEditor.value()
+          content: this.state.contentValue
         }, article && article.id);
       }
     });
@@ -50,7 +43,7 @@ class ArticleForm extends React.PureComponent {
           ...params,
           article_type: ArticleType.NEWS,
           status: ArticleStatus.DRAFT,
-          content: this.contentEditor.value()
+          content: this.state.contentValue
         }, article && article.id);
       }
     });
@@ -69,23 +62,16 @@ class ArticleForm extends React.PureComponent {
         { required: true, message: '请填写新闻标题' }
       ]
     });
-    const contentProps = getFieldProps('content', {
-      initialValue: article && article.content,
-      rules: [
-        {
-          required: true,
-          message: '请填写正文',
-          transform: () => this.state.contentEditor.value()
-        }
-      ]
-    });
     return (
       <Form horizontal onSubmit={this.onSubmit}>
         <FormItem {...formItemLayout} label="标题">
           <Input size="default" placeholder="标题" {...titleProps} />
         </FormItem>
         <FormItem {...formItemLayout} label="正文">
-          <Input type="textarea" size="default" placeholder="正文" {...contentProps} />
+          <MarkdownInput
+            initialValue={article && article.content}
+            onChange={this.onContentChange}
+          />
         </FormItem>
         <FormItem wrapperCol={{ span: 16, offset: 4 }} >
           <Button type="primary" htmlType="submit">发布</Button>

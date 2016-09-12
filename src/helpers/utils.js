@@ -16,20 +16,31 @@ export function isObject(obj) {
 
 const esc = window.encodeURIComponent;
 
-export function withParams(url, parameters) {
-  const queryString = Object.keys(parameters).map(key => {
+function decodeParams(parameters, prefix) {
+  const kvs = [];
+  const inArray = isArray(parameters);
+  Object.keys(parameters).forEach((k) => {
+    const key = k.trim();
     const value = parameters[key];
-    if (isObject(value)) {
-      return Object.keys(value).map(k => (
-        `${esc(`${key}[${k}]`)}=${esc(value[k])}`
-      )).join('&');
-    } else if (isArray(value)) {
-      return value.map(v => (
-        `${esc(`${key}[]`)}=${esc(v)}`
-      )).join('&');
+    if (key !== '' && value !== '') {
+      let nextKey;
+      if (inArray) {
+        nextKey = prefix ? `${prefix}[]` : key;
+      } else {
+        nextKey = prefix ? `${prefix}[${key}]` : key;
+      }
+      console.log(nextKey, value);
+      kvs.push(isObject(value) || isArray(value) ?
+        decodeParams(value, nextKey) : `${esc(nextKey)}=${esc(value)}`
+      );
     }
-    return `${esc(key)}=${esc(value)}`;
-  }).join('&');
+  });
+  return kvs.join('&');
+}
+
+export function withParams(url, parameters = {}) {
+  const queryString = decodeParams(parameters);
+  console.log(queryString);
   let ret = url;
   if (queryString.length > 0) {
     ret += `?${queryString}`;

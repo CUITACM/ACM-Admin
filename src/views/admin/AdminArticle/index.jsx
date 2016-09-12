@@ -6,15 +6,24 @@ import { Table, Tag, Icon, Button } from 'antd';
 import StatusPoint from 'components/StatusPoint';
 import SearchInput from 'components/SearchInput';
 import * as articleActions from 'actions/entity/article';
+import { ArticleStatus, ArticleType } from 'constants/article';
 import './style.less';
 
 const columns = [{
   title: '标题',
   dataIndex: 'title',
-  sorter: true
+  sorter: true,
+  width: '15%'
 }, {
   title: '状态',
   dataIndex: 'status',
+  width: '8%',
+  filters: [
+    { text: '回收站', value: ArticleStatus.RECYCLE },
+    { text: '草稿', value: ArticleStatus.DRAFT },
+    { text: '发布', value: ArticleStatus.PUBLISH },
+    { text: '置顶', value: ArticleStatus.PINNED }
+  ],
   render: status => {
     switch (status) {
       case 0:
@@ -31,7 +40,12 @@ const columns = [{
   }
 }, {
   title: '类型',
-  dataIndex: 'type',
+  dataIndex: 'article_type',
+  width: '10%',
+  filters: [
+    { text: '新闻', value: ArticleType.NEWS },
+    { text: '解题报告', value: ArticleType.SOLUTION }
+  ],
   render: type => {
     switch (type) {
       case 'News':
@@ -43,14 +57,17 @@ const columns = [{
     }
   }
 }, {
-  title: '正文',
-  dataIndex: 'content'
-}, {
   title: '作者',
-  dataIndex: 'user.name'
+  dataIndex: 'user.name',
+  width: '8%',
 }, {
   title: '创建时间',
-  dataIndex: 'created_at'
+  dataIndex: 'created_at',
+  sorter: true,
+  width: '15%',
+}, {
+  title: '正文',
+  dataIndex: 'content'
 }, {
   title: '操作',
   key: 'operation',
@@ -69,13 +86,9 @@ class AdminArtcile extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      searchKey: '',
-      selectedRowKeys: []
+      searchKey: ''
     };
     this.handleTableChange = this.handleTableChange.bind(this);
-    this.onSelectChange = (selectedRowKeys) => {
-      this.setState({ selectedRowKeys });
-    };
     this.onSearch = this.onSearch.bind(this);
   }
 
@@ -103,6 +116,7 @@ class AdminArtcile extends React.PureComponent {
       params.sort_field = sorter.field;
       params.sort_order = sorter.order;
     }
+    console.log(filters);
     this.props.fetchArticles({
       ...params,
       filters
@@ -110,12 +124,6 @@ class AdminArtcile extends React.PureComponent {
   }
 
   render() {
-    const { selectedRowKeys } = this.state;
-    const hasSelected = selectedRowKeys.length > 0;
-    const rowSelection = {
-      selectedRowKeys,
-      onChange: this.onSelectChange,
-    };
     return (
       <div>
         <div className="table-operations clear-fix">
@@ -125,15 +133,15 @@ class AdminArtcile extends React.PureComponent {
           >
             发布新闻
           </Button>
-          <Button disabled={!hasSelected}>删除</Button>
           <div className="pull-right">
             <SearchInput onSearch={this.onSearch} style={{ width: 200 }} />
           </div>
         </div>
         <Table
-          bordered onChange={this.handleTableChange}
+          bordered
+          onChange={this.handleTableChange}
+          rowKey={record => record.id}
           columns={columns} dataSource={this.props.articles}
-          rowSelection={rowSelection} rowKey={record => record.id}
           pagination={this.props.pagination} loading={this.props.loading}
         />
       </div>

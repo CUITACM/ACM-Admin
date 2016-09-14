@@ -14,10 +14,7 @@ const initState = {
   createErrors: null,
   waitUpdate: false,
   updateSuccess: false,
-  updateErrors: null,
-  waitDelete: false,
-  deleteSuccess: false,
-  deleteErrors: null
+  updateErrors: null
 };
 
 export default function article(state = initState, action) {
@@ -106,27 +103,6 @@ export default function article(state = initState, action) {
         waitUpdate: false,
         updateSuccess: false,
         updateErrors: action.payload.message
-      };
-    case actionTypes.DELETE_ARTICLE_REQUEST:
-      return {
-        ...state,
-        waitDelete: !action.error,
-        deleteSuccess: false,
-        deleteErrors: action.error ? action.payload.message : null
-      };
-    case actionTypes.DELETE_ARTICLE_SUCCESS:
-      return {
-        ...state,
-        waitDelete: false,
-        deleteSuccess: true,
-        deleteErrors: null
-      };
-    case actionTypes.DELETE_ARTICLE_FAILURE:
-      return {
-        ...state,
-        waitDelete: false,
-        deleteSuccess: false,
-        deleteErrors: action.payload.message
       };
     default:
       return state;

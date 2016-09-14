@@ -2,85 +2,87 @@ import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Table, Tag, Icon, Button } from 'antd';
+import { Table, Tag, Button, Popconfirm, message } from 'antd';
 import StatusPoint from 'components/StatusPoint';
 import SearchInput from 'components/SearchInput';
 import * as articleActions from 'actions/entity/article';
 import { ArticleStatus, ArticleType } from 'constants/article';
 import './style.less';
 
-const columns = [{
-  title: '标题',
-  dataIndex: 'title',
-  sorter: true,
-  width: '15%'
-}, {
-  title: '状态',
-  dataIndex: 'status',
-  width: '8%',
-  filters: [
-    { text: '回收站', value: ArticleStatus.RECYCLE },
-    { text: '草稿', value: ArticleStatus.DRAFT },
-    { text: '发布', value: ArticleStatus.PUBLISH },
-    { text: '置顶', value: ArticleStatus.PINNED }
-  ],
-  render: status => {
-    switch (status) {
-      case 0:
-        return <StatusPoint>回收站</StatusPoint>;
-      case 1:
-        return <StatusPoint color="light-blue">草稿</StatusPoint>;
-      case 2:
-        return <StatusPoint color="green">发布</StatusPoint>;
-      case 3:
-        return <StatusPoint color="red">置顶</StatusPoint>;
-      default:
-        return null;
+const getColumns = (operations) => (
+  [{
+    title: '标题',
+    dataIndex: 'title',
+    sorter: true,
+    width: '15%'
+  }, {
+    title: '状态',
+    dataIndex: 'status',
+    width: '8%',
+    filters: [
+      { text: '草稿', value: ArticleStatus.DRAFT },
+      { text: '发布', value: ArticleStatus.PUBLISH },
+      { text: '置顶', value: ArticleStatus.PINNED }
+    ],
+    render: status => {
+      switch (status) {
+        case 1:
+          return <StatusPoint color="light-blue">草稿</StatusPoint>;
+        case 2:
+          return <StatusPoint color="green">发布</StatusPoint>;
+        case 3:
+          return <StatusPoint color="red">置顶</StatusPoint>;
+        default:
+          return null;
+      }
     }
-  }
-}, {
-  title: '类型',
-  dataIndex: 'article_type',
-  width: '10%',
-  filters: [
-    { text: '新闻', value: ArticleType.NEWS },
-    { text: '解题报告', value: ArticleType.SOLUTION }
-  ],
-  render: type => {
-    switch (type) {
-      case 'News':
-        return <Tag color="blue">新闻</Tag>;
-      case 'Solution':
-        return <Tag color="green">解题报告</Tag>;
-      default:
-        return null;
+  }, {
+    title: '类型',
+    dataIndex: 'article_type',
+    width: '10%',
+    filters: [
+      { text: '新闻', value: ArticleType.NEWS },
+      { text: '解题报告', value: ArticleType.SOLUTION }
+    ],
+    render: type => {
+      switch (type) {
+        case 'News':
+          return <Tag color="blue">新闻</Tag>;
+        case 'Solution':
+          return <Tag color="green">解题报告</Tag>;
+        default:
+          return null;
+      }
     }
-  }
-}, {
-  title: '作者',
-  dataIndex: 'user.name',
-  width: '8%',
-}, {
-  title: '创建时间',
-  dataIndex: 'created_at',
-  sorter: true,
-  width: '15%',
-}, {
-  title: '正文',
-  dataIndex: 'content'
-}, {
-  title: '操作',
-  key: 'operation',
-  render: (text, record) => (
-    <span>
-      <Link to={`/admin/articles/edit/${record.id}`}>修改</Link>
-      <span className="ant-divider" />
-      <a className="ant-dropdown-link">
-        更多 <Icon type="down" />
-      </a>
-    </span>
-  ),
-}];
+  }, {
+    title: '作者',
+    dataIndex: 'user.name',
+    width: '10%',
+  }, {
+    title: '创建时间',
+    dataIndex: 'created_at',
+    sorter: true,
+    width: '15%',
+  }, {
+    title: '正文',
+    dataIndex: 'content'
+  }, {
+    title: '操作',
+    key: 'operation',
+    render: (text, record) => (
+      <span>
+        <Link to={`/admin/articles/edit/${record.id}`}>修改</Link>
+        <span className="ant-divider" />
+        <Popconfirm
+          title="确定要删除吗？" placement="left"
+          onConfirm={() => operations.onDelete(record)}
+        >
+          <a>删除</a>
+        </Popconfirm>
+      </span>
+    ),
+  }]
+);
 
 class AdminArtcile extends React.PureComponent {
   constructor(props) {
@@ -90,10 +92,27 @@ class AdminArtcile extends React.PureComponent {
     };
     this.handleTableChange = this.handleTableChange.bind(this);
     this.onSearch = this.onSearch.bind(this);
+    this.onDelete = this.onDelete.bind(this);
   }
 
   componentDidMount() {
     this.props.fetchArticles();
+  }
+
+  onDelete(record) {
+    articleActions.deleteArticle(record.id)
+      .then((response) => {
+        if (response.status >= 400) {
+          throw new Error('Bad response from server');
+        }
+        return response.json();
+      })
+      .then((response) => {
+        if (response.error_code === 0) {
+          message.success('删除成功');
+          this.props.fetchArticles();
+        }
+      });
   }
 
   onSearch(value) {
@@ -124,6 +143,9 @@ class AdminArtcile extends React.PureComponent {
   }
 
   render() {
+    const columns = getColumns({
+      onDelete: this.onDelete
+    });
     return (
       <div>
         <div className="table-operations clear-fix">
@@ -138,7 +160,7 @@ class AdminArtcile extends React.PureComponent {
           </div>
         </div>
         <Table
-          bordered
+          bordered size="small"
           onChange={this.handleTableChange}
           rowKey={record => record.id}
           columns={columns} dataSource={this.props.articles}

@@ -29,7 +29,6 @@ function decodeParams(parameters, prefix) {
       } else {
         nextKey = prefix ? `${prefix}[${key}]` : key;
       }
-      console.log(nextKey, value);
       kvs.push(isObject(value) || isArray(value) ?
         decodeParams(value, nextKey) : `${esc(nextKey)}=${esc(value)}`
       );
@@ -40,7 +39,6 @@ function decodeParams(parameters, prefix) {
 
 export function withParams(url, parameters = {}) {
   const queryString = decodeParams(parameters);
-  console.log(queryString);
   let ret = url;
   if (queryString.length > 0) {
     ret += `?${queryString}`;

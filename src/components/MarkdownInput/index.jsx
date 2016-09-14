@@ -11,7 +11,7 @@ export default class MarkdownInput extends React.PureComponent {
     this.editor = new SimpleMDE({
       initialValue: this.props.initialValue,
       autoDownloadFontAwesome: false,
-      showIcons: ['strikethrough', 'heading-1', 'heading-2', 'code', 'table'],
+      showIcons: ['strikethrough', 'code', 'table'],
       spellChecker: false
     });
     this.editor.codemirror.on('change', () => {

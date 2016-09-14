@@ -1,12 +1,19 @@
 import React, { PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Table, Button, Tag } from 'antd';
+import { Table, Tag } from 'antd';
+import { API_ROOT } from 'constants/endpoints';
 import SearchInput from 'components/SearchInput';
 import * as userActions from 'actions/entity/user';
+
 import './style.less';
 
 const columns = [{
+  title: '头像',
+  dataIndex: 'avatar',
+  width: '70px',
+  render: avatar => <img alt="avatar" src={API_ROOT + avatar} />
+}, {
   title: '姓名',
   dataIndex: 'name',
   sorter: true,
@@ -14,8 +21,8 @@ const columns = [{
   className: 'text-center',
   render: (name, record) => (
     <div>
-      { name }<br />
-      <Tag color="green">{ record.nickname }</Tag>
+      <h3>{ name }</h3>
+      <Tag color="blue">{ record.nickname }</Tag>
     </div>
   ),
 }, {
@@ -64,12 +71,8 @@ class AdminUser extends React.PureComponent {
     super(props);
     this.state = {
       searchKey: '',
-      selectedRowKeys: []
     };
     this.handleTableChange = this.handleTableChange.bind(this);
-    this.onSelectChange = (selectedRowKeys) => {
-      this.setState({ selectedRowKeys });
-    };
     this.onSearch = this.onSearch.bind(this);
   }
 
@@ -105,24 +108,18 @@ class AdminUser extends React.PureComponent {
   }
 
   render() {
-    const { selectedRowKeys } = this.state;
-    const hasSelected = selectedRowKeys.length > 0;
-    const rowSelection = {
-      selectedRowKeys,
-      onChange: this.onSelectChange,
-    };
     return (
       <div>
         <div className="table-operations clear-fix">
-          <Button disabled={!hasSelected}>删除</Button>
           <div className="pull-right">
             <SearchInput onSearch={this.onSearch} style={{ width: 200 }} />
           </div>
         </div>
         <Table
-          bordered onChange={this.handleTableChange}
+          bordered size="small"
+          onChange={this.handleTableChange}
+          rowKey={record => record.id}
           columns={columns} dataSource={this.props.users}
-          rowSelection={rowSelection} rowKey={record => record.id}
           pagination={this.state.pagination} loading={this.props.loading}
         />
       </div>

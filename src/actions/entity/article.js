@@ -1,3 +1,4 @@
+import fetch from 'isomorphic-fetch';
 import { CALL_API } from 'redux-api-middleware';
 import { withToken } from 'helpers/auth';
 import { withParams } from 'helpers/utils';
@@ -84,19 +85,11 @@ export function updateArticle(params, id) {
 }
 
 export function deleteArticle(id) {
-  return {
-    [CALL_API]: {
-      endpoint: DELETE_ARTICLE.endpoint(id),
-      method: DELETE_ARTICLE.method,
-      headers: withToken({
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      }),
-      types: [
-        actionTypes.DELETE_ARTICLE_REQUEST,
-        actionTypes.DELETE_ARTICLE_SUCCESS,
-        actionTypes.DELETE_ARTICLE_FAILURE
-      ]
-    }
-  };
+  return fetch(DELETE_ARTICLE.endpoint(id), {
+    method: DELETE_ARTICLE.method,
+    headers: withToken({
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    }),
+  });
 }

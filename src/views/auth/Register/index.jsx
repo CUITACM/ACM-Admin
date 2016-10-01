@@ -44,18 +44,18 @@ class Register extends React.PureComponent {
 
   render() {
     const FormItem = Form.Item;
-    const { getFieldProps } = this.props.form;
-    const nameProps = getFieldProps('name', {
+    const { getFieldDecorator } = this.props.form;
+    const nameDecorator = getFieldDecorator('name', {
       rules: [
         { required: true, message: '请填写真实姓名' }
       ],
     });
-    const nicknameProps = getFieldProps('nickname', {
+    const nicknameDecorator = getFieldDecorator('nickname', {
       rules: [
         { required: true, message: '请填写用户名' }
       ],
     });
-    const passwordProps = getFieldProps('password', {
+    const passwordDecorator = getFieldDecorator('password', {
       rules: [
         { required: true, whitespace: true, message: '请填写密码' }
       ],
@@ -66,13 +66,19 @@ class Register extends React.PureComponent {
         <h1>加入我们</h1>
         <Form horizontal onSubmit={this.onSubmit} className="auth-form">
           <FormItem wrapperCol={formItemCol} >
-            <Input size="large" placeholder="真实姓名" {...nameProps} />
+            {nameDecorator(
+              <Input size="large" placeholder="真实姓名" />
+            )}
           </FormItem>
           <FormItem wrapperCol={formItemCol} >
-            <Input size="large" placeholder="用户名" {...nicknameProps} />
+            {nicknameDecorator(
+              <Input size="large" placeholder="用户名" />
+            )}
           </FormItem>
           <FormItem wrapperCol={formItemCol} >
-            <Input size="large" type="password" placeholder="密码" {...passwordProps} />
+            {passwordDecorator(
+              <Input size="large" type="password" placeholder="密码" />
+            )}
           </FormItem>
           <Row>
             <Col span="18" offset="3">

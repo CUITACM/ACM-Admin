@@ -14,6 +14,11 @@ const NavbarMenu = [
     key: 'admin_articles',
     to: '/admin/articles',
     text: '文章管理'
+  },
+  {
+    key: 'admin_resources',
+    to: '/admin/resources',
+    text: '资源管理'
   }
 ];
 

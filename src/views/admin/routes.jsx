@@ -23,7 +23,11 @@ export default {
         {
           path: 'articles/edit/:id',
           component: require('./ArticleEdit').default
-        }
+        },
+        {
+          path: 'resources',
+          component: require('./AdminResource').default
+        },
       ]);
     }, 'admin');
   }

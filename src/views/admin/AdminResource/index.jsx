@@ -2,11 +2,9 @@ import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Table, Tag, Button, Popconfirm, message } from 'antd';
-import StatusPoint from 'components/StatusPoint';
+import { Table, Button, Popconfirm, message } from 'antd';
 import SearchInput from 'components/SearchInput';
-import * as articleActions from 'actions/entity/article';
-import { ArticleStatus, ArticleType } from 'constants/article';
+import * as resourceActions from 'actions/entity/resource';
 import './style.less';
 
 const getColumns = (operations) => (
@@ -16,56 +14,10 @@ const getColumns = (operations) => (
     sorter: true,
     width: '15%'
   }, {
-    title: '状态',
-    dataIndex: 'status',
-    width: '8%',
-    filters: [
-      { text: '草稿', value: ArticleStatus.DRAFT },
-      { text: '发布', value: ArticleStatus.PUBLISH },
-      { text: '置顶', value: ArticleStatus.PINNED }
-    ],
-    render: status => {
-      switch (status) {
-        case 1:
-          return <StatusPoint color="light-blue">草稿</StatusPoint>;
-        case 2:
-          return <StatusPoint color="green">发布</StatusPoint>;
-        case 3:
-          return <StatusPoint color="red">置顶</StatusPoint>;
-        default:
-          return null;
-      }
-    }
-  }, {
-    title: '类型',
-    dataIndex: 'article_type',
-    width: '10%',
-    filters: [
-      { text: '新闻', value: ArticleType.NEWS },
-      { text: '解题报告', value: ArticleType.SOLUTION }
-    ],
-    render: type => {
-      switch (type) {
-        case 'News':
-          return <Tag color="blue">新闻</Tag>;
-        case 'Solution':
-          return <Tag color="green">解题报告</Tag>;
-        default:
-          return null;
-      }
-    }
-  }, {
-    title: '作者',
-    dataIndex: 'user.name',
-    width: '10%',
-  }, {
     title: '创建时间',
     dataIndex: 'created_at',
     sorter: true,
     width: '15%'
-  }, {
-    title: '正文',
-    dataIndex: 'content'
   }, {
     title: '操作',
     key: 'operation',
@@ -84,7 +36,7 @@ const getColumns = (operations) => (
   }]
 );
 
-class AdminArtcile extends React.PureComponent {
+class AdminResource extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -96,10 +48,7 @@ class AdminArtcile extends React.PureComponent {
   }
 
   componentDidMount() {
-    this.props.fetchArticles({
-      sort_field: 'created_at',
-      sort_order: 'descend'
-    });
+    this.props.fetchResources();
   }
 
   onDelete(record) {
@@ -113,7 +62,7 @@ class AdminArtcile extends React.PureComponent {
       .then((response) => {
         if (response.error_code === 0) {
           message.success('删除成功');
-          this.props.fetchArticles();
+          this.props.fetchResources();
         }
       });
   }
@@ -121,7 +70,7 @@ class AdminArtcile extends React.PureComponent {
   onSearch(value) {
     const { pagination } = this.props;
     this.setState({ searchKey: value });
-    this.props.fetchArticles({
+    this.props.fetchResources({
       page: pagination.current,
       per: pagination.pageSize,
       search: value
@@ -139,7 +88,7 @@ class AdminArtcile extends React.PureComponent {
       params.sort_order = sorter.order;
     }
     console.log(filters);
-    this.props.fetchArticles({
+    this.props.fetchResources({
       ...params,
       filters
     });
@@ -166,7 +115,7 @@ class AdminArtcile extends React.PureComponent {
           bordered size="small"
           onChange={this.handleTableChange}
           rowKey={record => record.id}
-          columns={columns} dataSource={this.props.articles}
+          columns={columns} dataSource={this.props.resources}
           pagination={this.props.pagination} loading={this.props.loading}
         />
       </div>
@@ -174,34 +123,34 @@ class AdminArtcile extends React.PureComponent {
   }
 }
 
-AdminArtcile.contextTypes = {
+AdminResource.contextTypes = {
   router: PropTypes.object.isRequired
 };
 
-AdminArtcile.propTypes = {
-  articles: PropTypes.array.isRequired,
+AdminResource.propTypes = {
+  resources: PropTypes.array.isRequired,
   pagination: PropTypes.object.isRequired,
   loading: PropTypes.bool.isRequired,
-  fetchArticles: PropTypes.func.isRequired
+  fetchResources: PropTypes.func.isRequired
 };
 
 function mapStateToProps(state) {
-  const articleState = state.entity.article;
+  const resourceState = state.entity.resource;
   return {
-    articles: articleState.data || [],
+    resources: resourceState.data || [],
     pagination: {
-      total: articleState.pagination.total_count,
-      current: articleState.pagination.current_page,
-      pageSize: articleState.pageSize
+      total: resourceState.pagination.total_count,
+      current: resourceState.pagination.current_page,
+      pageSize: resourceState.pageSize
     },
-    loading: articleState.waitFetch
+    loading: resourceState.waitFetch
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    fetchArticles: bindActionCreators(articleActions.fetchArticles, dispatch)
+    fetchResources: bindActionCreators(resourceActions.fetchResources, dispatch)
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AdminArtcile);
+export default connect(mapStateToProps, mapDispatchToProps)(AdminResource);

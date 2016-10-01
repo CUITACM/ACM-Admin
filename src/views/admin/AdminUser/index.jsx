@@ -5,14 +5,13 @@ import { Table, Tag } from 'antd';
 import { API_ROOT } from 'constants/endpoints';
 import SearchInput from 'components/SearchInput';
 import * as userActions from 'actions/entity/user';
-
 import './style.less';
 
 const columns = [{
   title: '头像',
   dataIndex: 'avatar',
   width: '70px',
-  render: avatar => <img alt="avatar" src={API_ROOT + avatar} />
+  render: avatar => <img alt="avatar" src={API_ROOT + avatar.thumb} />
 }, {
   title: '姓名',
   dataIndex: 'name',

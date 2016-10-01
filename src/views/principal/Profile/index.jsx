@@ -32,11 +32,10 @@ class Profile extends React.PureComponent {
     return (
       <div className="profile-container">
         <ProfileCard width={240} user={user} actions={actions} />
-        <div className="profile-tab" >
+        <div className="profile-tab">
           <Tabs defaultActiveKey="1">
-            <TabPane tab="信息" key="1">选项卡三内容</TabPane>
-            <TabPane tab="文章" key="2">选项卡一内容</TabPane>
-            <TabPane tab="提交" key="3">选项卡二内容</TabPane>
+            <TabPane tab="文章" key="1">选项卡一内容</TabPane>
+            <TabPane tab="提交" key="2">选项卡二内容</TabPane>
           </Tabs>
         </div>
       </div>

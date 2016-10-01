@@ -49,13 +49,13 @@ class Login extends React.PureComponent {
 
   render() {
     const FormItem = Form.Item;
-    const { getFieldProps } = this.props.form;
-    const nicknameProps = getFieldProps('nickname', {
+    const { getFieldDecorator } = this.props.form;
+    const nicknameDecorator = getFieldDecorator('nickname', {
       rules: [
         { required: true, message: '请填写用户名或学号或邮箱' }
       ],
     });
-    const passwordProps = getFieldProps('password', {
+    const passwordDecorator = getFieldDecorator('password', {
       rules: [
         { required: true, whitespace: true, message: '请填写密码' }
       ],
@@ -66,10 +66,14 @@ class Login extends React.PureComponent {
         <h1>登录</h1>
         <Form horizontal onSubmit={this.onSubmit} className="auth-form">
           <FormItem wrapperCol={formItemCol} >
-            <Input size="large" placeholder="用户名或学号或邮箱" {...nicknameProps} />
+            {nicknameDecorator(
+              <Input size="large" placeholder="用户名或学号或邮箱" />
+            )}
           </FormItem>
           <FormItem wrapperCol={formItemCol} >
-            <Input size="large" type="password" placeholder="密码" {...passwordProps} />
+            {passwordDecorator(
+              <Input size="large" type="password" placeholder="密码" />
+            )}
           </FormItem>
           <Row>
             <Col span="18" offset="3">

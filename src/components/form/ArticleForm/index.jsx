@@ -38,12 +38,12 @@ class ArticleForm extends React.PureComponent {
 
   render() {
     const { article } = this.props;
-    const { getFieldProps } = this.props.form;
+    const { getFieldDecorator } = this.props.form;
     const formItemLayout = {
       labelCol: { span: 4 },
       wrapperCol: { span: 16 },
     };
-    const titleProps = getFieldProps('title', {
+    const titleDecorator = getFieldDecorator('title', {
       initialValue: article && article.title,
       rules: [
         { required: true, message: '请填写新闻标题' }
@@ -52,7 +52,9 @@ class ArticleForm extends React.PureComponent {
     return (
       <Form horizontal onSubmit={this.onSubmit}>
         <FormItem {...formItemLayout} label="标题">
-          <Input size="default" placeholder="标题" {...titleProps} />
+          {titleDecorator(
+            <Input size="default" placeholder="标题" />
+          )}
         </FormItem>
         <FormItem {...formItemLayout} label="标签">
           <TagInput

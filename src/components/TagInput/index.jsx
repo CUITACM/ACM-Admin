@@ -43,6 +43,7 @@ export default class TagInput extends React.PureComponent {
   renderPopoverContent() {
     const onTagAdd = () => {
       const value = this.state.newTagValue.trim();
+      if (!value) return;
       if (this.state.tags.indexOf(value) === -1) {
         const newTags = this.state.tags.concat([value]);
         this.setState({
@@ -62,7 +63,10 @@ export default class TagInput extends React.PureComponent {
           onChange={(e) => this.setState({ newTagValue: e.target.value })}
         />
         <div className="ant-input-group-wrap">
-          <Button className="tag-create-btn" onClick={onTagAdd} >
+          <Button
+            className="tag-create-btn" onClick={onTagAdd}
+            disabled={!this.state.newTagValue}
+          >
             添加
           </Button>
         </div>

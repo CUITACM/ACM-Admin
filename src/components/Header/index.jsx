@@ -80,7 +80,8 @@ class Header extends React.PureComponent {
 
   render() {
     const { currentUser } = this.props;
-    const avatarUrl = `${API_ROOT}${currentUser.avatar}`;
+    const avatar = currentUser.avatar;
+    const avatarUrl = `${API_ROOT}${avatar && avatar.thumb}`;
     return (
       <header className="layout-header">
         <div className="header-wrapper">
@@ -91,7 +92,7 @@ class Header extends React.PureComponent {
               <li>
                 <Dropdown overlay={this.renderDropdownMenu()} trigger={['click']}>
                   <a className="ant-dropdown-link" href="#app-root">
-                    <img alt="avatar" src={avatarUrl} />
+                    {avatar ? <img alt="avatar" src={avatarUrl} /> : null}
                     {currentUser.name} <Icon type="down" />
                   </a>
                 </Dropdown>

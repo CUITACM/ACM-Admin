@@ -8,7 +8,8 @@ export default class AvatarUpload extends React.PureComponent {
 
   render() {
     const { user } = this.props;
-    const avatarUrl = `${API_ROOT}${user.avatar}`;
+    const avatar = user.avatar;
+    const avatarUrl = `${API_ROOT}${avatar && avatar.origin}`;
     const uploadProps = {
       name: 'avatar',
       action: UPDATE_USER.endpoint(user.id),

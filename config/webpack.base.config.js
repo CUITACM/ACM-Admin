@@ -52,7 +52,7 @@ module.exports = {
     fallback: [path.join(__dirname, '../node_modules')],
     alias: {
       'src': path.resolve(__dirname, '../src'),
-      'assets': path.resolve(__dirname, '../src/assets'),
+      'libs': path.resolve(__dirname, '../src/libs'),
       'components': path.resolve(__dirname, '../src/components'),
       'actions': path.resolve(__dirname, '../src/actions'),
       'reducers': path.resolve(__dirname, '../src/reducers'),
@@ -69,6 +69,8 @@ module.exports = {
       manifest: require('../dist/vendor-manifest.json')
     }),
   ],
+
+  devtool: 'source-map',
 
   node: {
     fs: "empty"

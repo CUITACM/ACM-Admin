@@ -77,3 +77,8 @@ export const CREATE_RESOURCE = {
   endpoint: `${API_ROOT}/api/v1/resources`,
   method: HttpMethod.POST
 };
+
+export const DELETE_RESOURCE = {
+  endpoint: (id) => `${API_ROOT}/api/v1/resources/${id}`,
+  method: HttpMethod.DELETE
+};

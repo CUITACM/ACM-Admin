@@ -1,7 +1,8 @@
 import React, { PropTypes } from 'react';
 import { Upload, message } from 'antd';
 import { withToken } from 'helpers/auth';
-import { API_ROOT, UPDATE_USER } from 'constants/endpoints';
+import { withApiRoot } from 'helpers/utils';
+import { UPDATE_USER } from 'constants/endpoints';
 import './style.less';
 
 export default class AvatarUpload extends React.PureComponent {
@@ -9,7 +10,7 @@ export default class AvatarUpload extends React.PureComponent {
   render() {
     const { user } = this.props;
     const avatar = user.avatar;
-    const avatarUrl = `${API_ROOT}${avatar && avatar.origin}`;
+    const avatarUrl = withApiRoot(avatar && avatar.origin);
     const uploadProps = {
       name: 'avatar',
       action: UPDATE_USER.endpoint(user.id),

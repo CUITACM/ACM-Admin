@@ -69,9 +69,7 @@ module.exports = {
       manifest: require('../dist/vendor-manifest.json')
     }),
   ],
-
-  devtool: 'source-map',
-
+  
   node: {
     fs: "empty"
   }

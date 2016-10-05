@@ -28,7 +28,6 @@ export default class Auth extends React.PureComponent {
         <Row className="auth-row" type="flex" justify="space-around" align="middle" >
           <Col className="figure" xs={{ span: 24 }} sm={{ span: 24 }}>
             <h1>CUIT ACM Team</h1>
-            <p>与世界分享你的zhuangbi</p>
           </Col>
           {this.props.children}
         </Row>

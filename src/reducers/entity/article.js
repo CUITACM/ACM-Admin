@@ -1,8 +1,10 @@
 import * as actionTypes from 'constants/actionTypes';
+import { listReducer } from 'reducers/common';
+import { composeReducers } from 'helpers/reducer';
 
 const initState = {
   one: null,
-  data: [],
+  datas: [],
   pageSize: 10,
   pagination: {
     current_page: 1
@@ -17,30 +19,9 @@ const initState = {
   updateErrors: null
 };
 
-export default function article(state = initState, action) {
+function article(state = initState, action) {
   switch (action.type) {
-    // FETCH_ARTICLES
-    case actionTypes.FETCH_ARTICLES_REQUEST:
-      return {
-        ...state,
-        waitFetch: !action.error,
-        fetchErrors: action.error ? action.payload.message : null
-      };
-    case actionTypes.FETCH_ARTICLES_SUCCESS:
-      return {
-        ...state,
-        pagination: action.payload.meta,
-        data: action.payload.articles,
-        waitFetch: false,
-        fetchErrors: null
-      };
-    case actionTypes.FETCH_ARTICLES_FAILURE:
-      return {
-        ...state,
-        waitFetch: false,
-        fetchErrors: action.payload.message
-      };
-    // FETCH_ONE_ARTICLE
+    // fetch one article
     case actionTypes.FETCH_ONE_ARTICLE_REQUEST:
       return {
         ...state,
@@ -60,7 +41,7 @@ export default function article(state = initState, action) {
         waitFetch: false,
         fetchErrors: action.payload.message
       };
-    // CREATE_ARTICLE
+    // create article
     case actionTypes.CREATE_ARTICLE_REQUEST:
       return {
         ...state,
@@ -82,7 +63,7 @@ export default function article(state = initState, action) {
         createSuccess: false,
         createErrors: action.payload.message
       };
-    // UPDATE_ARTICLE
+    // update article
     case actionTypes.UPDATE_ARTICLE_REQUEST:
       return {
         ...state,
@@ -108,3 +89,10 @@ export default function article(state = initState, action) {
       return state;
   }
 }
+
+export default composeReducers(article, listReducer({
+  request: actionTypes.FETCH_ARTICLES_REQUEST,
+  success: actionTypes.FETCH_ARTICLES_SUCCESS,
+  failure: actionTypes.FETCH_ARTICLES_FAILURE
+}));
+

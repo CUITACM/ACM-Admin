@@ -1,8 +1,10 @@
 import * as actionTypes from 'constants/actionTypes';
+import { listReducer } from 'reducers/common';
+import { composeReducers } from 'helpers/reducer';
 
 const initState = {
   one: null,
-  data: [],
+  datas: [],
   pageSize: 10,
   pagination: {
     current_page: 1
@@ -17,30 +19,9 @@ const initState = {
   updateErrors: null
 };
 
-export default function resource(state = initState, action) {
+function resource(state = initState, action) {
   switch (action.type) {
-    // FETCH_RESOURCES
-    case actionTypes.FETCH_RESOURCES_REQUEST:
-      return {
-        ...state,
-        waitFetch: !action.error,
-        fetchErrors: action.error ? action.payload.message : null
-      };
-    case actionTypes.FETCH_RESOURCES_SUCCESS:
-      return {
-        ...state,
-        pagination: action.payload.meta,
-        data: action.payload.articles,
-        waitFetch: false,
-        fetchErrors: null
-      };
-    case actionTypes.FETCH_RESOURCES_FAILURE:
-      return {
-        ...state,
-        waitFetch: false,
-        fetchErrors: action.payload.message
-      };
-    // FETCH_ONE_RESOURCE
+    // fetch one resource
     case actionTypes.FETCH_ONE_RESOURCE_REQUEST:
       return {
         ...state,
@@ -60,8 +41,8 @@ export default function resource(state = initState, action) {
         waitFetch: false,
         fetchErrors: action.payload.message
       };
-    // CREATE_RESOURCE
-    // UPDATE_RESOURCE
+    // create resource
+    // update resource
     case actionTypes.UPDATE_RESOURCE_REQUEST:
       return {
         ...state,
@@ -87,3 +68,9 @@ export default function resource(state = initState, action) {
       return state;
   }
 }
+
+export default composeReducers(resource, listReducer({
+  request: actionTypes.FETCH_RESOURCES_REQUEST,
+  success: actionTypes.FETCH_RESOURCES_SUCCESS,
+  failure: actionTypes.FETCH_RESOURCES_FAILURE
+}));

@@ -1,40 +1,12 @@
 import React, { PropTypes } from 'react';
-import { Link } from 'react-router';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Table, Button, Popconfirm, message } from 'antd';
-import SearchInput from 'components/SearchInput';
+import { Row, Col, Card, Button, Popconfirm, message } from 'antd';
+import { withApiRoot } from 'helpers/utils';
+import { ResourceUsageHuman } from 'constants/resource';
 import * as resourceActions from 'actions/entity/resource';
+import SearchInput from 'components/SearchInput';
 import './style.less';
-
-const getColumns = (operations) => (
-  [{
-    title: '标题',
-    dataIndex: 'title',
-    sorter: true,
-    width: '15%'
-  }, {
-    title: '创建时间',
-    dataIndex: 'created_at',
-    sorter: true,
-    width: '15%'
-  }, {
-    title: '操作',
-    key: 'operation',
-    render: (text, record) => (
-      <span>
-        <Link to={`/admin/articles/edit/${record.id}`}>修改</Link>
-        <span className="ant-divider" />
-        <Popconfirm
-          title="确定要删除吗？" placement="left"
-          onConfirm={() => operations.onDelete(record)}
-        >
-          <a>删除</a>
-        </Popconfirm>
-      </span>
-    ),
-  }]
-);
 
 class AdminResource extends React.PureComponent {
   constructor(props) {
@@ -51,19 +23,25 @@ class AdminResource extends React.PureComponent {
     this.props.fetchResources();
   }
 
-  onDelete(record) {
-    articleActions.deleteArticle(record.id)
-      .then((response) => {
-        if (response.status >= 400) {
-          throw new Error('Bad response from server');
+  onDelete(id) {
+    resourceActions.deleteResource(id)
+      .then(response => {
+        if (response.status >= 200 && response.status < 300) {
+          return response.json();
         }
-        return response.json();
+        throw new Error('删除失败');
       })
-      .then((response) => {
+      .then(response => {
         if (response.error_code === 0) {
           message.success('删除成功');
           this.props.fetchResources();
+        } else {
+          throw new Error('删除失败');
         }
+      })
+      .catch(error => {
+        console.log(error);
+        message.error(error.message);
       });
   }
 
@@ -94,10 +72,34 @@ class AdminResource extends React.PureComponent {
     });
   }
 
+  renderResourceList() {
+    return this.props.resources.map(data => (
+      <Col key={data.id} xs={24} sm={8} md={8} lg={6}>
+        <Card bodyStyle={{ padding: '15px' }}>
+          <div className="card-content">
+            <div className="card-preview">
+              <img alt={data.filename} src={withApiRoot(data.file.thumb)} />
+            </div>
+            <aside className="card-details">
+              <p className="card-id">{data.filename}</p>
+              <p>用途: {ResourceUsageHuman[data.usage]}</p>
+              <p>大小: {data.file_size}</p>
+            </aside>
+            <div className="card-operations">
+              <Popconfirm
+                title="确定要删除吗？" placement="right"
+                onConfirm={() => this.onDelete(data.id)}
+              >
+                <Button size="small" icon="delete">删除</Button>
+              </Popconfirm>
+            </div>
+          </div>
+        </Card>
+      </Col>
+    ));
+  }
+
   render() {
-    const columns = getColumns({
-      onDelete: this.onDelete
-    });
     return (
       <div>
         <div className="table-operations clear-fix">
@@ -105,19 +107,15 @@ class AdminResource extends React.PureComponent {
             type="primary"
             onClick={() => this.context.router.push('/admin/articles/create')}
           >
-            发布新闻
+            上传图片
           </Button>
           <div className="pull-right">
             <SearchInput onSearch={this.onSearch} style={{ width: 200 }} />
           </div>
         </div>
-        <Table
-          bordered size="small"
-          onChange={this.handleTableChange}
-          rowKey={record => record.id}
-          columns={columns} dataSource={this.props.resources}
-          pagination={this.props.pagination} loading={this.props.loading}
-        />
+        <Row>
+          {this.renderResourceList()}
+        </Row>
       </div>
     );
   }
@@ -137,7 +135,7 @@ AdminResource.propTypes = {
 function mapStateToProps(state) {
   const resourceState = state.entity.resource;
   return {
-    resources: resourceState.data || [],
+    resources: resourceState.datas || [],
     pagination: {
       total: resourceState.pagination.total_count,
       current: resourceState.pagination.current_page,

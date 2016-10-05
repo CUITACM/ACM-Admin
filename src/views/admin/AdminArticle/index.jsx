@@ -188,7 +188,7 @@ AdminArtcile.propTypes = {
 function mapStateToProps(state) {
   const articleState = state.entity.article;
   return {
-    articles: articleState.data || [],
+    articles: articleState.datas || [],
     pagination: {
       total: articleState.pagination.total_count,
       current: articleState.pagination.current_page,

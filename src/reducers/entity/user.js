@@ -1,4 +1,6 @@
 import * as actionTypes from 'constants/actionTypes';
+import { listReducer } from 'reducers/common';
+import { composeReducers } from 'helpers/reducer';
 
 const initState = {
   one: null,
@@ -14,28 +16,9 @@ const initState = {
   updateErrors: null
 };
 
-export default function user(state = initState, action) {
+function user(state = initState, action) {
   switch (action.type) {
-    case actionTypes.FETCH_USERS_REQUEST:
-      return {
-        ...state,
-        waitFetch: !action.error,
-        fetchErrors: action.error ? action.payload.message : null
-      };
-    case actionTypes.FETCH_USERS_SUCCESS:
-      return {
-        ...state,
-        pagination: action.payload.meta,
-        datas: action.payload.users,
-        waitFetch: false,
-        fetchErrors: null
-      };
-    case actionTypes.FETCH_USERS_FAILURE:
-      return {
-        ...state,
-        waitFetch: false,
-        fetchErrors: action.payload.message
-      };
+    // fetch one user
     case actionTypes.FETCH_ONE_USER_REQUEST:
       return {
         ...state,
@@ -55,6 +38,7 @@ export default function user(state = initState, action) {
         waitFetch: false,
         fetchErrors: action.payload.message
       };
+    // update user
     case actionTypes.UPDATE_USER_REQUEST:
       return {
         ...state,
@@ -82,3 +66,9 @@ export default function user(state = initState, action) {
       return state;
   }
 }
+
+export default composeReducers(user, listReducer({
+  request: actionTypes.FETCH_USERS_REQUEST,
+  success: actionTypes.FETCH_USERS_SUCCESS,
+  failure: actionTypes.FETCH_USERS_FAILURE
+}));

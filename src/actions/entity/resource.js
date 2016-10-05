@@ -4,7 +4,8 @@ import { withToken } from 'helpers/auth';
 import { withParams } from 'helpers/utils';
 import * as actionTypes from 'constants/actionTypes';
 import {
-  FETCH_RESOURCES, FETCH_ONE_ARTICLE, CREATE_RESOURCE
+  FETCH_RESOURCES, FETCH_ONE_ARTICLE, CREATE_RESOURCE,
+  DELETE_RESOURCE
 } from 'constants/endpoints';
 
 export function fetchResources({ page = 1, per = 20, ...args } = {}) {
@@ -54,5 +55,16 @@ export function createResource(params) {
     method: CREATE_RESOURCE.method,
     headers: withToken(),
     body: data,
+  });
+}
+
+
+export function deleteResource(id) {
+  return fetch(DELETE_RESOURCE.endpoint(id), {
+    method: DELETE_RESOURCE.method,
+    headers: withToken({
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    }),
   });
 }

@@ -1,46 +1,46 @@
 
 // auth
-export const LOGIN_REQUEST = 'LOGIN_REQUEST';
-export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
-export const LOGIN_FAILURE = 'LOGIN_FAILURE';
-export const REGISTER_REQUEST = 'REGISTER_REQUEST';
-export const REGISTER_SUCCESS = 'REGISTER_SUCCESS';
-export const REGISTER_FAILURE = 'REGISTER_FAILURE';
-export const LOAD_CURRENT_USER = 'LOAD_CURRENT_USER';
-export const LOGOUT = 'LOGOUT';
+export const LOGIN_REQUEST = 'auth/login/request';
+export const LOGIN_SUCCESS = 'auth/login/success';
+export const LOGIN_FAILURE = 'auth/login/failure';
+export const REGISTER_REQUEST = 'auth/register/request';
+export const REGISTER_SUCCESS = 'auth/register/success';
+export const REGISTER_FAILURE = 'auth/register/failure';
+export const LOAD_CURRENT_USER = 'auth/load_current_user';
+export const LOGOUT = 'auth/logout';
 
 // users
-export const FETCH_USERS_REQUEST = 'FETCH_USERS_REQUEST';
-export const FETCH_USERS_SUCCESS = 'FETCH_USERS_SUCCESS';
-export const FETCH_USERS_FAILURE = 'FETCH_USERS_FAILURE';
-export const FETCH_ONE_USER_REQUEST = 'FETCH_ONE_USER_REQUEST';
-export const FETCH_ONE_USER_SUCCESS = 'FETCH_ONE_USER_SUCCESS';
-export const FETCH_ONE_USER_FAILURE = 'FETCH_ONE_USER_FAILURE';
-export const UPDATE_USER_REQUEST = 'UPDATE_USER_REQUEST';
-export const UPDATE_USER_SUCCESS = 'UPDATE_USER_SUCCESS';
-export const UPDATE_USER_FAILURE = 'UPDATE_USER_FAILURE';
+export const FETCH_USERS_REQUEST = 'users/fetch/request';
+export const FETCH_USERS_SUCCESS = 'users/fetch/success';
+export const FETCH_USERS_FAILURE = 'users/fetch/failure';
+export const FETCH_ONE_USER_REQUEST = 'users/fetch/one/request';
+export const FETCH_ONE_USER_SUCCESS = 'users/fetch/one/success';
+export const FETCH_ONE_USER_FAILURE = 'users/fetch/one/failure';
+export const UPDATE_USER_REQUEST = 'users/update/request';
+export const UPDATE_USER_SUCCESS = 'users/update/success';
+export const UPDATE_USER_FAILURE = 'users/update/failure';
 
 // articles
-export const FETCH_ARTICLES_REQUEST = 'FETCH_ARTICLES_REQUEST';
-export const FETCH_ARTICLES_SUCCESS = 'FETCH_ARTICLES_SUCCESS';
-export const FETCH_ARTICLES_FAILURE = 'FETCH_ARTICLES_FAILURE';
-export const FETCH_ONE_ARTICLE_REQUEST = 'FETCH_ONE_ARTICLE_REQUEST';
-export const FETCH_ONE_ARTICLE_SUCCESS = 'FETCH_ONE_ARTICLE_SUCCESS';
-export const FETCH_ONE_ARTICLE_FAILURE = 'FETCH_ONE_ARTICLE_FAILURE';
-export const CREATE_ARTICLE_REQUEST = 'CREATE_ARTICLE_REQUEST';
-export const CREATE_ARTICLE_SUCCESS = 'CREATE_ARTICLE_SUCCESS';
-export const CREATE_ARTICLE_FAILURE = 'CREATE_ARTICLE_FAILURE';
-export const UPDATE_ARTICLE_REQUEST = 'UPDATE_ARTICLE_REQUEST';
-export const UPDATE_ARTICLE_SUCCESS = 'UPDATE_ARTICLE_SUCCESS';
-export const UPDATE_ARTICLE_FAILURE = 'UPDATE_ARTICLE_FAILURE';
+export const FETCH_ARTICLES_REQUEST = 'articles/fetch/request';
+export const FETCH_ARTICLES_SUCCESS = 'articles/fetch/success';
+export const FETCH_ARTICLES_FAILURE = 'articles/fetch/failure';
+export const FETCH_ONE_ARTICLE_REQUEST = 'articles/fetch/one/request';
+export const FETCH_ONE_ARTICLE_SUCCESS = 'articles/fetch/one/success';
+export const FETCH_ONE_ARTICLE_FAILURE = 'articles/fetch/one/failure';
+export const CREATE_ARTICLE_REQUEST = 'articles/create/request';
+export const CREATE_ARTICLE_SUCCESS = 'articles/create/success';
+export const CREATE_ARTICLE_FAILURE = 'articles/create/failure';
+export const UPDATE_ARTICLE_REQUEST = 'articles/update/request';
+export const UPDATE_ARTICLE_SUCCESS = 'articles/update/success';
+export const UPDATE_ARTICLE_FAILURE = 'articles/update/failure';
 
 // resources
-export const FETCH_RESOURCES_REQUEST = 'FETCH_RESOURCES_REQUEST';
-export const FETCH_RESOURCES_SUCCESS = 'FETCH_RESOURCES_SUCCESS';
-export const FETCH_RESOURCES_FAILURE = 'FETCH_RESOURCES_FAILURE';
-export const FETCH_ONE_RESOURCE_REQUEST = 'FETCH_ONE_RESOURCE_REQUEST';
-export const FETCH_ONE_RESOURCE_SUCCESS = 'FETCH_ONE_RESOURCE_SUCCESS';
-export const FETCH_ONE_RESOURCE_FAILURE = 'FETCH_ONE_RESOURCE_FAILURE';
-export const UPDATE_RESOURCE_REQUEST = 'UPDATE_RESOURCE_REQUEST';
-export const UPDATE_RESOURCE_SUCCESS = 'UPDATE_RESOURCE_SUCCESS';
-export const UPDATE_RESOURCE_FAILURE = 'UPDATE_RESOURCE_FAILURE';
+export const FETCH_RESOURCES_REQUEST = 'resources/fetch/request';
+export const FETCH_RESOURCES_SUCCESS = 'resources/fetch/success';
+export const FETCH_RESOURCES_FAILURE = 'resources/fetch/failure';
+export const FETCH_ONE_RESOURCE_REQUEST = 'resources/fetch/one/request';
+export const FETCH_ONE_RESOURCE_SUCCESS = 'resources/fetch/one/success';
+export const FETCH_ONE_RESOURCE_FAILURE = 'resources/fetch/one/failure';
+export const UPDATE_RESOURCE_REQUEST = 'resources/update/request';
+export const UPDATE_RESOURCE_SUCCESS = 'resources/update/request';
+export const UPDATE_RESOURCE_FAILURE = 'resources/update/request';

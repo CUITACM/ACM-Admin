@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Menu, Dropdown, Icon, notification } from 'antd';
 import { isAdmin } from 'helpers/auth';
-import { API_ROOT } from 'constants/endpoints';
+import { withApiRoot } from 'helpers/utils';
 import * as authActions from 'actions/auth';
 import './style.less';
 
@@ -81,7 +81,7 @@ class Header extends React.PureComponent {
   render() {
     const { currentUser } = this.props;
     const avatar = currentUser.avatar;
-    const avatarUrl = `${API_ROOT}${avatar && avatar.thumb}`;
+    const avatarUrl = withApiRoot(avatar && avatar.thumb);
     return (
       <header className="layout-header">
         <div className="header-wrapper">

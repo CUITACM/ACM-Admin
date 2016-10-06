@@ -1,13 +1,13 @@
 import { CALL_API } from 'redux-api-middleware';
-import { LOGIN, REGISTER } from 'constants/endpoints';
+import * as api from 'constants/endpoints';
 import * as actionTypes from 'constants/actionTypes';
 import * as authHelpers from 'helpers/auth';
 
 export function login(nickname, password) {
   return {
     [CALL_API]: {
-      endpoint: LOGIN.endpoint,
-      method: LOGIN.method,
+      endpoint: api.LOGIN.endpoint,
+      method: api.LOGIN.method,
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
@@ -27,8 +27,8 @@ export function login(nickname, password) {
 export function register(params) {
   return {
     [CALL_API]: {
-      endpoint: REGISTER.endpoint,
-      method: REGISTER.method,
+      endpoint: api.REGISTER.endpoint,
+      method: api.REGISTER.method,
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'

@@ -12,7 +12,9 @@ new WebpackDevServer(webpack(config), {
   stats: {
     colors: true,
     chunks: false,
-    errorDetails: true
+    children: false,
+    errorDetails: true,
+    assetsSort: 'name'
   }
 }).listen(config.devPort, 'localhost', function (err, result) {
   if (err) {

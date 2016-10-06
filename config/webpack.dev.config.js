@@ -15,6 +15,18 @@ Object.keys(baseConfig.entry).forEach(function (name) {
 });
 
 module.exports = webpackMerge(baseConfig, {
+  module: {
+    loaders: [
+      {
+        test: /\.css$/,
+        loaders: ['style', 'css', 'postcss']
+      },
+      {
+        test: /\.less$/,
+        loaders: ['style', 'css', 'postcss', 'less']
+      }
+    ]
+  },
   plugins: [
     new DashboardPlugin(),
     new webpack.HotModuleReplacementPlugin(),

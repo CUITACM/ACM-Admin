@@ -1,5 +1,8 @@
+.table-operations {
+  
+}
 
-.ant-card-body .card-content {
+.ant-card-body {
   position: relative;
   &:after {
     display: table;
@@ -9,28 +12,37 @@
   .card-preview {
     float: left;
     width: 35%;
+    padding: 10px;
     img {
       width: 100%;
       display: block;
       border-radius: 5px;
     }
   }
-  .card-id {
-    color: #222;
-    font-size: 16px;
-  }
   .card-details {
     position: relative;
     margin-left: 35%;
-    padding: 0 12px;
-    padding-bottom: 30px;
+    padding: 10px 0 30px;
+    .card-id {
+      color: #222;
+      font-size: 16px;
+    }
   }
   .card-operations {
     position: absolute;
-    bottom: 0;
+    bottom: 10px;
     left: 0;
     margin-left: 35%;
     display: block;
-    padding: 0 12px;
+    padding: 0;
+  }
+}
+
+.page-row {
+  padding: 10px;
+  text-align: right;
+  .ant-pagination {
+    display: inline-block;
+    vertical-align: middle;
   }
 }

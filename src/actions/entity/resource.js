@@ -1,20 +1,17 @@
-import fetch from 'isomorphic-fetch';
 import { CALL_API } from 'redux-api-middleware';
 import { withToken } from 'helpers/auth';
 import { withParams } from 'helpers/utils';
+import request from 'helpers/request';
 import * as actionTypes from 'constants/actionTypes';
-import {
-  FETCH_RESOURCES, FETCH_ONE_ARTICLE, CREATE_RESOURCE,
-  DELETE_RESOURCE
-} from 'constants/endpoints';
+import * as api from 'constants/endpoints';
 
 export function fetchResources({ page = 1, per = 20, ...args } = {}) {
   return {
     [CALL_API]: {
-      endpoint: withParams(FETCH_RESOURCES.endpoint, {
+      endpoint: withParams(api.FETCH_RESOURCES.endpoint, {
         page, per, ...args
       }),
-      method: FETCH_RESOURCES.method,
+      method: api.FETCH_RESOURCES.method,
       headers: withToken({
         'Accept': 'application/json',
         'Content-Type': 'application/json'
@@ -31,8 +28,8 @@ export function fetchResources({ page = 1, per = 20, ...args } = {}) {
 export function fetchOneResource(id) {
   return {
     [CALL_API]: {
-      endpoint: FETCH_ONE_ARTICLE.endpoint(id),
-      method: FETCH_ONE_ARTICLE.method,
+      endpoint: api.FETCH_ONE_ARTICLE.endpoint(id),
+      method: api.FETCH_ONE_ARTICLE.method,
       headers: withToken({
         'Accept': 'application/json',
         'Content-Type': 'application/json'
@@ -51,8 +48,8 @@ export function createResource(params) {
   Object.keys(params).forEach(key => {
     data.append(key, params[key]);
   });
-  return fetch(CREATE_RESOURCE.endpoint, {
-    method: CREATE_RESOURCE.method,
+  return request(api.CREATE_RESOURCE.endpoint, {
+    method: api.CREATE_RESOURCE.method,
     headers: withToken(),
     body: data,
   });
@@ -60,8 +57,8 @@ export function createResource(params) {
 
 
 export function deleteResource(id) {
-  return fetch(DELETE_RESOURCE.endpoint(id), {
-    method: DELETE_RESOURCE.method,
+  return request(api.DELETE_RESOURCE.endpoint(id), {
+    method: api.DELETE_RESOURCE.method,
     headers: withToken({
       'Accept': 'application/json',
       'Content-Type': 'application/json'

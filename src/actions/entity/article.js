@@ -1,20 +1,17 @@
-import fetch from 'isomorphic-fetch';
 import { CALL_API } from 'redux-api-middleware';
 import { withToken } from 'helpers/auth';
 import { withParams } from 'helpers/utils';
+import request from 'helpers/request';
 import * as actionTypes from 'constants/actionTypes';
-import {
-  FETCH_ARTICLES, FETCH_ONE_ARTICLE, CREATE_ARTICLE,
-  UPDATE_ARTICLE, DELETE_ARTICLE
-} from 'constants/endpoints';
+import * as api from 'constants/endpoints';
 
 export function fetchArticles({ page = 1, per = 20, ...args } = {}) {
   return {
     [CALL_API]: {
-      endpoint: withParams(FETCH_ARTICLES.endpoint, {
+      endpoint: withParams(api.FETCH_ARTICLES.endpoint, {
         page, per, ...args
       }),
-      method: FETCH_ARTICLES.method,
+      method: api.FETCH_ARTICLES.method,
       headers: withToken({
         'Accept': 'application/json',
         'Content-Type': 'application/json'
@@ -31,8 +28,8 @@ export function fetchArticles({ page = 1, per = 20, ...args } = {}) {
 export function fetchOneArticle(id) {
   return {
     [CALL_API]: {
-      endpoint: FETCH_ONE_ARTICLE.endpoint(id),
-      method: FETCH_ONE_ARTICLE.method,
+      endpoint: api.FETCH_ONE_ARTICLE.endpoint(id),
+      method: api.FETCH_ONE_ARTICLE.method,
       headers: withToken({
         'Accept': 'application/json',
         'Content-Type': 'application/json'
@@ -49,8 +46,8 @@ export function fetchOneArticle(id) {
 export function createArticle(params) {
   return {
     [CALL_API]: {
-      endpoint: CREATE_ARTICLE.endpoint,
-      method: CREATE_ARTICLE.method,
+      endpoint: api.CREATE_ARTICLE.endpoint,
+      method: api.CREATE_ARTICLE.method,
       headers: withToken({
         'Accept': 'application/json',
         'Content-Type': 'application/json'
@@ -68,8 +65,8 @@ export function createArticle(params) {
 export function updateArticle(params, id) {
   return {
     [CALL_API]: {
-      endpoint: UPDATE_ARTICLE.endpoint(id),
-      method: UPDATE_ARTICLE.method,
+      endpoint: api.UPDATE_ARTICLE.endpoint(id),
+      method: api.UPDATE_ARTICLE.method,
       headers: withToken({
         'Accept': 'application/json',
         'Content-Type': 'application/json'
@@ -85,8 +82,8 @@ export function updateArticle(params, id) {
 }
 
 export function deleteArticle(id) {
-  return fetch(DELETE_ARTICLE.endpoint(id), {
-    method: DELETE_ARTICLE.method,
+  return request(api.DELETE_ARTICLE.endpoint(id), {
+    method: api.DELETE_ARTICLE.method,
     headers: withToken({
       'Accept': 'application/json',
       'Content-Type': 'application/json'

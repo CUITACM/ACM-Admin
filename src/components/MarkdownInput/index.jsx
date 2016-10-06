@@ -7,14 +7,9 @@ import { withApiRoot } from 'helpers/utils';
 import { ResourceUsage } from 'constants/resource.js';
 import * as resourceActions from 'actions/entity/resource';
 import UploadForm from 'components/form/UploadForm';
-
 import './style.less';
 
 const TabPane = Tabs.TabPane;
-
-function uploadAndDrawImage(editor, component) {
-  component.setState({ showModal: true });
-}
 
 export default class MarkdownInput extends React.PureComponent {
   constructor(props) {
@@ -34,7 +29,7 @@ export default class MarkdownInput extends React.PureComponent {
       spellChecker: false,
       customToolbar: [{
         name: 'image',
-        action: (editor) => uploadAndDrawImage(editor, this),
+        action: () => this.setState({ showModal: true }),
         className: 'fa fa-picture-o',
         title: 'Upload & Insert Image',
         default: true
@@ -53,12 +48,6 @@ export default class MarkdownInput extends React.PureComponent {
 
   onImageUpload(params) {
     return resourceActions.createResource(params)
-      .then(response => {
-        if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        }
-        throw new Error('上传失败');
-      })
       .then(response => {
         if (response.error_code === 0) {
           return response;

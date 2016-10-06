@@ -12,7 +12,7 @@ module.exports = {
     publicPath: '/',
     path: path.resolve(__dirname, '../dist'),
     filename: '[name].bundle.js',
-    chunkFilename: '[name].chunk.js',
+    chunkFilename: 'chunks/[name].chunk.js',
   },
 
   module: {
@@ -21,14 +21,6 @@ module.exports = {
         test: /\.jsx?$/,
         loader: 'babel',
         exclude: /node_modules/
-      },
-      {
-        test: /\.css$/,
-        loaders: ['style', 'css', 'postcss']
-      },
-      {
-        test: /\.less$/,
-        loaders: ['style', 'css', 'postcss', 'less']
       },
       {
         test: /\.(gif|jpg|png)\??.*$/,
@@ -66,8 +58,8 @@ module.exports = {
   plugins: [
     new webpack.DllReferencePlugin({
       context: path.join(__dirname, '../'),
-      manifest: require('../dist/vendor-manifest.json')
-    }),
+      manifest: require('../dist/vendor_manifest.json')
+    })
   ],
   
   node: {

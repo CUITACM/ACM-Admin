@@ -70,7 +70,7 @@ class UploadForm extends React.PureComponent {
         <FormItem {...formItemLayout} label="文件">
           <Upload {...uploadProps} >
             <Button type="ghost">
-              <Icon type="upload" /> 点击上传
+              <Icon type="upload" /> 添加文件
             </Button>
           </Upload>
         </FormItem>

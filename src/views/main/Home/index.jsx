@@ -1,9 +1,16 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
+
 
 export default class Home extends React.PureComponent {
   render() {
     return (
-      <h2>Home</h2>
+      <div>
+        Home
+      </div>
     );
   }
 }
+
+Home.propTypes = {
+  children: PropTypes.element
+};

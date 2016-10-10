@@ -7,7 +7,7 @@ const RootRoute = {
   childRoutes: [{
     path: '/',
     indexRoute: {
-      onEnter: (_, replace) => replace('/home'),
+      onEnter: (_, replace) => replace('/index/home'),
     },
     childRoutes: [
       mainRoute,

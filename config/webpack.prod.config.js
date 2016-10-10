@@ -6,6 +6,7 @@ var baseConfig = require('./webpack.base.config');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var CompressionPlugin = require("compression-webpack-plugin");
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
+var AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin');
 
 process.env.NODE_ENV = 'production';
 
@@ -43,7 +44,13 @@ module.exports = webpackMerge(baseConfig, {
         collapseWhitespace: true
       }
     }),
-    new ExtractTextPlugin("[name].[hash:7].css"),
+    new AddAssetHtmlPlugin({
+      filepath: require.resolve('../dist/vendor.bundle.js'),
+      publicPath: '/',
+      hash: true,
+      includeSourcemap: false
+    }),
+    new ExtractTextPlugin("[name].bundle.[hash:7].css"),
     new webpack.optimize.DedupePlugin(),
     new webpack.optimize.OccurrenceOrderPlugin(),
     new webpack.optimize.UglifyJsPlugin({

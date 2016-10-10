@@ -18,7 +18,7 @@ module.exports = {
   output: {
     path: path.join(__dirname, '../dist'),
     publicPath: '',
-    filename: '[name].dll.js',
+    filename: '[name].bundle.js',
     /**
      * output.library
      * 将会定义为 window.${output.library}

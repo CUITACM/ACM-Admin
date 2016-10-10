@@ -27,6 +27,7 @@ export default class ProfileCard extends React.PureComponent {
 
   renderUserInfo(user) {
     const notWrite = '未填';
+    const userInfo = user.user_info || {};
     return (
       <ul className="user-info">
         <li>
@@ -35,15 +36,17 @@ export default class ProfileCard extends React.PureComponent {
         </li>
         <li>
           <span className="icon"><Icon type="team" /></span>
-          <span className="content">{user.stu_id || notWrite}</span>
+          <span className="content">{userInfo.stu_id || notWrite}</span>
         </li>
         <li>
           <span className="icon"><Icon type="mail" /></span>
-          <span className="content">{user.email || notWrite}</span>
+          <span className="content">{userInfo.email || notWrite}</span>
         </li>
         <li>
           <span className="icon"><Icon type="environment" /></span>
-          <span className="content">{user.school} {user.college} {user.major} {user.grade}</span>
+          <span className="content">
+            {userInfo.school} {userInfo.college} {userInfo.major} {userInfo.grade}
+          </span>
         </li>
       </ul>
     );

@@ -3,9 +3,14 @@ import Header from 'components/Header';
 import Footer from 'components/Footer';
 
 const NavbarMenu = [
+  {
+    key: 'home',
+    to: '/index/home',
+    text: '主页'
+  },
 ];
 
-export default function PrincipalApp(props) {
+export default function IndexApp(props) {
   return (
     <div>
       <Header menus={NavbarMenu} />
@@ -17,6 +22,6 @@ export default function PrincipalApp(props) {
   );
 }
 
-PrincipalApp.propTypes = {
+IndexApp.propTypes = {
   children: PropTypes.element.isRequired
 };

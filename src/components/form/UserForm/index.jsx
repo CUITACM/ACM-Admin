@@ -36,7 +36,7 @@ class UserForm extends React.PureComponent {
       ]
     });
     const emailDecorator = getFieldDecorator('email', {
-      initialValue: user.email,
+      initialValue: user.user_info.email,
       rules: [
         { required: true, whitespace: true, message: '请填写邮箱' },
         { type: 'email', message: '请输入正确的邮箱地址' }
@@ -49,19 +49,19 @@ class UserForm extends React.PureComponent {
       ],
     });
     const stuIdDecorator = getFieldDecorator('stu_id', {
-      initialValue: user.stu_id
+      initialValue: user.user_info.stu_id
     });
     const schoolDecorator = getFieldDecorator('school', {
-      initialValue: user.school
+      initialValue: user.user_info.school
     });
     const collegeDecorator = getFieldDecorator('college', {
-      initialValue: user.college
+      initialValue: user.user_info.college
     });
     const majorDecorator = getFieldDecorator('major', {
-      initialValue: user.major
+      initialValue: user.user_info.major
     });
     const gradeDecorator = getFieldDecorator('grade', {
-      initialValue: user.grade
+      initialValue: user.user_info.grade
     });
     const descriptionDecorator = getFieldDecorator('description', {
       initialValue: user.description

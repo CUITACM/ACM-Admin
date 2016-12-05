@@ -1,4 +1,3 @@
-import { API_ROOT } from 'constants/endpoints';
 
 export function type(obj) {
   return obj == null ? String(obj) : toString.call(obj) || 'object';
@@ -46,8 +45,4 @@ export function withParams(url, parameters = {}) {
     ret += `?${queryString}`;
   }
   return ret;
-}
-
-export function withApiRoot(url) {
-  return `${API_ROOT}${url == null ? '' : url}`;
 }

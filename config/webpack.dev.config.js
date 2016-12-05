@@ -4,7 +4,6 @@ var webpackMerge = require('webpack-merge');
 var baseConfig = require('./webpack.base.config');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var DashboardPlugin = require('webpack-dashboard/plugin');
-var AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin');
 
 process.env.NODE_ENV = 'development';
 
@@ -36,11 +35,6 @@ module.exports = webpackMerge(baseConfig, {
       inject: true,
       template: 'src/index.html',
       filename: 'index.html'
-    }),
-    new AddAssetHtmlPlugin({
-      filepath: require.resolve('../dist/vendor.bundle.js'),
-      publicPath: '/',
-      includeSourcemap: false
     })
   ]
 });

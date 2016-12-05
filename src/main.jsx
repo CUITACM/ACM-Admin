@@ -1,15 +1,16 @@
-import 'babel-polyfill';
-import ReactDOM from 'react-dom';
-import { browserHistory } from 'react-router';
-import { syncHistoryWithStore } from 'react-router-redux';
-import createApp from './views';
-import configureStore from './store/configureStore';
-import './styles/common.less';
+import dva from 'dva';
+import createLoading from 'dva-loading';
+import { createHistory, useBasename } from 'history';
+import routers from './routers';
 
-const store = configureStore();
-const history = syncHistoryWithStore(browserHistory, store);
+const app = dva({
+  history: useBasename(createHistory)({ basename: '/admin' }),
+});
 
-ReactDOM.render(
-  createApp(store, history),
-  document.getElementById('app-root')
-);
+app.use(createLoading());
+
+app.model();
+
+app.router(routers);
+
+app.start('#app-root');

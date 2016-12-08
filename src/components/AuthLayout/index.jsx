@@ -2,7 +2,11 @@ import React, { PropTypes } from 'react';
 import { Row, Col } from 'antd';
 import './style.less';
 
-export default class Auth extends React.PureComponent {
+export default class AuthLayout extends React.PureComponent {
+  static propTypes = {
+    children: PropTypes.element.isRequired
+  }
+
   constructor(props) {
     super(props);
     this.state = {
@@ -35,7 +39,3 @@ export default class Auth extends React.PureComponent {
     );
   }
 }
-
-Auth.propTypes = {
-  children: PropTypes.element.isRequired
-};

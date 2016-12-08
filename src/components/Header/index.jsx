@@ -1,14 +1,22 @@
 import React, { PropTypes } from 'react';
-import { Link } from 'react-router';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import { Menu, Dropdown, Icon, notification } from 'antd';
-import { isAdmin } from 'helpers/auth';
-import { withApiRoot } from 'helpers/utils';
-import * as authActions from 'actions/auth';
+import { connect } from 'dva';
+import { Link } from 'dva/router';
+import { CDN_ROOT } from 'src/config';
+import { Menu, Dropdown, Icon } from 'antd';
 import './style.less';
 
 class Header extends React.PureComponent {
+  static contextTypes = {
+    router: PropTypes.object.isRequired
+  }
+
+  static propTypes = {
+    menus: PropTypes.array,
+    dispatch: PropTypes.func,
+    loading: PropTypes.bool,
+    currentUser: PropTypes.object
+  }
+
   constructor(props) {
     super(props);
     this.state = {
@@ -18,21 +26,9 @@ class Header extends React.PureComponent {
     this.renderDropdownMenu = this.renderDropdownMenu.bind(this);
   }
 
-  componentDidMount() {
-    this.props.actions.loadCurrentUser();
-  }
-
-  componentWillReceiveProps(nextProps) {
-    const { currentUser, logoutSuccess } = nextProps;
-    if (!this.state.hasLogout && logoutSuccess && currentUser.token == null) {
-      this.setState({ hasLogout: true });
-      notification.success({
-        message: '注销成功'
-      });
-      this.context.router.replace('/auth/login');
-    } else if (currentUser.token) {
-      this.setState({ hasLogout: false });
-    }
+  getAvatar(user) {
+    if (user == null || user.avatar == null) return '';
+    return CDN_ROOT + user.avatar.thumb;
   }
 
   renderMenu() {
@@ -51,14 +47,10 @@ class Header extends React.PureComponent {
   }
 
   renderDropdownMenu() {
-    const { actions, currentUser } = this.props;
-    if (currentUser.token == null) {
-      return <Menu />;
-    }
     const onMenuSelect = ({ key }) => {
       switch (key) {
         case 'logout':
-          actions.logout();
+          this.props.dispatch({ type: 'auth/logout' });
           break;
         default:
           break;
@@ -66,13 +58,9 @@ class Header extends React.PureComponent {
     };
     return (
       <Menu onSelect={onMenuSelect}>
-        <Menu.Item key="user_home">
+        {/* <Menu.Item key="user_home">
           <Link to={`/principal/profile/${currentUser.id}`}>个人主页</Link>
-        </Menu.Item>
-        {isAdmin(currentUser) ?
-          (<Menu.Item key="admin">
-            <Link to="/admin/users">管理页</Link>
-          </Menu.Item>) : null}
+        </Menu.Item> */}
         <Menu.Item key="logout">注销</Menu.Item>
       </Menu>
     );
@@ -80,8 +68,6 @@ class Header extends React.PureComponent {
 
   render() {
     const { currentUser } = this.props;
-    const avatar = currentUser.avatar;
-    const avatarUrl = withApiRoot(avatar && avatar.thumb);
     return (
       <header className="layout-header">
         <div className="header-wrapper">
@@ -92,8 +78,8 @@ class Header extends React.PureComponent {
               <li>
                 <Dropdown overlay={this.renderDropdownMenu()} trigger={['click']}>
                   <a className="ant-dropdown-link" href="#app-root">
-                    {avatar ? <img alt="avatar" src={avatarUrl} /> : null}
-                    {currentUser.name} <Icon type="down" />
+                    <img alt="avatar" src={this.getAvatar(currentUser)} />
+                    {currentUser.display_name} <Icon type="down" />
                   </a>
                 </Dropdown>
               </li>
@@ -104,28 +90,9 @@ class Header extends React.PureComponent {
   }
 }
 
-Header.propTypes = {
-  menus: PropTypes.array,
-  actions: PropTypes.object.isRequired,
-  currentUser: PropTypes.object.isRequired,
-  logoutSuccess: PropTypes.bool.isRequired
-};
+const mapStateToProps = state => ({
+  loading: state.loading.global || false,
+  currentUser: state.user.currentUser,
+});
 
-Header.contextTypes = {
-  router: PropTypes.object.isRequired
-};
-
-function mapStateToProps(state) {
-  return {
-    currentUser: state.auth.currentUser || {},
-    logoutSuccess: state.auth.logoutSuccess
-  };
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    actions: bindActionCreators(authActions, dispatch)
-  };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Header);
+export default connect(mapStateToProps)(Header);

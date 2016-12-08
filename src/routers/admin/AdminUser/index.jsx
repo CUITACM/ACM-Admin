@@ -1,27 +1,26 @@
 import React, { PropTypes } from 'react';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import { connect } from 'dva';
+import { routerRedux } from 'dva/router';
 import { Table, Tag } from 'antd';
-import { API_ROOT } from 'constants/endpoints';
+import { CDN_ROOT } from 'src/config';
 import SearchInput from 'components/SearchInput';
-import * as userActions from 'actions/entity/user';
 import './style.less';
 
 const columns = [{
   title: '头像',
   dataIndex: 'avatar',
   width: '70px',
-  render: avatar => <img alt="avatar" src={API_ROOT + avatar.thumb} />
+  render: avatar => <img alt="avatar" src={CDN_ROOT + avatar.thumb} />
 }, {
   title: '姓名',
-  dataIndex: 'name',
+  dataIndex: 'display_name',
   sorter: true,
   width: '10%',
   className: 'text-center',
   render: (name, record) => (
     <div>
       <h3>{ name }</h3>
-      <Tag color="blue">{ record.nickname }</Tag>
+      <Tag color="#108ee9">{ record.nickname }</Tag>
     </div>
   ),
 }, {
@@ -41,8 +40,8 @@ const columns = [{
     return (
       <div>
         {isStudent ? <Tag>学生</Tag> : null}
-        {isCoach ? <Tag color="blue">教练</Tag> : null}
-        {isAdmin ? <Tag color="red">管理员</Tag> : null}
+        {isCoach ? <Tag color="#108ee9">教练</Tag> : null}
+        {isAdmin ? <Tag color="#f50">管理员</Tag> : null}
       </div>
     );
   }
@@ -66,90 +65,80 @@ const columns = [{
 }];
 
 class AdminUser extends React.PureComponent {
+  static propTypes = {
+    dispatch: PropTypes.func,
+    loading: PropTypes.bool,
+    list: PropTypes.array,
+    pagination: PropTypes.object,
+    query: PropTypes.object,
+  }
+
   constructor(props) {
     super(props);
-    this.state = {
-      searchKey: '',
-    };
     this.handleTableChange = this.handleTableChange.bind(this);
     this.onSearch = this.onSearch.bind(this);
   }
 
-  componentDidMount() {
-    this.props.fetchUsers();
-  }
-
   onSearch(value) {
-    const { pagination } = this.props;
-    this.setState({ searchKey: value });
-    this.props.fetchUsers({
-      page: pagination.current,
-      per: pagination.pageSize,
-      search: value
-    });
+    this.props.dispatch(routerRedux.push({
+      pathname: '/admin/users',
+      query: { ...this.props.query, search: value }
+    }));
   }
 
   handleTableChange(pagination, filters, sorter) {
     console.log(pagination, sorter, filters);
     const params = {
       page: pagination.current,
-      per: pagination.pageSize,
-      search: this.state.searchKey
     };
     if (sorter && sorter.field) {
-      params.sort_field = sorter.field;
-      params.sort_order = sorter.order;
+      params.sortField = sorter.field;
+      params.sortOrder = sorter.order;
     }
-    this.props.fetchUsers({
-      ...params,
-      filters
-    });
+    this.props.dispatch(routerRedux.push({
+      pathname: '/admin/users',
+      query: { ...this.props.query, ...params }
+    }));
   }
 
   render() {
+    const { search } = this.props.query;
     return (
       <div>
         <div className="table-operations clear-fix">
           <div className="pull-right">
-            <SearchInput onSearch={this.onSearch} style={{ width: 200 }} />
+            <SearchInput
+              placeholder={search || '搜索'}
+              onSearch={this.onSearch} style={{ width: 200 }}
+            />
           </div>
         </div>
         <Table
           bordered size="small"
           onChange={this.handleTableChange}
           rowKey={record => record.id}
-          columns={columns} dataSource={this.props.users}
-          pagination={this.state.pagination} loading={this.props.loading}
+          columns={columns} dataSource={this.props.list}
+          pagination={this.props.pagination} loading={this.props.loading}
         />
       </div>
     );
   }
 }
 
-AdminUser.propTypes = {
-  users: PropTypes.array.isRequired,
-  pagination: PropTypes.object.isRequired,
-  loading: PropTypes.bool.isRequired,
-  fetchUsers: PropTypes.func.isRequired
-};
+const mapStateToProps = state => ({
+  loading: state.loading.models.user,
+  list: state.user.list,
+  pagination: {
+    current: state.user.page,
+    pageSize: state.user.per,
+    total: state.user.totalCount
+  },
+  query: {
+    page: state.user.page,
+    search: state.user.search,
+    sortField: state.user.sortField,
+    sortOrder: state.user.sortOrder,
+  }
+});
 
-function mapStateToProps(state) {
-  const userState = state.entity.user;
-  return {
-    users: userState.datas || [],
-    pagination: {
-      total: userState.pagination.total_count,
-      current: userState.pagination.current_page,
-      pageSize: userState.pageSize
-    },
-    loading: userState.waitFetch
-  };
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    fetchUsers: bindActionCreators(userActions.fetchUsers, dispatch)
-  };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(AdminUser);
+export default connect(mapStateToProps)(AdminUser);

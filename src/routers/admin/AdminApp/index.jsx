@@ -21,18 +21,20 @@ const NavbarMenu = [
   }
 ];
 
-export default function AdminApp(props) {
-  return (
-    <div>
-      <Header menus={NavbarMenu} />
-      <section className="layout-container">
-        {props.children}
-      </section>
-      <Footer />
-    </div>
-  );
-}
+export default class AdminApp extends React.PureComponent {
+  static propTypes = {
+    children: PropTypes.element
+  }
 
-AdminApp.propTypes = {
-  children: PropTypes.element
-};
+  render() {
+    return (
+      <div>
+        <Header menus={NavbarMenu} />
+        <section className="layout-container">
+          {this.props.children}
+        </section>
+        <Footer />
+      </div>
+    );
+  }
+}

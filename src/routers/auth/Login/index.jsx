@@ -1,50 +1,54 @@
 import React, { PropTypes } from 'react';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import { connect } from 'dva';
 import { Form, Input, Button, Row, Col, notification } from 'antd';
-import * as authActions from 'actions/auth';
-import * as authHelpers from 'helpers/auth';
+import AuthLayout from 'components/AuthLayout';
 
 class Login extends React.PureComponent {
+  static contextTypes = {
+    router: PropTypes.object.isRequired
+  }
+
+  static propTypes = {
+    form: PropTypes.object.isRequired,
+    dispatch: PropTypes.func,
+    loading: PropTypes.bool.isRequired,
+    hasLogin: PropTypes.bool.isRequired,
+    loginErrors: PropTypes.string,
+    nextPath: PropTypes.string,
+  }
+
   constructor(props) {
     super(props);
-    this.onSubmit = (e) => {
-      e.preventDefault();
-      this.props.form.validateFields((errors) => {
-        if (!errors) {
-          const data = this.props.form.getFieldsValue();
-          this.props.actions.login(data.nickname, data.password);
-        }
-      });
-    };
+    this.onLoginSubmit = this.onLoginSubmit.bind(this);
   }
 
-  componentDidMount() {
-    if (authHelpers.hasLogin()) {
-      this.props.actions.loadCurrentUser(authHelpers.takeCurrentUser());
-    }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    const success = nextProps.loginSuccess;
-    const error = nextProps.loginErrors;
-    const currentUser = nextProps.currentUser;
-
-    if (error && error !== this.props.loginErrors) {
-      notification.error({ message: '登录失败', description: error });
-    }
-
-    if (success && currentUser && currentUser.token) {
+  componentDidUpdate(prevProps) {
+    const { hasLogin, loginErrors, nextPath } = this.props;
+    if (hasLogin && hasLogin !== prevProps.hasLogin) {
+      console.log('hasLogin');
       notification.success({
         message: '登录成功',
-        description: `欢迎 ${currentUser.name}, 即将自动跳转`
+        description: '将自动跳转到登录前一页',
+        duration: 3
       });
-      authHelpers.keepCurrentUser(currentUser);
-      setTimeout(() => {
-        this.context.router.replace(this.props.location.query.next ||
-          `/principal/profile/${currentUser.id}`);
-      }, 1000);
+      this.context.router.push({ pathname: nextPath });
     }
+    if (!hasLogin && loginErrors && loginErrors !== prevProps.loginErrors) {
+      notification.error({
+        message: '登录失败',
+        description: this.props.loginErrors
+      });
+    }
+  }
+
+  onLoginSubmit(e) {
+    e.preventDefault();
+    this.props.form.validateFields((errors) => {
+      if (!errors) {
+        const data = this.props.form.getFieldsValue();
+        this.props.dispatch({ type: 'auth/login', payload: data });
+      }
+    });
   }
 
   render() {
@@ -62,65 +66,43 @@ class Login extends React.PureComponent {
     });
     const formItemCol = { span: 18, offset: 3 };
     return (
-      <Col className="auth-box" xs={24} sm={10} md={7} lg={6} >
-        <h1>登录</h1>
-        <Form horizontal onSubmit={this.onSubmit} className="auth-form">
-          <FormItem wrapperCol={formItemCol} >
-            {nicknameDecorator(
-              <Input size="large" placeholder="用户名或学号或邮箱" />
-            )}
-          </FormItem>
-          <FormItem wrapperCol={formItemCol} >
-            {passwordDecorator(
-              <Input size="large" type="password" placeholder="密码" />
-            )}
-          </FormItem>
-          <Row>
-            <Col span="18" offset="3">
-              <Button
-                className="btn-auth" type="primary" htmlType="submit"
-                loading={this.props.loading}
-              >
-                登陆
-              </Button>
-            </Col>
-          </Row>
-        </Form>
-      </Col>
+      <AuthLayout>
+        <Col className="auth-box" xs={24} sm={10} md={7} lg={6} >
+          <h1>登录</h1>
+          <Form horizontal onSubmit={this.onLoginSubmit} className="auth-form">
+            <FormItem wrapperCol={formItemCol} >
+              {nicknameDecorator(
+                <Input size="large" placeholder="用户名或学号或邮箱" />
+              )}
+            </FormItem>
+            <FormItem wrapperCol={formItemCol} >
+              {passwordDecorator(
+                <Input size="large" type="password" placeholder="密码" />
+              )}
+            </FormItem>
+            <Row>
+              <Col span="18" offset="3">
+                <Button
+                  className="btn-auth" type="primary" htmlType="submit"
+                  loading={this.props.loading}
+                >
+                  登陆
+                </Button>
+              </Col>
+            </Row>
+          </Form>
+        </Col>
+      </AuthLayout>
     );
   }
 }
 
-Login.contextTypes = {
-  router: PropTypes.object.isRequired
-};
 
-Login.propTypes = {
-  form: PropTypes.object.isRequired,
-  location: PropTypes.object.isRequired,
-  actions: PropTypes.object.isRequired,
-  currentUser: PropTypes.object,
-  loading: PropTypes.bool.isRequired,
-  loginSuccess: PropTypes.bool.isRequired,
-  loginErrors: PropTypes.string
-};
+const mapStateToProps = state => ({
+  loading: state.loading.models.auth || false,
+  ...state.auth,
+});
 
-function mapStateToProps(state) {
-  const { auth } = state;
-  return {
-    currentUser: auth.currentUser,
-    loading: auth.waitLoginIn,
-    loginSuccess: auth.loginSuccess,
-    loginErrors: auth.loginErrors
-  };
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    actions: bindActionCreators(authActions, dispatch)
-  };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(
+export default connect(mapStateToProps)(
   Form.create()(Login)
 );

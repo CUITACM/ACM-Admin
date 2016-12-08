@@ -1,9 +1,6 @@
 import React, { PropTypes } from 'react';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import { connect } from 'dva';
 import { Form, Input, Button, Row, Col, notification } from 'antd';
-import * as authActions from 'actions/auth';
-import * as authHelpers from 'helpers/auth';
 
 class Register extends React.PureComponent {
   constructor(props) {
@@ -117,12 +114,6 @@ function mapStateToProps(state) {
   };
 }
 
-function mapDispatchToProps(dispatch) {
-  return {
-    actions: bindActionCreators(authActions, dispatch)
-  };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(
+export default connect(mapStateToProps)(
   Form.create()(Register)
 );

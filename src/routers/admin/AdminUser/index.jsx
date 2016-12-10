@@ -87,7 +87,6 @@ class AdminUser extends React.PureComponent {
   }
 
   handleTableChange(pagination, filters, sorter) {
-    console.log(pagination, sorter, filters);
     const params = {
       page: pagination.current,
     };

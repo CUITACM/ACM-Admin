@@ -1,16 +1,17 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'dva';
-import { Link } from 'dva/router';
+import { routerRedux } from 'dva/router';
 import { CDN_ROOT } from 'src/config';
 import { Menu, Dropdown, Icon } from 'antd';
 import './style.less';
 
 class Header extends React.PureComponent {
   static contextTypes = {
-    router: PropTypes.object.isRequired
+    router: PropTypes.object,
   }
 
   static propTypes = {
+    location: PropTypes.object,
     menus: PropTypes.array,
     dispatch: PropTypes.func,
     loading: PropTypes.bool,
@@ -20,10 +21,21 @@ class Header extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      hasLogout: false
+      selectedKeys: []
     };
     this.renderMenu = this.renderMenu.bind(this);
     this.renderDropdownMenu = this.renderDropdownMenu.bind(this);
+    this.linkTo = (item) => {
+      this.props.dispatch(routerRedux.push(item.key));
+    };
+  }
+
+  componentWillMount() {
+    this.setState({ selectedKeys: [this.props.location.pathname] });
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({ selectedKeys: [nextProps.location.pathname] });
   }
 
   getAvatar(user) {
@@ -36,11 +48,10 @@ class Header extends React.PureComponent {
       <Menu
         theme="dark" mode="horizontal"
         style={{ lineHeight: '64px', display: 'inline-block' }}
+        selectedKeys={this.state.selectedKeys} onClick={this.linkTo}
       >
         {this.props.menus.map(data => (
-          <Menu.Item key={data.key} >
-            <Link to={data.to}>{data.text}</Link>
-          </Menu.Item>
+          <Menu.Item key={data.to} >{data.text}</Menu.Item>
         ))}
       </Menu>
     );
@@ -58,9 +69,6 @@ class Header extends React.PureComponent {
     };
     return (
       <Menu onSelect={onMenuSelect}>
-        {/* <Menu.Item key="user_home">
-          <Link to={`/principal/profile/${currentUser.id}`}>个人主页</Link>
-        </Menu.Item> */}
         <Menu.Item key="logout">注销</Menu.Item>
       </Menu>
     );

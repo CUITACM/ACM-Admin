@@ -1,8 +1,8 @@
-# ACM-Meter-Web
+# ACM-Admin
 
 ACM 校队综合平台 后台管理前端
 
-> 1.0 [代码地址](https://github.com/Raynxxx/CUIT-ACM-Website)
+> 官网系统 1.0 [代码地址](https://github.com/Raynxxx/CUIT-ACM-Website)
 
 ### 技术栈
 * dva

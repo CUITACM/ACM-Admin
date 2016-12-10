@@ -1,12 +1,10 @@
 import React, { PropTypes } from 'react';
-import { Link } from 'react-router';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import { connect } from 'dva';
+import { routerRedux, Link } from 'dva/router';
 import { Table, Tag, Button, Popconfirm, message } from 'antd';
 import StatusPoint from 'components/StatusPoint';
 import SearchInput from 'components/SearchInput';
-import * as articleActions from 'actions/entity/article';
-import { ArticleStatus, ArticleType } from 'constants/article';
+import { ArticleStatus, ArticleType } from 'models/article';
 import './style.less';
 
 const getColumns = (operations) => (
@@ -47,9 +45,9 @@ const getColumns = (operations) => (
     render: type => {
       switch (type) {
         case 'News':
-          return <Tag color="blue">新闻</Tag>;
+          return <Tag color="#108ee9">新闻</Tag>;
         case 'Solution':
-          return <Tag color="green">解题报告</Tag>;
+          return <Tag color="#87d068">解题报告</Tag>;
         default:
           return null;
       }
@@ -85,21 +83,19 @@ const getColumns = (operations) => (
 );
 
 class AdminArtcile extends React.PureComponent {
+  static propTypes = {
+    location: PropTypes.object,
+    dispatch: PropTypes.func,
+    loading: PropTypes.bool,
+    list: PropTypes.array,
+    pagination: PropTypes.object,
+  }
+
   constructor(props) {
     super(props);
-    this.state = {
-      searchKey: ''
-    };
     this.handleTableChange = this.handleTableChange.bind(this);
     this.onSearch = this.onSearch.bind(this);
     this.onDelete = this.onDelete.bind(this);
-  }
-
-  componentDidMount() {
-    this.props.fetchArticles({
-      sort_field: 'created_at',
-      sort_order: 'descend'
-    });
   }
 
   onDelete(record) {
@@ -113,42 +109,33 @@ class AdminArtcile extends React.PureComponent {
       .then((response) => {
         if (response.error_code === 0) {
           message.success('删除成功');
-          this.props.fetchArticles();
         }
       });
   }
 
   onSearch(value) {
-    const { pagination } = this.props;
-    this.setState({ searchKey: value });
-    this.props.fetchArticles({
-      page: pagination.current,
-      per: pagination.pageSize,
-      search: value
-    });
+    this.props.dispatch(routerRedux.push({
+      pathname: '/admin/articles',
+      query: { ...this.props.location.query, search: value }
+    }));
   }
 
   handleTableChange(pagination, filters, sorter) {
     const params = {
       page: pagination.current,
-      per: pagination.pageSize,
-      search: this.state.searchKey
     };
     if (sorter && sorter.field) {
-      params.sort_field = sorter.field;
-      params.sort_order = sorter.order;
+      params.sortField = sorter.field;
+      params.sortOrder = sorter.order;
     }
-    console.log(filters);
-    this.props.fetchArticles({
-      ...params,
-      filters
-    });
+    this.props.dispatch(routerRedux.push({
+      pathname: '/admin/articles',
+      query: { ...this.props.location.query, ...params }
+    }));
   }
 
   render() {
-    const columns = getColumns({
-      onDelete: this.onDelete
-    });
+    const columns = getColumns({ onDelete: this.onDelete });
     return (
       <div>
         <div className="table-operations clear-fix">
@@ -166,7 +153,7 @@ class AdminArtcile extends React.PureComponent {
           bordered size="small"
           onChange={this.handleTableChange}
           rowKey={record => record.id}
-          columns={columns} dataSource={this.props.articles}
+          columns={columns} dataSource={this.props.list}
           pagination={this.props.pagination} loading={this.props.loading}
         />
       </div>
@@ -174,34 +161,15 @@ class AdminArtcile extends React.PureComponent {
   }
 }
 
-AdminArtcile.contextTypes = {
-  router: PropTypes.object.isRequired
-};
+const mapStateToProps = ({ loading, article }) => ({
+  loading: loading.models.article,
+  list: article.list,
+  pagination: {
+    current: article.page,
+    pageSize: article.per,
+    total: article.totalCount
+  }
+});
 
-AdminArtcile.propTypes = {
-  articles: PropTypes.array.isRequired,
-  pagination: PropTypes.object.isRequired,
-  loading: PropTypes.bool.isRequired,
-  fetchArticles: PropTypes.func.isRequired
-};
 
-function mapStateToProps(state) {
-  const articleState = state.entity.article;
-  return {
-    articles: articleState.datas || [],
-    pagination: {
-      total: articleState.pagination.total_count,
-      current: articleState.pagination.current_page,
-      pageSize: articleState.pageSize
-    },
-    loading: articleState.waitFetch
-  };
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    fetchArticles: bindActionCreators(articleActions.fetchArticles, dispatch)
-  };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(AdminArtcile);
+export default connect(mapStateToProps)(AdminArtcile);

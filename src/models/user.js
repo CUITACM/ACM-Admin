@@ -4,9 +4,7 @@ import { getToken } from 'services/auth';
 import * as userServices from 'services/user';
 
 const extractParams = query => {
-  const {
-    page = 1, search = '', sortField = 'id', sortOrder = 'ascend',
-  } = query;
+  const { page = 1, search = '', sortField = 'id', sortOrder = 'ascend' } = query;
   return { page: parseInt(page, 10), search, sortField, sortOrder };
 };
 
@@ -42,8 +40,13 @@ export default {
     }
   },
   effects: {
-    *loadCurrentUser(action, { call, put }) {
+    *loadCurrentUser(action, { call, put, select }) {
       try {
+        const alreadyUser = yield select(state => state.user.currentUser);
+        if (alreadyUser != null) {
+          yield put({ type: 'loadCurrentUserSuccess', payload: { user: alreadyUser } });
+          return;
+        }
         const token = yield call(getToken);
         const decoded = jwtDecode(token);
         if (!decoded) {

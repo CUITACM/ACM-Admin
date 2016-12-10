@@ -23,13 +23,14 @@ const NavbarMenu = [
 
 export default class AdminApp extends React.PureComponent {
   static propTypes = {
+    location: PropTypes.object,
     children: PropTypes.element
   }
 
   render() {
     return (
       <div>
-        <Header menus={NavbarMenu} />
+        <Header menus={NavbarMenu} location={this.props.location} />
         <section className="layout-container">
           {this.props.children}
         </section>

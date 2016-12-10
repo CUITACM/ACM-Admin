@@ -12,11 +12,10 @@ export function fetchToken(nickname, password) {
 
 export function getToken() {
   const tokenObject = persistence.takeObject(tokenKey);
-  return tokenObject.token;
+  return tokenObject && tokenObject.token;
 }
 
 export function saveToken(params) {
-  console.log(Date.now(), params.expire_time);
   persistence.saveObject(tokenKey, {
     token: params.token,
     expired_time: Date.now() + (params.expire_time * 1000)

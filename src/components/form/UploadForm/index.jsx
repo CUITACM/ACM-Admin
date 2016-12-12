@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 import { Form, Input, Button, Upload, Icon, message } from 'antd';
-import { ResourceUsage } from 'constants/resource.js';
+import { ResourceUsage } from 'models/resource.js';
 
 const FormItem = Form.Item;
 
@@ -19,7 +19,7 @@ class UploadForm extends React.PureComponent {
           this.props.onSubmit({
             ...formValues,
             usage: this.props.usage,
-            file: this.state.uploadFile
+            path: this.state.uploadFile
           })
           .then(() => {
             this.props.form.resetFields();

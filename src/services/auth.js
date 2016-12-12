@@ -1,13 +1,13 @@
 import request from 'utils/request';
 import * as persistence from 'utils/persistence';
 import { API_ROOT } from 'src/config';
-import qs from 'qs';
+import { withParams } from 'utils/qs';
 
 const tokenKey = 'acm_meter_token';
 
 export function fetchToken(nickname, password) {
   const params = { nickname, password };
-  return request(`${API_ROOT}/auth/token?${qs.stringify(params)}`);
+  return request(withParams(`${API_ROOT}/auth/token`, params));
 }
 
 export function getToken() {

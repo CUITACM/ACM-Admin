@@ -10,7 +10,12 @@ const app = dva({
   history: browserHistory,
 });
 
+// plugins
 app.use(createLoading());
+app.use({
+  onError: err => console.log('ERROR => ', err)
+});
+
 
 // config models
 models.forEach(m =>

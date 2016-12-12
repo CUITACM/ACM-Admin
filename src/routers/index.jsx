@@ -6,6 +6,7 @@ import Register from './auth/Register';
 import AdminApp from './admin/AdminApp';
 import AdminUser from './admin/AdminUser';
 import AdminArticle from './admin/AdminArticle';
+import AdminResource from './admin/AdminResource';
 
 /* eslint react/prop-types:0 */
 export default ({ history }) => (
@@ -16,6 +17,7 @@ export default ({ history }) => (
       <IndexRoute component={AdminApp} />
       <Route path="users" component={AdminUser} />
       <Route path="articles" component={AdminArticle} />
+      <Route path="resources" component={AdminResource} />
     </Route>
   </Router>
 );

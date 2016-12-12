@@ -7,7 +7,7 @@ import SearchInput from 'components/SearchInput';
 import { ArticleStatus, ArticleType } from 'models/article';
 import './style.less';
 
-const getColumns = (operations) => (
+const getColumns = (operations, filters) => (
   [{
     title: '标题',
     dataIndex: 'title',
@@ -18,12 +18,16 @@ const getColumns = (operations) => (
     dataIndex: 'status',
     width: '8%',
     filters: [
+      { text: '回收站', value: ArticleStatus.RECYCLE },
       { text: '草稿', value: ArticleStatus.DRAFT },
       { text: '发布', value: ArticleStatus.PUBLISH },
       { text: '置顶', value: ArticleStatus.PINNED }
     ],
+    filteredValue: filters.status || [],
     render: status => {
       switch (status) {
+        case 0:
+          return <StatusPoint color="gray">回收站</StatusPoint>;
         case 1:
           return <StatusPoint color="light-blue">草稿</StatusPoint>;
         case 2:
@@ -42,6 +46,7 @@ const getColumns = (operations) => (
       { text: '新闻', value: ArticleType.NEWS },
       { text: '解题报告', value: ArticleType.SOLUTION }
     ],
+    filteredValue: filters.article_type || [],
     render: type => {
       switch (type) {
         case 'News':
@@ -88,6 +93,7 @@ class AdminArtcile extends React.PureComponent {
     dispatch: PropTypes.func,
     loading: PropTypes.bool,
     list: PropTypes.array,
+    filters: PropTypes.object,
     pagination: PropTypes.object,
   }
 
@@ -99,18 +105,7 @@ class AdminArtcile extends React.PureComponent {
   }
 
   onDelete(record) {
-    articleActions.deleteArticle(record.id)
-      .then((response) => {
-        if (response.status >= 400) {
-          throw new Error('Bad response from server');
-        }
-        return response.json();
-      })
-      .then((response) => {
-        if (response.error_code === 0) {
-          message.success('删除成功');
-        }
-      });
+    this.props.dispatch({ type: 'article/delete', payload: record.id });
   }
 
   onSearch(value) {
@@ -123,7 +118,9 @@ class AdminArtcile extends React.PureComponent {
   handleTableChange(pagination, filters, sorter) {
     const params = {
       page: pagination.current,
+      filters: JSON.stringify(filters)
     };
+    console.log(params);
     if (sorter && sorter.field) {
       params.sortField = sorter.field;
       params.sortOrder = sorter.order;
@@ -135,7 +132,7 @@ class AdminArtcile extends React.PureComponent {
   }
 
   render() {
-    const columns = getColumns({ onDelete: this.onDelete });
+    const columns = getColumns({ onDelete: this.onDelete }, this.props.filters);
     return (
       <div>
         <div className="table-operations clear-fix">
@@ -164,6 +161,7 @@ class AdminArtcile extends React.PureComponent {
 const mapStateToProps = ({ loading, article }) => ({
   loading: loading.models.article,
   list: article.list,
+  filters: article.filters,
   pagination: {
     current: article.page,
     pageSize: article.per,

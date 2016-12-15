@@ -1,25 +1,9 @@
 import React, { PropTypes } from 'react';
 import Header from 'components/Header';
+import LayoutSider from 'components/LayoutSider';
 import Footer from 'components/Footer';
+import { NavbarMenu } from 'src/config';
 import './style.less';
-
-const NavbarMenu = [
-  {
-    key: 'admin_users',
-    to: '/admin/users',
-    text: '用户管理'
-  },
-  {
-    key: 'admin_articles',
-    to: '/admin/articles',
-    text: '文章管理'
-  },
-  {
-    key: 'admin_resources',
-    to: '/admin/resources',
-    text: '资源管理'
-  }
-];
 
 export default class AdminApp extends React.PureComponent {
   static propTypes = {
@@ -31,9 +15,17 @@ export default class AdminApp extends React.PureComponent {
     return (
       <div>
         <Header menus={NavbarMenu} location={this.props.location} />
-        <section className="layout-container">
-          {this.props.children}
-        </section>
+        <div className="layout-top">
+          <section className="layout-container">
+            <LayoutSider
+              className="layout-sider"
+              menus={NavbarMenu} location={this.props.location}
+            />
+            <div className="layout-content">
+              {this.props.children}
+            </div>
+          </section>
+        </div>
         <Footer />
       </div>
     );

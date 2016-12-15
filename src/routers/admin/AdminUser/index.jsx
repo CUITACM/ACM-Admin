@@ -6,71 +6,85 @@ import { CDN_ROOT } from 'src/config';
 import SearchInput from 'components/SearchInput';
 import './style.less';
 
-const columns = [{
-  title: '头像',
-  dataIndex: 'avatar',
-  width: '70px',
-  render: avatar => <img alt="avatar" src={CDN_ROOT + avatar.thumb} />
-}, {
-  title: '姓名',
-  dataIndex: 'display_name',
-  sorter: true,
-  width: '10%',
-  className: 'text-center',
-  render: (name, record) => (
-    <div>
-      <h3>{ name }</h3>
-      <Tag color="#108ee9">{ record.nickname }</Tag>
-    </div>
-  ),
-}, {
-  title: '性别',
-  dataIndex: 'gender',
-  render: isMale => (isMale ? '男' : '女'),
-  width: '5%',
-  className: 'text-center'
-}, {
-  title: '身份',
-  dataIndex: 'role',
-  width: '15%',
-  render: (role) => {
-    const isStudent = role & 1;
-    const isCoach = role & 2;
-    const isAdmin = role & 4;
-    return (
+const getColumns = (filters) => (
+  [{
+    title: '头像',
+    dataIndex: 'avatar',
+    width: '70px',
+    render: avatar => <img alt="avatar" src={CDN_ROOT + avatar.thumb} />
+  }, {
+    title: '姓名',
+    dataIndex: 'display_name',
+    sorter: true,
+    width: '10%',
+    className: 'text-center',
+    render: (name, record) => (
       <div>
-        {isStudent ? <Tag>学生</Tag> : null}
-        {isCoach ? <Tag color="#108ee9">教练</Tag> : null}
-        {isAdmin ? <Tag color="#f50">管理员</Tag> : null}
+        <h3>{ name }</h3>
+        <Tag color="#108ee9">{ record.nickname }</Tag>
       </div>
-    );
-  }
-}, {
-  title: '邮箱',
-  dataIndex: 'email',
-  width: '18%'
-}, {
-  title: '学院专业年级',
-  key: 'student_info',
-  render: (text, record) => (
-    <div>
-      {record.school}<br />
-      {record.college}<br />
-      {record.major} {record.grade}
-    </div>
-  )
-}, {
-  title: '创建时间',
-  dataIndex: 'created_at'
-}];
+    ),
+  }, {
+    title: '性别',
+    dataIndex: 'gender',
+    width: '5%',
+    className: 'text-center',
+    filters: [
+      { text: '男', value: 1 },
+      { text: '女', value: 0 }
+    ],
+    filteredValue: filters.gender || [],
+    render: isMale => (isMale ? '男' : '女')
+  }, {
+    title: '身份',
+    dataIndex: 'role',
+    width: '15%',
+    filters: [
+      { text: '管理员', value: 4 },
+      { text: '教练', value: 2 },
+      { text: '学生', value: 1 },
+    ],
+    filteredValue: filters.role || [],
+    render: (role) => {
+      const isStudent = role === 1;
+      const isCoach = role === 2;
+      const isAdmin = role === 4;
+      return (
+        <div>
+          {isStudent ? <Tag>学生</Tag> : null}
+          {isCoach ? <Tag color="#108ee9">教练</Tag> : null}
+          {isAdmin ? <Tag color="#f50">管理员</Tag> : null}
+        </div>
+      );
+    }
+  }, {
+    title: '邮箱',
+    dataIndex: 'email',
+    width: '18%'
+  }, {
+    title: '学院专业年级',
+    key: 'student_info',
+    render: (text, record) => (
+      <div>
+        {record.school}<br />
+        {record.college}<br />
+        {record.major} {record.grade}
+      </div>
+    )
+  }, {
+    title: '创建时间',
+    dataIndex: 'created_at'
+  }]
+);
 
 class AdminUser extends React.PureComponent {
   static propTypes = {
+    location: PropTypes.object,
     dispatch: PropTypes.func,
     loading: PropTypes.bool,
     list: PropTypes.array,
     pagination: PropTypes.object,
-    query: PropTypes.object,
+    filters: PropTypes.object,
   }
 
   constructor(props) {
@@ -82,13 +96,14 @@ class AdminUser extends React.PureComponent {
   onSearch(value) {
     this.props.dispatch(routerRedux.push({
       pathname: '/admin/users',
-      query: { ...this.props.query, search: value }
+      query: { ...this.props.location.query, search: value }
     }));
   }
 
   handleTableChange(pagination, filters, sorter) {
     const params = {
       page: pagination.current,
+      filters: JSON.stringify(filters)
     };
     if (sorter && sorter.field) {
       params.sortField = sorter.field;
@@ -96,12 +111,13 @@ class AdminUser extends React.PureComponent {
     }
     this.props.dispatch(routerRedux.push({
       pathname: '/admin/users',
-      query: { ...this.props.query, ...params }
+      query: { ...this.props.location.query, ...params }
     }));
   }
 
   render() {
-    const { search } = this.props.query;
+    const { search } = this.props.location.query;
+    const columns = getColumns(this.props.filters);
     return (
       <div>
         <div className="table-operations clear-fix">
@@ -124,20 +140,15 @@ class AdminUser extends React.PureComponent {
   }
 }
 
-const mapStateToProps = state => ({
-  loading: state.loading.models.user,
-  list: state.user.list,
+const mapStateToProps = ({ loading, user }) => ({
+  loading: loading.models.user,
+  list: user.list,
+  filters: user.filters,
   pagination: {
-    current: state.user.page,
-    pageSize: state.user.per,
-    total: state.user.totalCount
+    current: user.page,
+    pageSize: user.per,
+    total: user.totalCount
   },
-  query: {
-    page: state.user.page,
-    search: state.user.search,
-    sortField: state.user.sortField,
-    sortOrder: state.user.sortOrder,
-  }
 });
 
 export default connect(mapStateToProps)(AdminUser);

@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 import { Form, Input, Button, Upload, Icon, message } from 'antd';
-import { ResourceUsage } from 'models/resource.js';
+import { ResourceUsage } from 'models/resource';
 
 const FormItem = Form.Item;
 

@@ -1,3 +1,4 @@
+import pathToRegexp from 'path-to-regexp';
 import { fetchResources, deleteResource } from 'services/resource';
 
 export const ResourceUsage = {
@@ -25,9 +26,10 @@ const extractParams = query => {
 export default {
   namespace: 'resource',
   state: {
+    currentItem: {},
     list: [],
     page: 1,
-    per: 2,
+    per: 16,
     totalCount: 0,
     totalPages: 0,
     search: '',
@@ -43,7 +45,16 @@ export default {
           dispatch({ type: 'fetchList', payload: query });
         }
       });
-    }
+    },
+    itemSubscriber({ dispatch, history }) {
+      return history.listen(({ pathname }) => {
+        const match = pathToRegexp('/admin/resources/:id').exec(pathname);
+        if (match) {
+          const id = match[1];
+          dispatch({ type: 'fetchItem', payload: id });
+        }
+      });
+    },
   },
   effects: {
     *fetchList({ payload }, { put, call, select }) {
@@ -56,6 +67,9 @@ export default {
         filters: params.filters,
       });
       yield put({ type: 'saveList', payload: response });
+    },
+    *fethItem({ payload: id }, { put, call }) {
+      // yield call()
     },
     *delete({ payload }, { put, call }) {
       const response = yield call(deleteResource, payload);

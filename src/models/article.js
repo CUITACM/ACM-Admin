@@ -1,4 +1,5 @@
-import { fetchArticles, deleteArticle } from 'services/article';
+import pathToRegexp from 'path-to-regexp';
+import { fetchArticles, fetchArticle, deleteArticle } from 'services/article';
 
 export const ArticleType = {
   NEWS: 'News',
@@ -13,9 +14,7 @@ export const ArticleStatus = {
 };
 
 const extractParams = query => {
-  const {
-    page = 1, search = '', sortField = 'id', sortOrder = 'ascend',
-  } = query;
+  const { page = 1, search = '', sortField = 'id', sortOrder = 'ascend' } = query;
   const filters = JSON.parse(query.filters || '{}');
   return { page: parseInt(page, 10), search, sortField, sortOrder, filters };
 };
@@ -23,6 +22,7 @@ const extractParams = query => {
 export default {
   namespace: 'article',
   state: {
+    currentItem: {},
     list: [],
     page: 1,
     per: 10,
@@ -41,7 +41,16 @@ export default {
           dispatch({ type: 'fetchList', payload: query });
         }
       });
-    }
+    },
+    itemSubscriber({ dispatch, history }) {
+      return history.listen(({ pathname }) => {
+        const match = pathToRegexp('/admin/articles/edit/:id').exec(pathname);
+        if (match) {
+          const id = match[1];
+          dispatch({ type: 'fetchItem', payload: id });
+        }
+      });
+    },
   },
   effects: {
     *fetchList({ payload }, { put, call, select }) {
@@ -54,6 +63,10 @@ export default {
         filters: params.filters,
       });
       yield put({ type: 'saveList', payload: response });
+    },
+    *fetchItem({ payload: id }, { put, call }) {
+      const response = yield call(fetchArticle, id);
+      yield put({ type: 'saveItem', payload: response.article });
     },
     *delete({ payload }, { put, call }) {
       const response = yield call(deleteArticle, payload);
@@ -75,6 +88,9 @@ export default {
         totalCount: payload.meta.total_count,
         totalPages: payload.meta.total_pages,
       };
+    },
+    saveItem(state, { payload }) {
+      return { ...state, currentItem: payload };
     },
     deleteSuccess(state, { payload }) {
       return { ...state, list: state.list.filter(user => user.id !== payload) };

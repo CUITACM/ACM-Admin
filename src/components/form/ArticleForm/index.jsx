@@ -1,12 +1,19 @@
 import React, { PropTypes } from 'react';
 import { Form, Input, Button } from 'antd';
-import { ArticleType, ArticleStatus } from 'constants/article';
+import { ArticleType, ArticleStatus } from 'models/article';
 import TagInput from 'components/TagInput';
 import MarkdownInput from 'components/MarkdownInput';
 
 const FormItem = Form.Item;
 
 class ArticleForm extends React.PureComponent {
+  static propTypes = {
+    form: PropTypes.object.isRequired,
+    article: PropTypes.object,
+    onSubmit: PropTypes.func.isRequired,
+    onSubmitDraft: PropTypes.func
+  }
+
   constructor(props) {
     super(props);
     this.state = {
@@ -77,11 +84,5 @@ class ArticleForm extends React.PureComponent {
   }
 }
 
-ArticleForm.propTypes = {
-  form: PropTypes.object.isRequired,
-  article: PropTypes.object,
-  onSubmit: PropTypes.func.isRequired,
-  onSubmitDraft: PropTypes.func
-};
 
 export default Form.create()(ArticleForm);

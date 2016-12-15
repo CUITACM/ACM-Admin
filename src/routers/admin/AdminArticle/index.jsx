@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'dva';
 import { routerRedux, Link } from 'dva/router';
-import { Table, Tag, Button, Popconfirm, message } from 'antd';
+import { Table, Tag, Button, Popconfirm } from 'antd';
 import StatusPoint from 'components/StatusPoint';
 import SearchInput from 'components/SearchInput';
 import { ArticleStatus, ArticleType } from 'models/article';
@@ -12,11 +12,11 @@ const getColumns = (operations, filters) => (
     title: '标题',
     dataIndex: 'title',
     sorter: true,
-    width: '15%'
+    width: '20%',
   }, {
     title: '状态',
     dataIndex: 'status',
-    width: '8%',
+    width: '12%',
     filters: [
       { text: '回收站', value: ArticleStatus.RECYCLE },
       { text: '草稿', value: ArticleStatus.DRAFT },
@@ -41,7 +41,7 @@ const getColumns = (operations, filters) => (
   }, {
     title: '类型',
     dataIndex: 'article_type',
-    width: '10%',
+    width: '15%',
     filters: [
       { text: '新闻', value: ArticleType.NEWS },
       { text: '解题报告', value: ArticleType.SOLUTION }
@@ -65,10 +65,7 @@ const getColumns = (operations, filters) => (
     title: '创建时间',
     dataIndex: 'created_at',
     sorter: true,
-    width: '15%'
-  }, {
-    title: '正文',
-    dataIndex: 'content'
+    width: '20%'
   }, {
     title: '操作',
     key: 'operation',
@@ -120,7 +117,6 @@ class AdminArtcile extends React.PureComponent {
       page: pagination.current,
       filters: JSON.stringify(filters)
     };
-    console.log(params);
     if (sorter && sorter.field) {
       params.sortField = sorter.field;
       params.sortOrder = sorter.order;
@@ -168,6 +164,5 @@ const mapStateToProps = ({ loading, article }) => ({
     total: article.totalCount
   }
 });
-
 
 export default connect(mapStateToProps)(AdminArtcile);

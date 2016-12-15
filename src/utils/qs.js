@@ -46,3 +46,9 @@ export function withParams(url, parameters = {}) {
   }
   return ret;
 }
+
+export function extractParams(query) {
+  const { page = 1, search = '', sortField = 'id', sortOrder = 'ascend' } = query;
+  const filters = JSON.parse(query.filters || '{}');
+  return { page: parseInt(page, 10), search, sortField, sortOrder, filters };
+}

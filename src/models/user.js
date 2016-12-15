@@ -5,7 +5,8 @@ import * as userServices from 'services/user';
 
 const extractParams = query => {
   const { page = 1, search = '', sortField = 'id', sortOrder = 'ascend' } = query;
-  return { page: parseInt(page, 10), search, sortField, sortOrder };
+  const filters = JSON.parse(query.filters || '{}');
+  return { page: parseInt(page, 10), search, sortField, sortOrder, filters };
 };
 
 export default {
@@ -20,6 +21,7 @@ export default {
     search: '',
     sortOrder: 'ascend',
     sortField: 'id',
+    filters: {},
   },
   subscriptions: {
     currentUserSubscriber({ dispatch, history }) {
@@ -66,7 +68,8 @@ export default {
       const response = yield call(userServices.fetchUsers, params.page, per, {
         search: params.search,
         sort_field: params.sortField,
-        sort_order: params.sortOrder
+        sort_order: params.sortOrder,
+        filters: params.filters,
       });
       yield put({ type: 'saveList', payload: response });
     }

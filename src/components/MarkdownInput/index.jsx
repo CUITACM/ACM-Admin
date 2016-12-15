@@ -3,10 +3,10 @@ import SimpleMDE from 'libs/simplemde';
 import 'libs/simplemde/dist/simplemde.min.css';
 import 'libs/fontawesome/css/font-awesome.min.css';
 import { Input, Modal, Tabs, message } from 'antd';
-import { withApiRoot } from 'helpers/utils';
-import { ResourceUsage } from 'constants/resource.js';
-import * as resourceActions from 'actions/entity/resource';
 import UploadForm from 'components/form/UploadForm';
+import { CDN_ROOT } from 'src/config';
+import { ResourceUsage } from 'models/resource';
+import { createResource } from 'services/resource';
 import './style.less';
 
 const TabPane = Tabs.TabPane;
@@ -47,7 +47,7 @@ export default class MarkdownInput extends React.PureComponent {
   }
 
   onImageUpload(params) {
-    return resourceActions.createResource(params)
+    return createResource(params)
       .then(response => {
         if (response.error_code === 0) {
           return response;
@@ -59,7 +59,7 @@ export default class MarkdownInput extends React.PureComponent {
       .then(response => {
         const resource = response.resource;
         this.setState({ showModal: false });
-        this.drawImage(withApiRoot(resource.file.url));
+        this.drawImage(CDN_ROOT + resource.file.url);
       })
       .catch(error => {
         console.log(error);

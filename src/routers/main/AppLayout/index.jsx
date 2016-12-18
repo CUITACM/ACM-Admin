@@ -5,7 +5,7 @@ import Footer from 'components/Footer';
 import { NavbarMenu } from 'src/config';
 import './style.less';
 
-export default class AdminApp extends React.PureComponent {
+export default class AppLayout extends React.PureComponent {
   static propTypes = {
     location: PropTypes.object,
     children: PropTypes.element

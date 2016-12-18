@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'dva';
-import { routerRedux } from 'dva/router';
-import { Table, Tag } from 'antd';
+import { routerRedux, Link } from 'dva/router';
+import { Table, Tag, Button, Popconfirm } from 'antd';
 import { CDN_ROOT } from 'src/config';
 import SearchInput from 'components/SearchInput';
 import './style.less';
@@ -16,7 +16,7 @@ const getColumns = (filters) => (
     title: '姓名',
     dataIndex: 'display_name',
     sorter: true,
-    width: '10%',
+    width: '100px',
     className: 'text-center',
     render: (name, record) => (
       <div>
@@ -27,7 +27,7 @@ const getColumns = (filters) => (
   }, {
     title: '性别',
     dataIndex: 'gender',
-    width: '5%',
+    width: '60px',
     className: 'text-center',
     filters: [
       { text: '男', value: 1 },
@@ -38,7 +38,7 @@ const getColumns = (filters) => (
   }, {
     title: '身份',
     dataIndex: 'role',
-    width: '15%',
+    width: '90px',
     filters: [
       { text: '管理员', value: 4 },
       { text: '教练', value: 2 },
@@ -74,6 +74,21 @@ const getColumns = (filters) => (
   }, {
     title: '创建时间',
     dataIndex: 'created_at'
+  }, {
+    title: '操作',
+    key: 'operation',
+    render: (text, record) => (
+      <span>
+        <Link to={`/admin/users/edit/${record.id}`}>修改</Link>
+        <span className="ant-divider" />
+        <Popconfirm
+          title="确定要删除吗？" placement="left"
+          onConfirm={() => operations.onDelete(record)}
+        >
+          <a>删除</a>
+        </Popconfirm>
+      </span>
+    ),
   }]
 );
 

@@ -50,7 +50,6 @@ export default class LayoutSider extends React.PureComponent {
     const menu = this.props.menus[routeIndex].children || [];
     for (let i = 0; i < menu.length; ++i) {
       if (location.pathname.indexOf(menu[i].to) === 0) {
-        console.log(menu[i].to);
         this.setState({ selectedKeys: [menu[i].to] });
         return;
       }
@@ -64,7 +63,7 @@ export default class LayoutSider extends React.PureComponent {
       <aside className={this.props.className}>
         <Menu mode="inline" selectedKeys={this.state.selectedKeys} onClick={this.linkTo}>
           {menu.map(child =>
-            <Menu.Item key={child.to}>{child.text}</Menu.Item>
+            <Menu.Item key={child.to}><Icon type={child.icon} />{child.text}</Menu.Item>
           )}
         </Menu>
       </aside>

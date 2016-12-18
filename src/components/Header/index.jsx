@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
-import { CDN_ROOT } from 'src/config';
+import { CDN_ROOT, SiteName } from 'src/config';
 import { Menu, Dropdown, Icon } from 'antd';
 import './style.less';
 
@@ -31,16 +31,27 @@ class Header extends React.PureComponent {
   }
 
   componentWillMount() {
-    this.setState({ selectedKeys: [this.props.location.pathname] });
+    const { menus, location } = this.props;
+    this.computeActiveRoute(menus, location);
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({ selectedKeys: [nextProps.location.pathname] });
+    const { menus, location } = nextProps;
+    this.computeActiveRoute(menus, location);
   }
 
   getAvatar(user) {
     if (user == null || user.avatar == null) return '';
     return CDN_ROOT + user.avatar.thumb;
+  }
+
+  computeActiveRoute(menus, location) {
+    for (let i = 0; i < menus.length; ++i) {
+      if (location.pathname.indexOf(menus[i].to) === 0) {
+        this.setState({ selectedKeys: [menus[i].to] });
+        return;
+      }
+    }
   }
 
   renderMenu() {
@@ -79,7 +90,7 @@ class Header extends React.PureComponent {
     return (
       <header className="layout-header">
         <div className="header-wrapper">
-          <div className="header-logo">CUIT ACM Team</div>
+          <div className="header-logo">{SiteName}</div>
           {this.renderMenu()}
           {currentUser ?
             (<ul className="nav nav-right">

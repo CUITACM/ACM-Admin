@@ -26,13 +26,13 @@ const getColumns = (operations, filters) => (
     filteredValue: filters.status || [],
     render: status => {
       switch (status) {
-        case 0:
+        case ArticleStatus.RECYCLE:
           return <StatusPoint color="gray">回收站</StatusPoint>;
-        case 1:
+        case ArticleStatus.DRAFT:
           return <StatusPoint color="light-blue">草稿</StatusPoint>;
-        case 2:
+        case ArticleStatus.PUBLISH:
           return <StatusPoint color="green">发布</StatusPoint>;
-        case 3:
+        case ArticleStatus.PINNED:
           return <StatusPoint color="red">置顶</StatusPoint>;
         default:
           return null;
@@ -50,7 +50,7 @@ const getColumns = (operations, filters) => (
     render: type => {
       switch (type) {
         case 'News':
-          return <Tag color="#108ee9">新闻</Tag>;
+          return <Tag color="#00A0E5">新闻</Tag>;
         case 'Solution':
           return <Tag color="#87d068">解题报告</Tag>;
         default:

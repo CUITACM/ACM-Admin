@@ -29,7 +29,7 @@ export default {
     totalCount: 0,
     totalPages: 0,
     search: '',
-    sortOrder: 'ascend',
+    sortOrder: 'descend',
     sortField: 'id',
     filters: {}
   },

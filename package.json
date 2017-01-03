@@ -1,7 +1,7 @@
 {
-  "name": "acm_meter_web",
+  "name": "acm_admin",
   "version": "1.0.0",
-  "description": "ACM Meter Web",
+  "description": "ACM Admin",
   "main": "index.js",
   "scripts": {
     "dev": "cross-env NODE_ENV=development node config/dev-server.js",
@@ -14,7 +14,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Raynxxx/ACM-Meter-Web.git"
+    "url": "git+https://github.com/CUITACM/ACM-Admin"
   },
   "keywords": [
     "React"
@@ -22,9 +22,9 @@
   "author": "Rayn",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Raynxxx/ACM-Meter-Web/issues"
+    "url": "https://github.com/CUITACM/ACM-Admin/issues"
   },
-  "homepage": "https://github.com/Raynxxx/ACM-Meter-Web#readme",
+  "homepage": "https://github.com/CUITACM/ACM-Admin#readme",
   "devDependencies": {
     "autoprefixer": "^6.4.0",
     "babel-core": "^6.14.0",

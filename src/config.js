@@ -23,7 +23,8 @@ export const NavbarMenu = [
     to: '/admin/articles',
     text: '文章管理',
     children: [
-      { to: '/admin/articles', text: '所有文章', icon: 'bars' }
+      { to: '/admin/articles/news', text: '新闻管理', icon: 'bars' },
+      { to: '/admin/articles/solution', text: '解题报告', icon: 'bars' },
     ]
   },
   {

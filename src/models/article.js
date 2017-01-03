@@ -19,11 +19,23 @@ const extractParams = query => {
   return { page: parseInt(page, 10), search, sortField, sortOrder, filters };
 };
 
+const mapToArticleType = (type) => {
+  switch (type) {
+    case 'news':
+      return ArticleType.NEWS;
+    case 'solution':
+      return ArticleType.SOLUTION;
+    default:
+      throw new Error('未知的文章类型');
+  }
+};
+
 export default {
   namespace: 'article',
   state: {
     currentItem: {},
     list: [],
+    type: null,
     page: 1,
     per: 10,
     totalCount: 0,
@@ -36,9 +48,11 @@ export default {
   subscriptions: {
     listSubscriber({ dispatch, history }) {
       return history.listen(({ pathname, query }) => {
-        if (pathname === '/admin/articles') {
-          dispatch({ type: 'saveParams', payload: query });
-          dispatch({ type: 'fetchList', payload: query });
+        const match = pathToRegexp('/admin/articles/:type').exec(pathname);
+        if (match) {
+          const type = match[1];
+          dispatch({ type: 'saveParams', payload: { query, type } });
+          dispatch({ type: 'fetchList', payload: { query, type } });
         }
       });
     },
@@ -53,14 +67,18 @@ export default {
     },
   },
   effects: {
-    *fetchList({ payload }, { put, call, select }) {
-      const params = extractParams(payload);
+    *fetchList({ payload: { query, type } }, { put, call, select }) {
+      const params = extractParams(query);
       const per = yield select(state => state.article.per);
+      console.log(params.filters);
       const response = yield call(fetchArticles, params.page, per, {
         search: params.search,
         sort_field: params.sortField,
         sort_order: params.sortOrder,
-        filters: params.filters,
+        filters: {
+          ...params.filters,
+          article_type: mapToArticleType(type)
+        },
       });
       yield put({ type: 'saveList', payload: response });
     },
@@ -77,8 +95,8 @@ export default {
     }
   },
   reducers: {
-    saveParams(state, { payload }) {
-      return { ...state, ...extractParams(payload) };
+    saveParams(state, { payload: { query, type } }) {
+      return { ...state, ...extractParams(query), type };
     },
     saveList(state, { payload }) {
       return {

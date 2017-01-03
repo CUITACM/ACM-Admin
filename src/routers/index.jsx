@@ -21,8 +21,11 @@ export default ({ history }) => (
       <IndexRedirect to="/admin/main" />
       <Route path="main" component={AdminIndex} />
       <Route path="users" component={AdminUser} />
-      <Route path="articles" component={AdminArticle} />
-      <Route path="articles/edit/:id" component={ArticleEdit} />
+      <Route path="articles">
+        <IndexRedirect to="news" />
+        <Route path=":type" component={AdminArticle} />
+        <Route path="edit/:id" component={ArticleEdit} />
+      </Route>
       <Route path="resources" component={AdminResource} />
       <Route path="spiders">
         <IndexRedirect to="accounts" />

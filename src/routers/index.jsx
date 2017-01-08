@@ -6,6 +6,7 @@ import Register from './auth/Register';
 import AppLayout from './main/AppLayout';
 import AdminIndex from './admin/AdminIndex';
 import AdminUser from './user/AdminUser';
+import UserEdit from './user/UserEdit';
 import AdminArticle from './article/AdminArticle';
 import ArticleEdit from './article/ArticleEdit';
 import AdminResource from './resource/AdminResource';
@@ -20,7 +21,11 @@ export default ({ history }) => (
     <Route path="/admin" component={AppLayout} onEnter={validateLogin}>
       <IndexRedirect to="/admin/main" />
       <Route path="main" component={AdminIndex} />
-      <Route path="users" component={AdminUser} />
+      <Route path="users">
+        <IndexRedirect to="list" />
+        <Route path="list" component={AdminUser} />
+        <Route path="edit/:id" component={UserEdit} />
+      </Route>
       <Route path="articles">
         <IndexRedirect to="news" />
         <Route path=":type" component={AdminArticle} />

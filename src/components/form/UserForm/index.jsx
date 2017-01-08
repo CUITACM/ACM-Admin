@@ -5,6 +5,13 @@ const FormItem = Form.Item;
 const RadioGroup = Radio.Group;
 
 class UserForm extends React.PureComponent {
+  static propTypes = {
+    form: PropTypes.object.isRequired,
+    user: PropTypes.object.isRequired,
+    loading: PropTypes.bool,
+    onSubmit: PropTypes.func.isRequired
+  }
+
   constructor(props) {
     super(props);
     this.onSubmit = (e) => {
@@ -13,6 +20,7 @@ class UserForm extends React.PureComponent {
         if (!errors) {
           const params = this.props.form.getFieldsValue();
           params.gender = params.gender === 'male';
+          console.log(params);
           this.props.onSubmit(
             this.props.user.id,
             params
@@ -101,16 +109,20 @@ class UserForm extends React.PureComponent {
             <Input size="default" placeholder="学院" />
           )}
         </FormItem>
-        <FormItem {...formItemLayout} label="专业年级">
+        <FormItem {...formItemLayout} label="专业年级" >
           <Col span="14">
-            {majorDecorator(
-              <Input size="default" placeholder="专业年级" />
-            )}
+            <FormItem>
+              {majorDecorator(
+                <Input size="default" placeholder="专业年级" />
+              )}
+            </FormItem>
           </Col>
           <Col span="10">
-            {gradeDecorator(
-              <InputNumber min={2000} />
-            )}级
+            <FormItem>
+              {gradeDecorator(
+                <InputNumber min={2000} />
+              )}级
+            </FormItem>
           </Col>
         </FormItem>
         <FormItem {...formItemLayout} label="描述">
@@ -119,17 +131,14 @@ class UserForm extends React.PureComponent {
           )}
         </FormItem>
         <FormItem wrapperCol={{ span: 16, offset: 6 }} >
-          <Button type="primary" htmlType="submit">提交</Button>
+          <Button type="primary" htmlType="submit" loading={this.props.loading}>
+            提交
+          </Button>
         </FormItem>
       </Form>
     );
   }
 }
 
-UserForm.propTypes = {
-  form: PropTypes.object.isRequired,
-  user: PropTypes.object.isRequired,
-  onSubmit: PropTypes.func.isRequired
-};
 
 export default Form.create()(UserForm);

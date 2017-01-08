@@ -13,6 +13,9 @@ export default {
   namespace: 'user',
   state: {
     currentUser: null,
+    currentItem: {
+      user_info: {}
+    },
     list: [],
     page: 1,
     per: 10,
@@ -39,7 +42,16 @@ export default {
           dispatch({ type: 'fetchList', payload: query });
         }
       });
-    }
+    },
+    itemSubscriber({ dispatch, history }) {
+      return history.listen(({ pathname }) => {
+        const match = pathToRegexp('/admin/users/edit/:id').exec(pathname);
+        if (match) {
+          const id = match[1];
+          dispatch({ type: 'fetchItem', payload: id });
+        }
+      });
+    },
   },
   effects: {
     *loadCurrentUser(action, { call, put, select }) {
@@ -72,7 +84,14 @@ export default {
         filters: params.filters,
       });
       yield put({ type: 'saveList', payload: response });
-    }
+    },
+    *fetchItem({ payload: id }, { put, call }) {
+      const response = yield call(userServices.fetchUser, id);
+      yield put({ type: 'saveItem', payload: response.user });
+    },
+    *update({ payload }, { put, call }) {
+
+    },
   },
   reducers: {
     loadCurrentUserSuccess(state, { payload }) {
@@ -89,6 +108,9 @@ export default {
         totalCount: payload.meta.total_count,
         totalPages: payload.meta.total_pages,
       };
-    }
+    },
+    saveItem(state, { payload }) {
+      return { ...state, currentItem: payload };
+    },
   }
 };

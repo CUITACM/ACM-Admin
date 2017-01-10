@@ -20,13 +20,16 @@ export default function request(url, options = {}) {
     .then(parseJSON);
 }
 
-export function requestWithToken(url, options = {}) {
+export function requestWithToken(url, options = {}, json = false) {
   const newOptions = {
     ...options,
     headers: {
       ...(options.headers || {}),
-      Authorization: `Bearer ${getToken()}`,
+      Authorization: `Bearer ${getToken()}`
     }
   };
+  if (json) {
+    newOptions.headers['Content-Type'] = 'application/json';
+  }
   return request(url, newOptions);
 }

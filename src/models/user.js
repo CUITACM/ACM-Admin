@@ -1,6 +1,8 @@
 import jwtDecode from 'jwt-decode';
 import pathToRegexp from 'path-to-regexp';
 import { getToken } from 'services/auth';
+import { routerRedux } from 'dva/router';
+import { message } from 'antd';
 import * as userServices from 'services/user';
 
 const extractParams = query => {
@@ -37,7 +39,7 @@ export default {
     },
     listSubscriber({ dispatch, history }) {
       return history.listen(({ pathname, query }) => {
-        if (pathname === '/admin/users') {
+        if (pathname === '/admin/users/list') {
           dispatch({ type: 'saveParams', payload: query });
           dispatch({ type: 'fetchList', payload: query });
         }
@@ -90,7 +92,12 @@ export default {
       yield put({ type: 'saveItem', payload: response.user });
     },
     *update({ payload }, { put, call }) {
-
+      const response = yield call(userServices.updateUser, payload.id, payload.params);
+      if (response.user != null) {
+        yield put(routerRedux.goBack());
+      } else {
+        message.error('更新失败');
+      }
     },
   },
   reducers: {
@@ -111,6 +118,6 @@ export default {
     },
     saveItem(state, { payload }) {
       return { ...state, currentItem: payload };
-    },
+    }
   }
 };

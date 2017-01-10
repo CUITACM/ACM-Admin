@@ -37,6 +37,12 @@ class UserForm extends React.PureComponent {
       labelCol: { span: 6 },
       wrapperCol: { span: 14 },
     };
+    const displayNameDecorator = getFieldDecorator('display_name', {
+      initialValue: user.display_name,
+      rules: [
+        { required: true, message: '请填写真实姓名' }
+      ]
+    });
     const nicknameDecorator = getFieldDecorator('nickname', {
       initialValue: user.nickname,
       rules: [
@@ -69,13 +75,18 @@ class UserForm extends React.PureComponent {
       initialValue: user.user_info.major
     });
     const gradeDecorator = getFieldDecorator('grade', {
-      initialValue: user.user_info.grade
+      initialValue: user.user_info.grade || new Date().getFullYear()
     });
     const descriptionDecorator = getFieldDecorator('description', {
       initialValue: user.description
     });
     return (
       <Form horizontal onSubmit={this.onSubmit}>
+        <FormItem {...formItemLayout} label="真实姓名">
+          {displayNameDecorator(
+            <Input size="default" placeholder="真实姓名" />
+          )}
+        </FormItem>
         <FormItem {...formItemLayout} label="昵称">
           {nicknameDecorator(
             <Input size="default" placeholder="昵称" />

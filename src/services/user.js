@@ -18,13 +18,15 @@ export function createUser(params) {
 }
 
 export function updateUser(id, params) {
+  const data = new FormData();
+  Object.keys(params).forEach(key => { data.append(key, params[key]); });
   return requestWithToken(`${API_ROOT}/users/${id}`, {
-    method: 'POST', body: JSON.stringify(params),
+    method: 'POST', body: data,
   });
 }
 
 export function deleteUser(id) {
   return requestWithToken(`${API_ROOT}/users/${id}`, {
-    method: 'DELETE', body: JSON.stringify(params),
+    method: 'DELETE'
   });
 }

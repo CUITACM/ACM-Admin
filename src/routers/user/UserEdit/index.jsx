@@ -1,6 +1,9 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'dva';
+import { Link } from 'dva/router';
+import { Breadcrumb, Icon } from 'antd';
 import UserForm from 'components/form/UserForm';
+import './style.less';
 
 class UserEdit extends React.PureComponent {
   static propTypes = {
@@ -22,9 +25,22 @@ class UserEdit extends React.PureComponent {
   render() {
     const { loading, user } = this.props;
     return (
-      <UserForm
-        loading={loading} user={user} onSubmit={this.onSubmit}
-      />
+      <div className="user-edit-page">
+        <Breadcrumb>
+          <Breadcrumb.Item href="/admin/main">
+            <Link to="/admin/main"><Icon type="home" /></Link>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item >
+            <Link to="/admin/users/list"><Icon type="user" /> 用户列表</Link>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item>
+            编辑用户
+          </Breadcrumb.Item>
+        </Breadcrumb>
+        <UserForm
+          loading={loading} user={user} onSubmit={this.onSubmit}
+        />
+      </div>
     );
   }
 }

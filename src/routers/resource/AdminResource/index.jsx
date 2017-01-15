@@ -9,7 +9,7 @@ import SearchInput from 'components/SearchInput';
 import UploadForm from 'components/form/UploadForm';
 import { ResourceUsage, ResourceUsageHuman } from 'models/resource';
 import { createResource } from 'services/resource';
-import { CDN_ROOT } from 'src/config';
+import { joinCDN } from 'src/config';
 import './style.less';
 
 class AdminResource extends React.PureComponent {
@@ -25,12 +25,15 @@ class AdminResource extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      showModal: false
+      showModal: false,
+      showPictureModal: false,
+      activeRecord: null,
     };
     this.onPageChange = this.onPageChange.bind(this);
     this.onImageUpload = this.onImageUpload.bind(this);
     this.onSearch = this.onSearch.bind(this);
     this.onDelete = this.onDelete.bind(this);
+    this.onPreview = this.onPreview.bind(this);
   }
 
   onImageUpload(params) {
@@ -65,6 +68,10 @@ class AdminResource extends React.PureComponent {
     }));
   }
 
+  onPreview(picture) {
+    this.setState({ showPictureModal: true, activeRecord: picture });
+  }
+
   onPageChange(page) {
     this.props.dispatch(routerRedux.push({
       pathname: '/admin/resources',
@@ -78,7 +85,7 @@ class AdminResource extends React.PureComponent {
         <div style={{ padding: '5px' }}>
           <Card bodyStyle={{ padding: '0' }}>
             <div className="card-preview">
-              <img alt={data.filename} src={CDN_ROOT + data.path.thumb} />
+              <img alt={data.filename} src={joinCDN(data.path.thumb)} />
             </div>
             <aside className="card-details">
               <p className="card-id">{data.filename}</p>
@@ -86,12 +93,17 @@ class AdminResource extends React.PureComponent {
               <p>大小: {data.file_size}</p>
             </aside>
             <div className="card-operations">
-              <Popconfirm
-                title="确定要删除吗？" placement="right"
-                onConfirm={() => this.onDelete(data.id)}
-              >
-                <Button size="small" icon="delete">删除</Button>
-              </Popconfirm>
+              <Button.Group>
+                <Popconfirm
+                  title="确定要删除吗？" placement="right"
+                  onConfirm={() => this.onDelete(data.id)}
+                >
+                  <Button size="small" icon="delete">删除</Button>
+                </Popconfirm>
+                <Button size="small" icon="picture" onClick={() => this.onPreview(data)}>
+                  查看大图
+                </Button>
+              </Button.Group>
             </div>
           </Card>
         </div>
@@ -105,6 +117,7 @@ class AdminResource extends React.PureComponent {
       onChange: this.onPageChange,
       showTotal: total => `共${total}条`
     };
+    const { showModal, showPictureModal, activeRecord } = this.state;
     return (
       <div>
         <div className="table-operations clear-fix">
@@ -127,13 +140,21 @@ class AdminResource extends React.PureComponent {
           <Pagination {...paginationProps} />
         </div>
         <Modal
-          title="图片上传" visible={this.state.showModal} footer={null}
+          title="图片上传" visible={showModal} footer={null}
           onCancel={() => this.setState({ showModal: false })}
         >
           <UploadForm
             usage={ResourceUsage.OTHER}
             onSubmit={this.onImageUpload}
           />
+        </Modal>
+        <Modal
+          closable maskClosable title="查看大图" visible={showPictureModal} footer={null}
+          width={800} onCancel={() => this.setState({ showPictureModal: false })}
+        >
+          {activeRecord ? (
+            <img alt={activeRecord.filename} src={joinCDN(activeRecord.path.origin)} />
+          ) : null}
         </Modal>
       </div>
     );

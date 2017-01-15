@@ -20,7 +20,7 @@ export function createArticle(params) {
 export function updateArticle(id, params) {
   return requestWithToken(`${API_ROOT}/articles/${id}`, {
     method: 'PUT', body: JSON.stringify(params),
-  });
+  }, true);
 }
 
 export function deleteArticle(id) {

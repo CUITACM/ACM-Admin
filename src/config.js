@@ -5,6 +5,11 @@ export const API_ROOT = `${HOST}/api/v1`;
 
 export const SiteName = 'CUIT ACM Admin';
 
+export function joinCDN(url) {
+  if (url == null) return '';
+  return `${CDN_ROOT}${url}`;
+}
+
 export const NavbarMenu = [
   {
     to: '/admin/main',

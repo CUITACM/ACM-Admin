@@ -32,13 +32,13 @@ class ArticleForm extends React.PureComponent {
       if (!errors) {
         const params = this.props.form.getFieldsValue();
         const { article } = this.props;
-        this.props.onSubmit({
+        this.props.onSubmit(article && article.id, {
           ...params,
           article_type: ArticleType.NEWS,
           status: isDraft ? ArticleStatus.DRAFT : ArticleStatus.PUBLISH,
           content: this.state.contentValue || article.content,
           tags: this.state.tags || article.tags
-        }, article && article.id);
+        });
       }
     });
   }
@@ -76,7 +76,7 @@ class ArticleForm extends React.PureComponent {
           />
         </FormItem>
         <FormItem wrapperCol={{ span: 16, offset: 4 }} >
-          <Button type="primary" htmlType="submit">发布</Button>
+          <Button type="primary" onClick={e => this.onSubmit(e, false)}>发布</Button>
           <Button type="ghost" onClick={e => this.onSubmit(e, true)}>存到草稿</Button>
         </FormItem>
       </Form>

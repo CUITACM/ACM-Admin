@@ -6,7 +6,7 @@ import { CDN_ROOT } from 'src/config';
 import SearchInput from 'components/SearchInput';
 import './style.less';
 
-const getColumns = (filters) => (
+const getColumns = (filters, operations) => (
   [{
     title: '头像',
     dataIndex: 'avatar',
@@ -109,13 +109,25 @@ class AdminUser extends React.PureComponent {
     super(props);
     this.handleTableChange = this.handleTableChange.bind(this);
     this.onSearch = this.onSearch.bind(this);
+    this.onDelete = this.onDelete.bind(this);
   }
 
   onSearch(value) {
     this.props.dispatch(routerRedux.push({
-      pathname: '/admin/users',
+      pathname: '/admin/users/list',
       query: { ...this.props.location.query, search: value }
     }));
+  }
+
+  onDelete(record) {
+    console.log('onDelete');
+    this.props.dispatch({
+      type: 'user/delete',
+      payload: {
+        id: record.id,
+        redirect: { pathname: '/admin/users/list', query: this.props.location.query }
+      }
+    });
   }
 
   handleTableChange(pagination, filters, sorter) {
@@ -135,7 +147,9 @@ class AdminUser extends React.PureComponent {
 
   render() {
     const { search } = this.props.location.query;
-    const columns = getColumns(this.props.filters);
+    const columns = getColumns(this.props.filters, {
+      onDelete: this.onDelete,
+    });
     return (
       <div>
         <div className="table-operations clear-fix">

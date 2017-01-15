@@ -1,9 +1,18 @@
 import pathToRegexp from 'path-to-regexp';
-import { fetchArticles, fetchArticle, deleteArticle } from 'services/article';
+import { routerRedux } from 'dva/router';
+import { message } from 'antd';
+import {
+  fetchArticles, fetchArticle, updateArticle, deleteArticle
+} from 'services/article';
 
 export const ArticleType = {
   NEWS: 'News',
   SOLUTION: 'Solution'
+};
+
+export const HumanArticleType = {
+  News: '新闻',
+  Solution: '解题报告'
 };
 
 export const ArticleStatus = {
@@ -85,6 +94,15 @@ export default {
     *fetchItem({ payload: id }, { put, call }) {
       const response = yield call(fetchArticle, id);
       yield put({ type: 'saveItem', payload: response.article });
+    },
+    *update({ payload }, { put, call }) {
+      const response = yield call(updateArticle, payload.id, payload.params);
+      if (response.article != null) {
+        message.success('更新成功');
+        yield put(routerRedux.goBack());
+      } else {
+        message.error('更新失败');
+      }
     },
     *delete({ payload }, { put, call }) {
       const response = yield call(deleteArticle, payload);

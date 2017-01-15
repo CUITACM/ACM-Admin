@@ -15,6 +15,11 @@ export function isObject(obj) {
   return type(obj) === '[object Object]';
 }
 
+export function toLower(str) {
+  if (str == null) return '';
+  return str.toLowerCase();
+}
+
 const esc = window.encodeURIComponent;
 
 function decodeParams(parameters, prefix) {

@@ -1,12 +1,14 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'dva';
 import { routerRedux, Link } from 'dva/router';
-import { Table } from 'antd';
+import { Table, Modal } from 'antd';
+import Highlight from 'react-highlight';
 import SearchInput from 'components/SearchInput';
 import { OJ_MAP } from 'models/account';
+import './style.less';
 
-const getColumns = (filters, operations) => (
-  [{
+const getColumns = (filters, operations) => {
+  const columns = [{
     title: '用户名',
     dataIndex: 'user_name',
     sorter: true,
@@ -50,16 +52,20 @@ const getColumns = (filters, operations) => (
     dataIndex: 'submitted_at',
     sorter: true,
     width: '20%'
-  }, {
-    title: '操作',
-    key: 'operation',
-    render: (text, record) => (
-      <span>
-        <Link>代码</Link>
-      </span>
-    ),
-  }]
-);
+  }];
+  if (operations != null) {
+    columns.push({
+      title: '操作',
+      key: 'operation',
+      render: (text, record) => (
+        <span>
+          <Link onClick={() => operations.onShowCode(record)}>代码</Link>
+        </span>
+      ),
+    });
+  }
+  return columns;
+};
 
 class SpiderSubmit extends React.PureComponent {
   static propTypes = {
@@ -73,7 +79,12 @@ class SpiderSubmit extends React.PureComponent {
 
   constructor(props) {
     super(props);
+    this.state = {
+      showCode: false,
+      activeRecord: null,
+    };
     this.onSearch = this.onSearch.bind(this);
+    this.onShowCode = this.onShowCode.bind(this);
     this.handleTableChange = this.handleTableChange.bind(this);
   }
 
@@ -82,6 +93,13 @@ class SpiderSubmit extends React.PureComponent {
       pathname: '/admin/spiders/submits',
       query: { ...this.props.location.query, search: value }
     }));
+  }
+
+  onShowCode(record) {
+    this.setState({
+      activeRecord: record,
+      showCode: true
+    });
   }
 
   handleTableChange(pagination, filters, sorter) {
@@ -100,9 +118,12 @@ class SpiderSubmit extends React.PureComponent {
   }
 
   render() {
-    const columns = getColumns(this.props.filters, {});
+    const columns = getColumns(this.props.filters, {
+      onShowCode: this.onShowCode
+    });
+    const { showCode, activeRecord } = this.state;
     return (
-      <div>
+      <div className="submit-table">
         <div className="table-operations clear-fix">
           <div className="pull-right">
             <SearchInput onSearch={this.onSearch} style={{ width: 200 }} />
@@ -115,6 +136,25 @@ class SpiderSubmit extends React.PureComponent {
           columns={columns} dataSource={this.props.list}
           pagination={this.props.pagination} loading={this.props.loading}
         />
+        <Modal
+          closable maskClosable title="查看代码" visible={showCode} footer={null}
+          width={640} onCancel={() => this.setState({ showCode: false })}
+        >
+          {activeRecord ? (
+            <div>
+              <Table
+                bordered size="small"
+                rowKey={record => record.id}
+                columns={getColumns(this.props.filters)}
+                dataSource={[activeRecord]}
+                pagination={false}
+              />
+              <Highlight className="code-block">
+                {activeRecord.code}
+              </Highlight>
+            </div>
+          ) : null}
+        </Modal>
       </div>
     );
   }

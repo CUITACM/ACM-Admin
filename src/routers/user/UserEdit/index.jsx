@@ -7,9 +7,9 @@ import './style.less';
 
 class UserEdit extends React.PureComponent {
   static propTypes = {
-    loading: PropTypes.bool,
-    user: PropTypes.object,
-    dispatch: PropTypes.func,
+    loading: PropTypes.bool.isRequired,
+    user: PropTypes.object.isRequired,
+    dispatch: PropTypes.func.isRequired,
   }
 
   constructor(props) {
@@ -25,12 +25,12 @@ class UserEdit extends React.PureComponent {
   render() {
     const { loading, user } = this.props;
     return (
-      <div className="user-edit-page">
+      <div className="edit-page">
         <Breadcrumb>
-          <Breadcrumb.Item href="/admin/main">
+          <Breadcrumb.Item>
             <Link to="/admin/main"><Icon type="home" /></Link>
           </Breadcrumb.Item>
-          <Breadcrumb.Item >
+          <Breadcrumb.Item>
             <Link to="/admin/users/list"><Icon type="user" /> 用户列表</Link>
           </Breadcrumb.Item>
           <Breadcrumb.Item>

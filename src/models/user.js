@@ -3,7 +3,9 @@ import pathToRegexp from 'path-to-regexp';
 import { getToken } from 'services/auth';
 import { routerRedux } from 'dva/router';
 import { message } from 'antd';
-import * as userServices from 'services/user';
+import {
+  fetchUsers, fetchUser, createUser, updateUser, deleteUser
+} from 'services/user';
 
 const extractParams = query => {
   const { page = 1, search = '', sortField = 'id', sortOrder = 'ascend' } = query;
@@ -69,7 +71,7 @@ export default {
           console.log(decoded);
           throw new Error('invalid jwt token');
         }
-        const response = yield call(userServices.fetchUser, decoded.user_id);
+        const response = yield call(fetchUser, decoded.user_id);
         yield put({ type: 'loadCurrentUserSuccess', payload: response });
       } catch (err) {
         console.error(err);
@@ -79,7 +81,7 @@ export default {
     *fetchList({ payload }, { put, call, select }) {
       const params = extractParams(payload);
       const per = yield select(state => state.user.per);
-      const response = yield call(userServices.fetchUsers, params.page, per, {
+      const response = yield call(fetchUsers, params.page, per, {
         search: params.search,
         sort_field: params.sortField,
         sort_order: params.sortOrder,
@@ -88,17 +90,26 @@ export default {
       yield put({ type: 'saveList', payload: response });
     },
     *fetchItem({ payload: id }, { put, call }) {
-      const response = yield call(userServices.fetchUser, id);
+      const response = yield call(fetchUser, id);
       yield put({ type: 'saveItem', payload: response.user });
     },
     *update({ payload }, { put, call }) {
-      const response = yield call(userServices.updateUser, payload.id, payload.params);
+      const response = yield call(updateUser, payload.id, payload.params);
       if (response.user != null) {
         yield put(routerRedux.goBack());
       } else {
         message.error('更新失败');
       }
     },
+    *delete({ payload }, { put, call }) {
+      const response = yield call(deleteUser, payload.id);
+      if (response.error_code === 0) {
+        message.success('删除成功');
+        yield put(routerRedux.replace(payload.redirect));
+      } else {
+        message.error('删除失败');
+      }
+    }
   },
   reducers: {
     loadCurrentUserSuccess(state, { payload }) {

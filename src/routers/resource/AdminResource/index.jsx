@@ -149,8 +149,10 @@ class AdminResource extends React.PureComponent {
           />
         </Modal>
         <Modal
-          closable maskClosable title="查看大图" visible={showPictureModal} footer={null}
-          width={800} onCancel={() => this.setState({ showPictureModal: false })}
+          closable maskClosable
+          title="查看大图" visible={showPictureModal} footer={null}
+          style={{ top: 20 }} height={180}
+          onCancel={() => this.setState({ showPictureModal: false })}
         >
           {activeRecord ? (
             <img alt={activeRecord.filename} src={joinCDN(activeRecord.path.origin)} />

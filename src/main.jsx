@@ -1,9 +1,9 @@
 import dva from 'dva';
 import { browserHistory } from 'dva/router';
 import createLoading from 'dva-loading';
-import 'highlight.js/styles/monokai.css';
-import routers from './routers';
-import models from './models';
+import routers from 'routers';
+import models from 'models';
+import 'highlight.js/styles/github.css';
 import './styles/common.less';
 
 // init app

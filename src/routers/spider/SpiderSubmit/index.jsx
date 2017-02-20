@@ -137,8 +137,10 @@ class SpiderSubmit extends React.PureComponent {
           pagination={this.props.pagination} loading={this.props.loading}
         />
         <Modal
-          closable maskClosable title="查看代码" visible={showCode} footer={null}
-          width={640} onCancel={() => this.setState({ showCode: false })}
+          closable maskClosable
+          title="查看代码" visible={showCode} footer={null}
+          style={{ top: 20 }} width={720}
+          onCancel={() => this.setState({ showCode: false })}
         >
           {activeRecord ? (
             <div>

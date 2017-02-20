@@ -1,13 +1,58 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'dva';
 import { routerRedux, Link } from 'dva/router';
-import { Table, Button, Popconfirm, Modal } from 'antd';
+import {
+  Table, Button, Popconfirm, Modal, Dropdown, Icon, Menu
+} from 'antd';
 import marked from 'marked';
 import Highlight from 'react-highlight';
 import StatusPoint from 'components/StatusPoint';
 import SearchInput from 'components/SearchInput';
 import { ArticleStatus } from 'models/article';
 import './style.less';
+
+const MenuItem = Menu.Item;
+
+const renderOperationsByArticle = (record, operations) => {
+  const publishItem = (
+    <MenuItem key="publish">
+      <Link onClick={() => console.log('publish')}>发布</Link>
+    </MenuItem>
+  );
+  const topItem = (
+    <MenuItem key="top">
+      <Link onClick={() => console.log('top')}>置顶</Link>
+    </MenuItem>
+  );
+  const unTopItem = (
+    <MenuItem key="unTop">
+      <Link onClick={() => console.log('un top')}>取消置顶</Link>
+    </MenuItem>
+  );
+  const draftItem = (
+    <MenuItem key="draft">
+      <Link onClick={() => console.log('draft')}>移到草稿箱</Link>
+    </MenuItem>
+  );
+  let items = [];
+  switch (record.status) {
+    case ArticleStatus.RECYCLE:
+      items = [draftItem, publishItem, topItem];
+      break;
+    case ArticleStatus.DRAFT:
+      items = [publishItem, topItem];
+      break;
+    case ArticleStatus.PUBLISH:
+      items = [draftItem, topItem];
+      break;
+    case ArticleStatus.PINNED:
+      items = [unTopItem, draftItem];
+      break;
+    default:
+      break;
+  }
+  return <Menu>{items}</Menu>;
+};
 
 const getColumns = (filters, operations) => (
   [{
@@ -62,36 +107,6 @@ const getColumns = (filters, operations) => (
       const editOp = <Link to={`/admin/articles/edit/${record.id}`}>修改</Link>;
       return (
         <span>
-          {record.status === ArticleStatus.RECYCLE ? (
-            <span>
-              <Link to={`/admin/articles/edit/${record.id}`}>还原到草稿箱</Link>
-              <span className="ant-divider" />
-            </span>
-          ) : null}
-          {record.status === ArticleStatus.DRAFT ? (
-            <span>
-              <Link to={`/admin/articles/edit/${record.id}`}>上线发布</Link>
-              <span className="ant-divider" />
-              <Link to={`/admin/articles/edit/${record.id}`}>置顶</Link>
-              <span className="ant-divider" />
-            </span>
-          ) : null}
-          {record.status === ArticleStatus.PUBLISH ? (
-            <span>
-              <Link to={`/admin/articles/edit/${record.id}`}>置顶</Link>
-              <span className="ant-divider" />
-              <Link to={`/admin/articles/edit/${record.id}`}>放入草稿箱</Link>
-              <span className="ant-divider" />
-            </span>
-          ) : null}
-          {record.status === ArticleStatus.PINNED ? (
-            <span>
-              <Link to={`/admin/articles/edit/${record.id}`}>取消置顶</Link>
-              <span className="ant-divider" />
-              <Link to={`/admin/articles/edit/${record.id}`}>放入草稿箱</Link>
-              <span className="ant-divider" />
-            </span>
-          ) : null}
           {editOp}
           <span className="ant-divider" />
           <Popconfirm
@@ -102,6 +117,15 @@ const getColumns = (filters, operations) => (
           </Popconfirm>
           <span className="ant-divider" />
           <a onClick={e => operations.onPreview(e, record)}>预览</a>
+          <span className="ant-divider" />
+          <Dropdown
+            overlay={renderOperationsByArticle(record, operations)}
+            trigger={['click']}
+          >
+            <a className="ant-dropdown-link">
+              其它操作 <Icon type="down" />
+            </a>
+          </Dropdown>
         </span>
       );
     }
@@ -192,8 +216,10 @@ class AdminArticle extends React.PureComponent {
           pagination={this.props.pagination} loading={this.props.loading}
         />
         <Modal
-          closable maskClosable title="预览" visible={showPreviewModal} footer={null}
-          width={640} onCancel={() => this.setState({ showPreviewModal: false })}
+          closable maskClosable title="预览"
+          visible={showPreviewModal} footer={null}
+          style={{ top: 20 }} width={640}
+          onCancel={() => this.setState({ showPreviewModal: false })}
         >
           {activeRecord ? (
             <Highlight className="article-preview" innerHTML>

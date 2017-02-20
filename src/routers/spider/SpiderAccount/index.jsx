@@ -1,9 +1,10 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'dva';
 import { routerRedux, Link } from 'dva/router';
-import { Table, Tag, Popconfirm } from 'antd';
+import { Table, Tag, Popconfirm, Modal } from 'antd';
 import StatusPoint from 'components/StatusPoint';
 import SearchInput from 'components/SearchInput';
+import AccountForm from 'components/form/AccountForm';
 import { AccountStatus, OJ_MAP } from 'models/account';
 
 const getColumns = (filters, operations) => (
@@ -79,7 +80,7 @@ const getColumns = (filters, operations) => (
     key: 'operation',
     render: (text, record) => (
       <span>
-        <Link to={`/admin/articles/edit/${record.id}`}>修改</Link>
+        <Link onClick={() => operations.onEdit(record)}>修改</Link>
         <span className="ant-divider" />
         <Popconfirm
           title="确定要删除吗？" placement="left"
@@ -104,6 +105,10 @@ class SpiderAccount extends React.PureComponent {
 
   constructor(props) {
     super(props);
+    this.state = {
+      showEditModal: false,
+      activeRecord: null,
+    };
     this.onSearch = this.onSearch.bind(this);
     this.handleTableChange = this.handleTableChange.bind(this);
   }
@@ -131,7 +136,10 @@ class SpiderAccount extends React.PureComponent {
   }
 
   render() {
-    const columns = getColumns(this.props.filters, {});
+    const { showEditModal, activeRecord } = this.state;
+    const columns = getColumns(this.props.filters, {
+      onEdit: (r) => this.setState({ showEditModal: true, activeRecord: r })
+    });
     return (
       <div>
         <div className="table-operations clear-fix">
@@ -146,6 +154,12 @@ class SpiderAccount extends React.PureComponent {
           columns={columns} dataSource={this.props.list}
           pagination={this.props.pagination} loading={this.props.loading}
         />
+        <Modal
+          title="账号修改" visible={showEditModal} footer={null}
+          onCancel={() => this.setState({ showEditModal: false })}
+        >
+          <AccountForm account={activeRecord} />
+        </Modal>
       </div>
     );
   }

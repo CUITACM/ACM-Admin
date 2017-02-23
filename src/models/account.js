@@ -1,5 +1,8 @@
-import { fetchAccounts } from 'services/spider';
 import { extractParams } from 'utils/qs';
+import { message } from 'antd';
+import {
+  fetchAccounts, createAcount, updateAccount, deleteAccount
+} from 'services/spider';
 
 export const AccountStatus = {
   NOT_INIT: 0,
@@ -55,6 +58,26 @@ export default {
       });
       yield put({ type: 'saveList', payload: response });
     },
+    *update({ payload, callback }, { put, call }) {
+      const response = yield call(updateAccount, payload.id, payload.params);
+      if (response.error_code !== 1 && response.account != null) {
+        message.success('修改成功');
+        if (callback) callback();
+        yield put({ type: 'updateSuccess', payload: response.account });
+      } else {
+        message.error('修改失败');
+      }
+    },
+    *delete({ payload }, { put, call }) {
+      const response = yield call(deleteAccount, payload);
+      console.log(response);
+      if (response.error_code === 0) {
+        message.success('删除成功');
+        yield put({ type: 'deleteSuccess', payload });
+      } else {
+        message.success('删除失败');
+      }
+    },
   },
   reducers: {
     saveParams(state, { payload }) {
@@ -68,6 +91,15 @@ export default {
         totalCount: payload.meta.total_count,
         totalPages: payload.meta.total_pages,
       };
+    },
+    updateSuccess(state, { payload }) {
+      return {
+        ...state,
+        list: state.list.map(account => (account.id !== payload.id ? account : payload)),
+      };
+    },
+    deleteSuccess(state, { payload }) {
+      return { ...state, list: state.list.filter(account => account.id !== payload) };
     },
   }
 };

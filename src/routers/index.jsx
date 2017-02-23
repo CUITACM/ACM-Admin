@@ -12,6 +12,7 @@ import ArticleEdit from './article/ArticleEdit';
 import AdminResource from './resource/AdminResource';
 import SpiderAccount from './spider/SpiderAccount';
 import SpiderSubmit from './spider/SpiderSubmit';
+import AdminAchievement from './achievements/AdminAchievement';
 
 /* eslint react/prop-types:0 */
 export default ({ history }) => (
@@ -29,6 +30,7 @@ export default ({ history }) => (
       <Route path="articles">
         <IndexRedirect to="news" />
         <Route path=":type" component={AdminArticle} />
+        <Route path="news/create" component={ArticleEdit} />
         <Route path="edit/:id" component={ArticleEdit} />
       </Route>
       <Route path="resources" component={AdminResource} />
@@ -37,6 +39,7 @@ export default ({ history }) => (
         <Route path="accounts" component={SpiderAccount} />
         <Route path="submits" component={SpiderSubmit} />
       </Route>
+      <Route path="achievements" component={AdminAchievement} />
     </Route>
   </Router>
 );

@@ -2,7 +2,8 @@ import React, { PropTypes } from 'react';
 import { connect } from 'dva';
 import { routerRedux, Link } from 'dva/router';
 import {
-  Table, Button, Popconfirm, Modal, Dropdown, Icon, Menu
+  Table, Button, Popconfirm, Modal, Dropdown,
+  Icon, Menu, Tag
 } from 'antd';
 import marked from 'marked';
 import Highlight from 'react-highlight';
@@ -16,22 +17,22 @@ const MenuItem = Menu.Item;
 const renderOperationsByArticle = (record, operations) => {
   const publishItem = (
     <MenuItem key="publish">
-      <Link onClick={() => console.log('publish')}>发布</Link>
+      <Link onClick={() => operations.onChangeStatus(record, ArticleStatus.PUBLISH)}>发布</Link>
     </MenuItem>
   );
   const topItem = (
     <MenuItem key="top">
-      <Link onClick={() => console.log('top')}>置顶</Link>
+      <Link onClick={() => operations.onChangeStatus(record, ArticleStatus.PINNED)}>置顶</Link>
     </MenuItem>
   );
   const unTopItem = (
     <MenuItem key="unTop">
-      <Link onClick={() => console.log('un top')}>取消置顶</Link>
+      <Link onClick={() => operations.onChangeStatus(record, ArticleStatus.PUBLISH)}>取消置顶</Link>
     </MenuItem>
   );
   const draftItem = (
     <MenuItem key="draft">
-      <Link onClick={() => console.log('draft')}>移到草稿箱</Link>
+      <Link onClick={() => operations.onChangeStatus(record, ArticleStatus.DRAFT)}>移到草稿箱</Link>
     </MenuItem>
   );
   let items = [];
@@ -154,6 +155,7 @@ class AdminArticle extends React.PureComponent {
     this.onSearch = this.onSearch.bind(this);
     this.onDelete = this.onDelete.bind(this);
     this.onPreview = this.onPreview.bind(this);
+    this.onChangeStatus = this.onChangeStatus.bind(this);
   }
 
   onDelete(record) {
@@ -165,6 +167,16 @@ class AdminArticle extends React.PureComponent {
       pathname: `/admin/articles/${this.props.type}`,
       query: { ...this.props.location.query, search: value }
     }));
+  }
+
+  onChangeStatus(record, status) {
+    this.props.dispatch({
+      type: 'article/changeStatus',
+      payload: {
+        id: record.id,
+        params: { status }
+      }
+    });
   }
 
   onPreview(e, record) {
@@ -191,17 +203,15 @@ class AdminArticle extends React.PureComponent {
     const columns = getColumns(this.props.filters, {
       onDelete: this.onDelete,
       onPreview: this.onPreview,
+      onChangeStatus: this.onChangeStatus
     });
     const { showPreviewModal, activeRecord } = this.state;
     return (
       <div>
         <div className="table-operations clear-fix">
           {this.props.type === 'news' ? (
-            <Button
-              type="primary"
-              onClick={() => this.context.router.push('/admin/articles/create')}
-            >
-              发布新闻
+            <Button type="primary" >
+              <Link to="/admin/articles/news/create">发布新闻</Link>
             </Button>
           ) : null}
           <div className="pull-right">
@@ -222,9 +232,16 @@ class AdminArticle extends React.PureComponent {
           onCancel={() => this.setState({ showPreviewModal: false })}
         >
           {activeRecord ? (
-            <Highlight className="article-preview" innerHTML>
-              {marked(activeRecord.content)}
-            </Highlight>
+            <div>
+              <div className="tags-line">
+                <b>标签:</b>
+                {activeRecord.tags.map(tag => <Tag key={tag} color="blue">{tag}</Tag>)}
+              </div>
+              <hr />
+              <Highlight className="article-preview" innerHTML>
+                {marked(activeRecord.content)}
+              </Highlight>
+            </div>
           ) : null}
         </Modal>
       </div>

@@ -17,7 +17,7 @@ const getColumns = (filters, operations) => (
     render: (nickname, record) => (
       <div>
         <h3>{nickname}</h3>
-        <Tag color="#00A0E9">{OJ_MAP[record.oj_name]}</Tag>
+        <Tag color="blue-inverse">{OJ_MAP[record.oj_name]}</Tag>
       </div>
     ),
   }, {
@@ -110,6 +110,8 @@ class SpiderAccount extends React.PureComponent {
       activeRecord: null,
     };
     this.onSearch = this.onSearch.bind(this);
+    this.onUpdate = this.onUpdate.bind(this);
+    this.onDelete = this.onDelete.bind(this);
     this.handleTableChange = this.handleTableChange.bind(this);
   }
 
@@ -118,6 +120,18 @@ class SpiderAccount extends React.PureComponent {
       pathname: '/admin/spiders/accounts',
       query: { ...this.props.location.query, search: value }
     }));
+  }
+
+  onUpdate(id, params) {
+    this.props.dispatch({
+      type: 'account/update',
+      payload: { id, params },
+      callback: () => this.setState({ showEditModal: false })
+    });
+  }
+
+  onDelete(record) {
+    this.props.dispatch({ type: 'account/delete', payload: record.id });
   }
 
   handleTableChange(pagination, filters, sorter) {
@@ -158,7 +172,7 @@ class SpiderAccount extends React.PureComponent {
           title="账号修改" visible={showEditModal} footer={null}
           onCancel={() => this.setState({ showEditModal: false })}
         >
-          <AccountForm account={activeRecord} />
+          <AccountForm account={activeRecord} onSubmit={this.onUpdate} />
         </Modal>
       </div>
     );

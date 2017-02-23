@@ -79,7 +79,6 @@ export default {
     *fetchList({ payload: { query, type } }, { put, call, select }) {
       const params = extractParams(query);
       const per = yield select(state => state.article.per);
-      console.log(params.filters);
       const response = yield call(fetchArticles, params.page, per, {
         search: params.search,
         sort_field: params.sortField,
@@ -108,7 +107,19 @@ export default {
       const response = yield call(deleteArticle, payload);
       console.log(response);
       if (response.error_code === 0) {
+        message.success('删除成功');
         yield put({ type: 'deleteSuccess', payload });
+      } else {
+        message.success('删除失败');
+      }
+    },
+    *changeStatus({ payload }, { put, call }) {
+      const response = yield call(updateArticle, payload.id, payload.params);
+      if (response.error_code !== 1 && response.article != null) {
+        message.success('修改成功');
+        yield put({ type: 'updateSuccess', payload: response.article });
+      } else {
+        message.error('修改失败');
       }
     }
   },
@@ -129,7 +140,13 @@ export default {
       return { ...state, currentItem: payload };
     },
     deleteSuccess(state, { payload }) {
-      return { ...state, list: state.list.filter(user => user.id !== payload) };
+      return { ...state, list: state.list.filter(article => article.id !== payload) };
+    },
+    updateSuccess(state, { payload }) {
+      return {
+        ...state,
+        list: state.list.map(article => (article.id !== payload.id ? article : payload))
+      };
     }
   }
 };

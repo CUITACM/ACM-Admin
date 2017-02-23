@@ -14,7 +14,7 @@ export function fetchArticle(id) {
 export function createArticle(params) {
   return requestWithToken(`${API_ROOT}/articles`, {
     method: 'POST', body: JSON.stringify(params),
-  });
+  }, true);
 }
 
 export function updateArticle(id, params) {

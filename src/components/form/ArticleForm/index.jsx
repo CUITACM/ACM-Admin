@@ -10,8 +10,7 @@ class ArticleForm extends React.PureComponent {
   static propTypes = {
     form: PropTypes.object.isRequired,
     article: PropTypes.object,
-    onSubmit: PropTypes.func.isRequired,
-    onSubmitDraft: PropTypes.func
+    onSubmit: PropTypes.func.isRequired
   }
 
   constructor(props) {

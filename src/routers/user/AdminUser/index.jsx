@@ -21,7 +21,7 @@ const getColumns = (filters, operations) => (
     render: (name, record) => (
       <div>
         <h3>{ name }</h3>
-        <Tag color="#108ee9">{ record.nickname }</Tag>
+        <Tag color="blue-inverse">{ record.nickname }</Tag>
       </div>
     ),
   }, {
@@ -52,8 +52,8 @@ const getColumns = (filters, operations) => (
       return (
         <div>
           {isStudent ? <Tag>学生</Tag> : null}
-          {isCoach ? <Tag color="#108ee9">教练</Tag> : null}
-          {isAdmin ? <Tag color="#f50">管理员</Tag> : null}
+          {isCoach ? <Tag color="blue-inverse">教练</Tag> : null}
+          {isAdmin ? <Tag color="red-inverse">管理员</Tag> : null}
         </div>
       );
     }

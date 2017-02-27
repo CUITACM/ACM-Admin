@@ -16,9 +16,9 @@ new WebpackDevServer(webpack(config), {
     errorDetails: true,
     assetsSort: 'name'
   }
-}).listen(config.devPort, 'localhost', function (err, result) {
+}).listen(config.devPort, '0.0.0.0', function (err, result) {
   if (err) {
     return console.log(err);
   }
-  console.log('==> 🌎  Listening at http://localhost:' + config.devPort);
+  console.log('==> 🌎  Listening at http://0.0.0.0:' + config.devPort);
 });

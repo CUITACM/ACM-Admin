@@ -9,7 +9,7 @@ process.env.NODE_ENV = 'development';
 
 Object.keys(baseConfig.entry).forEach(function (name) {
   baseConfig.entry[name].unshift(
-    'webpack-dev-server/client?http://localhost:' + baseConfig.devPort,
+    'webpack-dev-server/client?http://0.0.0.0:' + baseConfig.devPort,
     'webpack/hot/dev-server'
   );
 });

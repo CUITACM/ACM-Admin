@@ -13,6 +13,7 @@ import AdminResource from './resource/AdminResource';
 import SpiderAccount from './spider/SpiderAccount';
 import SpiderSubmit from './spider/SpiderSubmit';
 import AdminAchievement from './achievements/AdminAchievement';
+import AchievementEdit from './achievements/AchievementEdit';
 
 /* eslint react/prop-types:0 */
 export default ({ history }) => (
@@ -39,7 +40,12 @@ export default ({ history }) => (
         <Route path="accounts" component={SpiderAccount} />
         <Route path="submits" component={SpiderSubmit} />
       </Route>
-      <Route path="achievements" component={AdminAchievement} />
+      <Route path="achievements" >
+        <IndexRedirect to="list" />
+        <Route path="list" component={AdminAchievement} />
+        <Route path="create" component={AchievementEdit} />
+        <Route path="edit/:id" component={AchievementEdit} />
+      </Route>
     </Route>
   </Router>
 );

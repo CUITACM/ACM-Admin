@@ -51,6 +51,8 @@ export const NavbarMenu = [
   {
     to: '/admin/achievements',
     text: '成就管理',
-    children: []
+    children: [
+      { to: '/admin/achievements/list', text: '成就管理', icon: 'bars' },
+    ]
   }
 ];

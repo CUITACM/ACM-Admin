@@ -7,6 +7,19 @@ import {
   fetchUsers, fetchUser, createUser, updateUser, deleteUser
 } from 'services/user';
 
+export const UserRole = {
+  STUDENT: 1,
+  COACH: 2,
+  ADMIN: 4
+};
+
+export const UserStatus = {
+  REJECT: -1,
+  APPLY: 0,
+  TRAIN: 1,
+  RETIRE: 2
+};
+
 const extractParams = query => {
   const { page = 1, search = '', sortField = 'id', sortOrder = 'ascend' } = query;
   const filters = JSON.parse(query.filters || '{}');
@@ -43,7 +56,11 @@ export default {
       return history.listen(({ pathname, query }) => {
         if (pathname === '/admin/users/list') {
           dispatch({ type: 'saveParams', payload: query });
-          dispatch({ type: 'fetchList', payload: query });
+          dispatch({ type: 'fetchNormalList', payload: query });
+        }
+        if (pathname === '/admin/users/newcomers') {
+          dispatch({ type: 'saveParams', payload: query });
+          dispatch({ type: 'fetchNewComers', payload: query });
         }
       });
     },
@@ -78,14 +95,31 @@ export default {
         yield put({ type: 'loadCurrentUserFail' });
       }
     },
-    *fetchList({ payload }, { put, call, select }) {
+    *fetchNormalList({ payload }, { put, call, select }) {
       const params = extractParams(payload);
       const per = yield select(state => state.user.per);
       const response = yield call(fetchUsers, params.page, per, {
         search: params.search,
         sort_field: params.sortField,
         sort_order: params.sortOrder,
-        filters: params.filters,
+        filters: {
+          ...params.filters,
+          status: [UserStatus.TRAIN, UserStatus.RETIRE]
+        },
+      });
+      yield put({ type: 'saveList', payload: response });
+    },
+    *fetchNewComers({ payload }, { put, call, select }) {
+      const params = extractParams(payload);
+      const per = yield select(state => state.user.per);
+      const response = yield call(fetchUsers, params.page, per, {
+        search: params.search,
+        sort_field: 'status',
+        sort_order: 'descend',
+        filters: {
+          ...params.filters,
+          status: [UserStatus.REJECT, UserStatus.APPLY]
+        },
       });
       yield put({ type: 'saveList', payload: response });
     },

@@ -2,10 +2,9 @@ import React, { PropTypes } from 'react';
 import { connect } from 'dva';
 import { routerRedux, Link } from 'dva/router';
 import {
-  Table, Button, Popconfirm, Modal, Dropdown, Icon, Menu, Tag
+  Table, Button
 } from 'antd';
 import SearchInput from 'components/SearchInput';
-
 
 const getColumns = (filters, operations) => (
   []

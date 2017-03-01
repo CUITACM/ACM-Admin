@@ -1,19 +1,38 @@
 import React from 'react';
 import { Router, Route, IndexRedirect } from 'dva/router';
 import { validateLogin } from 'services/auth';
+
+// auth
 import Login from './auth/Login';
 import Register from './auth/Register';
+
+// main
 import AppLayout from './main/AppLayout';
-import AdminIndex from './admin/AdminIndex';
+import Dashboard from './main/Dashboard';
+
+// user
 import AdminUser from './user/AdminUser';
+import Newcomers from './user/Newcomers';
 import UserEdit from './user/UserEdit';
+
+// article
 import AdminArticle from './article/AdminArticle';
 import ArticleEdit from './article/ArticleEdit';
+
+// resource
 import AdminResource from './resource/AdminResource';
+
+// spider
 import SpiderAccount from './spider/SpiderAccount';
 import SpiderSubmit from './spider/SpiderSubmit';
-import AdminAchievement from './achievements/AdminAchievement';
-import AchievementEdit from './achievements/AchievementEdit';
+
+// achievement
+import AdminAchievement from './achievement/AdminAchievement';
+import AchievementEdit from './achievement/AchievementEdit';
+
+// honor
+import AdminHonor from './honor/AdminHonor';
+import HonorEdit from './honor/HonorEdit';
 
 /* eslint react/prop-types:0 */
 export default ({ history }) => (
@@ -22,10 +41,14 @@ export default ({ history }) => (
     <Route path="/auth/register" component={Register} />
     <Route path="/admin" component={AppLayout} onEnter={validateLogin}>
       <IndexRedirect to="/admin/main" />
-      <Route path="main" component={AdminIndex} />
+      <Route path="main" >
+        <IndexRedirect to="dashboard" />
+        <Route path="dashboard" component={Dashboard} />
+      </Route>
       <Route path="users">
         <IndexRedirect to="list" />
         <Route path="list" component={AdminUser} />
+        <Route path="newcomers" component={Newcomers} />
         <Route path="edit/:id" component={UserEdit} />
       </Route>
       <Route path="articles">
@@ -45,6 +68,12 @@ export default ({ history }) => (
         <Route path="list" component={AdminAchievement} />
         <Route path="create" component={AchievementEdit} />
         <Route path="edit/:id" component={AchievementEdit} />
+      </Route>
+      <Route path="honors" >
+        <IndexRedirect to="list" />
+        <Route path="list" component={AdminHonor} />
+        <Route path="create" component={HonorEdit} />
+        <Route path="edit/:id" component={HonorEdit} />
       </Route>
     </Route>
   </Router>

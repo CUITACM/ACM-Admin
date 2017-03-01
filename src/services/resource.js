@@ -1,10 +1,10 @@
-import { requestWithToken } from 'utils/request';
+import request, { requestWithToken } from 'utils/request';
 import { API_ROOT } from 'src/config';
 import { withParams } from 'utils/qs';
 
 export function fetchResources(page, per, params = {}) {
   const query = { page, per, ...params };
-  return requestWithToken(withParams(`${API_ROOT}/resources`, query));
+  return request(withParams(`${API_ROOT}/resources`, query));
 }
 
 export function createResource(params) {

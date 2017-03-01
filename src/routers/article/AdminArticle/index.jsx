@@ -9,7 +9,7 @@ import marked from 'marked';
 import Highlight from 'react-highlight';
 import StatusPoint from 'components/StatusPoint';
 import SearchInput from 'components/SearchInput';
-import { ArticleStatus } from 'models/article';
+import { ArticleStatus, ArticleType } from 'models/article';
 import './style.less';
 
 const MenuItem = Menu.Item;
@@ -108,8 +108,9 @@ const getColumns = (filters, operations) => (
       const editOp = <Link to={`/admin/articles/edit/${record.id}`}>修改</Link>;
       return (
         <span>
-          {editOp}
-          <span className="ant-divider" />
+          {record.article_type === ArticleType.NEWS ? (
+            <span>{editOp}<span className="ant-divider" /></span>
+          ) : null}
           <Popconfirm
             title="确定要删除吗？" placement="left"
             onConfirm={() => operations.onDelete(record)}

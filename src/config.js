@@ -14,13 +14,15 @@ export const NavbarMenu = [
   {
     to: '/admin/main',
     text: '系统信息',
-    children: []
+    children: [
+      { to: '/admin/main/dashboard', text: '仪表盘', icon: 'dashboard' },
+    ]
   },
   {
     to: '/admin/users',
     text: '用户管理',
     children: [
-      { to: '/admin/users/list', text: '所有用户', icon: 'user' },
+      { to: '/admin/users/list', text: '校队用户', icon: 'user' },
       { to: '/admin/users/newcomers', text: '新生申请', icon: 'bars' }
     ]
   },
@@ -54,5 +56,10 @@ export const NavbarMenu = [
     children: [
       { to: '/admin/achievements/list', text: '成就管理', icon: 'bars' },
     ]
+  },
+  {
+    to: '/admin/honors',
+    text: '荣誉墙管理',
+    children: []
   }
 ];

@@ -9,11 +9,6 @@ import './style.less';
 
 const getColumns = (filters, operations) => (
   [{
-    title: '头像',
-    dataIndex: 'avatar',
-    width: '70px',
-    render: avatar => <img alt="avatar" src={CDN_ROOT + avatar.thumb} />
-  }, {
     title: '姓名',
     dataIndex: 'display_name',
     sorter: true,
@@ -37,23 +32,6 @@ const getColumns = (filters, operations) => (
     filteredValue: filters.gender || [],
     render: isMale => (isMale ? '男' : '女')
   }, {
-    title: '身份',
-    dataIndex: 'role',
-    width: '90px',
-    filters: [
-      { text: '管理员', value: UserRole.ADMIN },
-      { text: '教练', value: UserRole.COACH },
-      { text: '学生', value: UserRole.STUDENT },
-    ],
-    filteredValue: filters.role || [],
-    render: (role) => (
-      <div>
-        {role === UserRole.STUDENT ? <Tag>学生</Tag> : null}
-        {role === UserRole.COACH ? <Tag color="blue-inverse">教练</Tag> : null}
-        {role === UserRole.ADMIN ? <Tag color="red-inverse">管理员</Tag> : null}
-      </div>
-    )
-  }, {
     title: '状态',
     dataIndex: 'status',
     width: '90px',
@@ -62,49 +40,41 @@ const getColumns = (filters, operations) => (
     filteredValue: filters.status || [],
     render: (status) => (
       <div>
-        {status === UserStatus.TRAIN ? <Tag color="green">训练中</Tag> : null}
-        {status === UserStatus.RETIRE ? <Tag color="gray">退役</Tag> : null}
+        {status === UserStatus.APPLY ? <Tag color="green">排队中</Tag> : null}
+        {status === UserStatus.REJECT ? <Tag color="red">拒绝</Tag> : null}
       </div>
     )
   }, {
-    title: '邮箱',
-    dataIndex: 'user_info',
-    width: '15%',
-    render: (_, record) => (
-      <span>{record.user_info.email}</span>
-    )
+    title: '基本信息',
+    key: 'description',
+    width: '40%',
   }, {
-    title: '学院专业年级',
-    key: 'student_info',
-    width: '18%',
-    render: (text, record) => (
-      <div>
-        {record.user_info.school} {record.user_info.college}&nbsp;
-        {record.user_info.major} {record.user_info.grade}
-      </div>
-    )
-  }, {
-    title: '创建时间',
+    title: '申请时间',
     dataIndex: 'created_at'
   }, {
     title: '操作',
     key: 'operation',
     render: (text, record) => (
       <span>
-        <Link to={`/admin/users/edit/${record.id}`}>修改</Link>
+        <Popconfirm
+          title="确定要通过申请吗？" placement="left"
+          onConfirm={() => operations.on(record)}
+        >
+          <a>通过申请</a>
+        </Popconfirm>
         <span className="ant-divider" />
         <Popconfirm
           title="确定要删除吗？" placement="left"
           onConfirm={() => operations.onDelete(record)}
         >
-          <a>删除</a>
+          <a>拒绝</a>
         </Popconfirm>
       </span>
     ),
   }]
 );
 
-class AdminUser extends React.PureComponent {
+class Newcomers extends React.PureComponent {
   static propTypes = {
     location: PropTypes.object,
     dispatch: PropTypes.func,
@@ -123,7 +93,7 @@ class AdminUser extends React.PureComponent {
 
   onSearch(value) {
     this.props.dispatch(routerRedux.push({
-      pathname: '/admin/users/list',
+      pathname: '/admin/users/newcomers',
       query: { ...this.props.location.query, search: value }
     }));
   }
@@ -134,7 +104,7 @@ class AdminUser extends React.PureComponent {
       type: 'user/delete',
       payload: {
         id: record.id,
-        redirect: { pathname: '/admin/users/list', query: this.props.location.query }
+        redirect: { pathname: '/admin/users/newcomers', query: this.props.location.query }
       }
     });
   }
@@ -149,7 +119,7 @@ class AdminUser extends React.PureComponent {
       params.sortOrder = sorter.order;
     }
     this.props.dispatch(routerRedux.push({
-      pathname: '/admin/users/list',
+      pathname: '/admin/users/newcomers',
       query: { ...this.props.location.query, ...params }
     }));
   }
@@ -192,4 +162,4 @@ const mapStateToProps = ({ loading, user }) => ({
   },
 });
 
-export default connect(mapStateToProps)(AdminUser);
+export default connect(mapStateToProps)(Newcomers);

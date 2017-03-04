@@ -75,7 +75,7 @@ class HonorForm extends React.PureComponent {
         </FormItem>
         <FormItem {...formItemLayout} label="描述">
           {descriptionDecorator(
-            <Input type="textarea" placeholder="描述" autosize={{ minRows: 4, maxRows: 6 }} />
+            <Input type="textarea" placeholder="描述" autosize={{ minRows: 4, maxRows: 10 }} />
           )}
         </FormItem>
         <FormItem wrapperCol={{ span: 16, offset: 6 }}>

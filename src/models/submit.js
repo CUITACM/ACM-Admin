@@ -1,5 +1,11 @@
 import { fetchSubmits } from 'services/spider';
-import { extractParams } from 'utils/qs';
+
+function extractParams(query) {
+  const { page = 1, search = '', sortField = 'id', sortOrder = 'descend' } = query;
+  const filters = JSON.parse(query.filters || '{}');
+  return { page: parseInt(page, 10), search, sortField, sortOrder, filters };
+}
+
 
 export default {
   namespace: 'submit',

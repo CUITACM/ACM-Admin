@@ -1,13 +1,44 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'dva';
-import { routerRedux, Link } from 'dva/router';
+import { Link } from 'dva/router';
 import {
-  Table, Button
+  Table, Button, Tag
 } from 'antd';
 import SearchInput from 'components/SearchInput';
+import { HumanAchievementType } from 'models/achievement';
 
 const getColumns = (filters, operations) => (
-  []
+  [{
+    title: '名称',
+    dataIndex: 'name',
+    sorter: true,
+    width: '15%',
+    render: name => <b>{name}</b>
+  }, {
+    title: '成就类型',
+    dataIndex: 'achievement_type',
+    width: '10%',
+    render: type => <Tag color="blue-inverse">{HumanAchievementType[type]}</Tag>
+  }, {
+    title: '成就点',
+    dataIndex: 'score',
+    width: '8%',
+  }, {
+    title: '描述',
+    dataIndex: 'description',
+    width: '20%',
+  }, {
+    title: '成就条件',
+    dataIndex: 'conditions',
+    width: '27%',
+    render: (conditions) => JSON.stringify(conditions)
+  }, {
+    title: '操作',
+    width: '20%',
+    render: (_, record) => (
+      <Link to={`/admin/achievements/edit/${record.id}`}>修改</Link>
+    )
+  }]
 );
 
 class AdminAchievement extends React.PureComponent {

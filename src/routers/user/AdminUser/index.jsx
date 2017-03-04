@@ -67,18 +67,11 @@ const getColumns = (filters, operations) => (
       </div>
     )
   }, {
-    title: '邮箱',
-    dataIndex: 'user_info',
-    width: '15%',
-    render: (_, record) => (
-      <span>{record.user_info.email}</span>
-    )
-  }, {
-    title: '学院专业年级',
-    key: 'student_info',
+    title: '其他信息',
     width: '18%',
-    render: (text, record) => (
+    render: (_, record) => (
       <div>
+        {record.user_info.email}<br />
         {record.user_info.school} {record.user_info.college}&nbsp;
         {record.user_info.major} {record.user_info.grade}
       </div>

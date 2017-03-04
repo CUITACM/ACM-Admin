@@ -25,6 +25,7 @@ import AdminResource from './resource/AdminResource';
 // spider
 import SpiderAccount from './spider/SpiderAccount';
 import SpiderSubmit from './spider/SpiderSubmit';
+import SpiderWorker from './spider/SpiderWorker';
 
 // achievement
 import AdminAchievement from './achievement/AdminAchievement';
@@ -62,6 +63,7 @@ export default ({ history }) => (
         <IndexRedirect to="accounts" />
         <Route path="accounts" component={SpiderAccount} />
         <Route path="submits" component={SpiderSubmit} />
+        <Route path="workers" component={SpiderWorker} />
       </Route>
       <Route path="achievements" >
         <IndexRedirect to="list" />

@@ -14,6 +14,7 @@ const getColumns = (filters, operations) => {
     sorter: true,
     width: '10%',
     className: 'text-center',
+    render: name => <b>{name}</b>
   }, {
     title: 'Run ID',
     dataIndex: 'run_id',
@@ -117,11 +118,37 @@ class SpiderSubmit extends React.PureComponent {
     }));
   }
 
+  renderCodeModal() {
+    const { showCode, activeRecord } = this.state;
+    return (
+      <Modal
+        closable maskClosable
+        title="查看代码" visible={showCode} footer={null}
+        style={{ top: 20 }} width={720}
+        onCancel={() => this.setState({ showCode: false })}
+      >
+        {activeRecord ? (
+          <div>
+            <Table
+              bordered size="small"
+              rowKey={record => record.id}
+              columns={getColumns(this.props.filters)}
+              dataSource={[activeRecord]}
+              pagination={false}
+            />
+            <Highlight className="code-block">
+              {activeRecord.code ? activeRecord.code : '代码正在爬取中，请稍候查看'}
+            </Highlight>
+          </div>
+        ) : null}
+      </Modal>
+    );
+  }
+
   render() {
     const columns = getColumns(this.props.filters, {
       onShowCode: this.onShowCode
     });
-    const { showCode, activeRecord } = this.state;
     return (
       <div className="submit-table">
         <div className="table-operations clear-fix">
@@ -136,27 +163,7 @@ class SpiderSubmit extends React.PureComponent {
           columns={columns} dataSource={this.props.list}
           pagination={this.props.pagination} loading={this.props.loading}
         />
-        <Modal
-          closable maskClosable
-          title="查看代码" visible={showCode} footer={null}
-          style={{ top: 20 }} width={720}
-          onCancel={() => this.setState({ showCode: false })}
-        >
-          {activeRecord ? (
-            <div>
-              <Table
-                bordered size="small"
-                rowKey={record => record.id}
-                columns={getColumns(this.props.filters)}
-                dataSource={[activeRecord]}
-                pagination={false}
-              />
-              <Highlight className="code-block">
-                {activeRecord.code}
-              </Highlight>
-            </div>
-          ) : null}
-        </Modal>
+        {this.renderCodeModal()}
       </div>
     );
   }

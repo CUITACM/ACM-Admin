@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import { Form, Input, Button, Upload, Icon, message } from 'antd';
 import { ResourceUsage } from 'models/resource';
+import './style.less';
 
 const FormItem = Form.Item;
 
@@ -8,7 +9,8 @@ class UploadForm extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      uploadFile: null
+      uploadFile: null,
+      previewUrl: null,
     };
     this.onSubmit = (e) => {
       e.preventDefault();
@@ -20,8 +22,7 @@ class UploadForm extends React.PureComponent {
             ...formValues,
             usage: this.props.usage,
             path: this.state.uploadFile
-          })
-          .then(() => {
+          }).then(() => {
             this.props.form.resetFields();
             this.setState({ uploadFile: null });
           });
@@ -31,32 +32,36 @@ class UploadForm extends React.PureComponent {
   }
 
   render() {
+    const { previewUrl, uploadFile } = this.state;
     const { getFieldDecorator } = this.props.form;
-    const formItemLayout = {
-      labelCol: { span: 6 },
-      wrapperCol: { span: 14 },
-    };
+    const formItemLayout = { labelCol: { span: 6 }, wrapperCol: { span: 14 } };
+    const formItemLayoutWithOutLabel = { wrapperCol: { span: 16, offset: 6 } };
     const filenameDecorator = getFieldDecorator('filename', {
-      rules: [
-        { required: true, message: '请填写图片名' }
-      ]
+      rules: [{ required: true, message: '请填写图片名' }]
     });
     const uploadProps = {
       multiple: false,
-      fileList: this.state.uploadFile ? [this.state.uploadFile] : [],
+      fileList: uploadFile ? [uploadFile] : [],
       beforeUpload: (file) => {
         const isImage = file.type.indexOf('image') !== -1;
         if (!isImage) {
+          this.setState({ previewUrl: null });
           message.error('只允许上传图片');
           return false;
         }
         this.setState({ uploadFile: file });
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          console.log(e.target.result);
+          this.setState({ previewUrl: e.target.result });
+        };
+        reader.readAsDataURL(file);
         return false;
       },
       onChange: (info) => {
         const fileList = info.fileList;
         if (fileList.length === 0) {
-          this.setState({ uploadFile: null });
+          this.setState({ uploadFile: null, previewUrl: null });
         }
       }
     };
@@ -74,9 +79,14 @@ class UploadForm extends React.PureComponent {
             </Button>
           </Upload>
         </FormItem>
+        <FormItem {...formItemLayoutWithOutLabel} >
+          {previewUrl ? (
+            <img role="presentation" className="upload-preview" src={previewUrl} />
+          ) : null}
+        </FormItem>
         <FormItem wrapperCol={{ span: 16, offset: 6 }} >
           <Button
-            type="primary" htmlType="submit" disabled={this.state.uploadFile == null}
+            type="primary" htmlType="submit" disabled={uploadFile == null}
           >
             提交
           </Button>

@@ -15,11 +15,15 @@ const getColumns = (filters, operations) => (
     width: '15%',
     className: 'text-center',
     render: (nickname, record) => (
-      <div>
-        <h3>{nickname}</h3>
-        <Tag color="blue-inverse">{OJ_MAP[record.oj_name]}</Tag>
-      </div>
-    ),
+      <div><h3>{nickname}</h3><Tag>{record.user.name}</Tag></div>
+    )
+  }, {
+    title: 'OJ平台',
+    dataIndex: 'oj_name',
+    width: '120px',
+    className: 'text-center',
+    filters: Object.keys(OJ_MAP).map(key => ({ text: OJ_MAP[key], value: key })),
+    render: oj => <Tag color="blue-inverse">{OJ_MAP[oj]}</Tag>,
   }, {
     title: '状态',
     dataIndex: 'status',
@@ -37,26 +41,22 @@ const getColumns = (filters, operations) => (
       switch (status) {
         case AccountStatus.NOT_INIT:
           return <StatusPoint color="gray">未初始化</StatusPoint>;
-        case 1:
+        case AccountStatus.NORMAL:
           return <StatusPoint color="green">正常</StatusPoint>;
-        case 2:
+        case AccountStatus.QUEUE:
           return <StatusPoint color="light-blue">排队</StatusPoint>;
-        case 3:
+        case AccountStatus.UPDATING:
           return <StatusPoint color="blue">更新中</StatusPoint>;
-        case 4:
+        case AccountStatus.UPDATE_ERROR:
           return <StatusPoint color="red">更新错误</StatusPoint>;
-        case 5:
+        case AccountStatus.ACCOUNT_ERROR:
           return <StatusPoint color="red">账号错误</StatusPoint>;
-        case 100:
+        case AccountStatus.STOP:
           return <StatusPoint color="gray">终止</StatusPoint>;
         default:
           return null;
       }
     },
-  }, {
-    title: '关联用户',
-    dataIndex: 'user.name',
-    width: '10%',
   }, {
     title: '信息',
     dataIndex: 'solved',
@@ -78,6 +78,7 @@ const getColumns = (filters, operations) => (
   }, {
     title: '操作',
     key: 'operation',
+    width: '100px',
     render: (text, record) => (
       <span>
         <Link onClick={() => operations.onEdit(record)}>修改</Link>
@@ -186,7 +187,9 @@ const mapStateToProps = ({ loading, account }) => ({
   pagination: {
     current: account.page,
     pageSize: account.per,
-    total: account.totalCount
+    total: account.totalCount,
+    showQuickJumper: true,
+    showTotal: total => <span>共有 {total} 个OJ账号</span>,
   }
 });
 

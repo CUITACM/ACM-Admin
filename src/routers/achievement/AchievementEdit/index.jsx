@@ -1,11 +1,31 @@
 import React, { PropTypes } from 'react';
+import { connect } from 'dva';
 import { Link } from 'dva/router';
-import { Form, Breadcrumb, Icon } from 'antd';
+import { Breadcrumb, Icon } from 'antd';
 import AchievementForm from 'components/form/AchievementForm';
 
 class AchievementEdit extends React.PureComponent {
+  static propTypes = {
+    dispatch: PropTypes.func.isRequired,
+    loading: PropTypes.bool.isRequired,
+    achievement: PropTypes.object.isRequired,
+  }
+
+  constructor(props) {
+    super(props);
+    this.onSubmit = this.onSubmit.bind(this);
+  }
+
+  onSubmit(id, params) {
+    if (id == null) {
+      this.props.dispatch({
+        type: 'achievement/create', payload: { params, goback: true }
+      });
+    }
+  }
 
   render() {
+    const { loading, achievement } = this.props;
     return (
       <div className="edit-page">
         <Breadcrumb>
@@ -21,10 +41,16 @@ class AchievementEdit extends React.PureComponent {
             发布新成就
           </Breadcrumb.Item>
         </Breadcrumb>
-        <AchievementForm onSubmit={() => null} />
+        <AchievementForm loading={loading} onSubmit={this.onSubmit} achievement={achievement} />
       </div>
     );
   }
 }
 
-export default AchievementEdit;
+const mapStateToProps = ({ loading, achievement }) => ({
+  loading: loading.models.achievement || false,
+  achievement: achievement.currentItem,
+});
+
+
+export default connect(mapStateToProps)(AchievementEdit);

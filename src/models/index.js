@@ -7,8 +7,9 @@ import submit from './submit';
 import achievement from './achievement';
 import misc from './misc';
 import honor from './honor';
+import spiderWorker from './spiderWorker';
 
 export default [
   auth, user, article, resource, account,
-  submit, achievement, misc, honor
+  submit, achievement, misc, honor, spiderWorker
 ];

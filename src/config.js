@@ -36,9 +36,10 @@ export const NavbarMenu = [
   },
   {
     to: '/admin/resources',
-    text: '资源管理',
+    text: '图库管理',
     children: [
-      { to: '/admin/resources', text: '所有资源', icon: 'bars' }
+      { to: '/admin/resources/list', text: '所有', icon: 'bars' },
+      { to: '/admin/resources/slides', text: '首页轮播图', icon: 'bars' },
     ]
   },
   {

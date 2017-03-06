@@ -33,17 +33,15 @@ class AccountForm extends React.PureComponent {
     };
     const ojNameDecorator = getFieldDecorator('oj_name', {
       initialValue: account && account.oj_name,
-      rules: [
-        { required: true, message: '请选择OJ' }
-      ]
+      rules: [{ required: true, message: '请选择OJ' }]
     });
     const nicknameDecorator = getFieldDecorator('nickname', {
       initialValue: account && account.nickname,
-      rules: [
-        { required: true, message: '请填写账号昵称' }
-      ]
+      rules: [{ required: true, message: '请填写账号昵称' }]
     });
-    const passwordDecorator = getFieldDecorator('password');
+    const passwordDecorator = getFieldDecorator('password', {
+      rules: [{ required: true, message: '请填写账号密码' }]
+    });
     return (
       <Form horizontal onSubmit={this.onSubmit}>
         <FormItem {...formItemLayout} label="OJ">

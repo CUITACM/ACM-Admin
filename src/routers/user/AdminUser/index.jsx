@@ -7,7 +7,7 @@ import SearchInput from 'components/SearchInput';
 import { UserRole, UserStatus } from 'models/user';
 import './style.less';
 
-const getColumns = (filters, operations) => (
+const getColumns = (filters, sorter, operations) => (
   [{
     title: '头像',
     dataIndex: 'avatar',
@@ -16,9 +16,10 @@ const getColumns = (filters, operations) => (
   }, {
     title: '姓名',
     dataIndex: 'display_name',
-    sorter: true,
     width: '100px',
     className: 'text-center',
+    sorter: true,
+    sortOrder: sorter.field === 'display_name' && sorter.order,
     render: (name, record) => (
       <div>
         <h3>{ name }</h3>
@@ -40,6 +41,8 @@ const getColumns = (filters, operations) => (
     title: '身份',
     dataIndex: 'role',
     width: '90px',
+    sorter: true,
+    sortOrder: sorter.field === 'role' && sorter.order,
     filters: [
       { text: '管理员', value: UserRole.ADMIN },
       { text: '教练', value: UserRole.COACH },
@@ -57,9 +60,6 @@ const getColumns = (filters, operations) => (
     title: '状态',
     dataIndex: 'status',
     width: '90px',
-    filters: [
-    ],
-    filteredValue: filters.status || [],
     render: (status) => (
       <div>
         {status === UserStatus.TRAIN ? <Tag color="green">训练中</Tag> : null}
@@ -103,8 +103,9 @@ class AdminUser extends React.PureComponent {
     dispatch: PropTypes.func,
     loading: PropTypes.bool,
     list: PropTypes.array,
-    pagination: PropTypes.object,
+    sorter: PropTypes.object,
     filters: PropTypes.object,
+    pagination: PropTypes.object
   }
 
   constructor(props) {
@@ -149,7 +150,7 @@ class AdminUser extends React.PureComponent {
 
   render() {
     const { search } = this.props.location.query;
-    const columns = getColumns(this.props.filters, {
+    const columns = getColumns(this.props.filters, this.props.sorter, {
       onDelete: this.onDelete,
     });
     return (
@@ -178,10 +179,15 @@ const mapStateToProps = ({ loading, user }) => ({
   loading: loading.models.user || false,
   list: user.list,
   filters: user.filters,
+  sorter: {
+    order: user.sortOrder,
+    field: user.sortField,
+  },
   pagination: {
     current: user.page,
     pageSize: user.per,
-    total: user.totalCount
+    total: user.totalCount,
+    showTotal: total => <span>共有 {total} 名用户</span>,
   },
 });
 

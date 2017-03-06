@@ -1,7 +1,9 @@
+import pathToRegexp from 'path-to-regexp';
 import { extractParams } from 'utils/qs';
+import { routerRedux } from 'dva/router';
 import { message } from 'antd';
 import {
-  fetchHonors
+  fetchHonors, fetchHonor, createHonor, updateHonor
 } from 'services/honor';
 
 export const HonorLevel = {
@@ -20,6 +22,7 @@ export const HonorLevel = {
 export default {
   namespace: 'honor',
   state: {
+    currentItem: {},
     list: [],
     page: 1,
     per: 10,
@@ -33,9 +36,18 @@ export default {
   subscriptions: {
     listSubscription({ dispatch, history }) {
       return history.listen(({ pathname, query }) => {
-        if (pathname === '/admin/honors') {
+        if (pathname === '/admin/honors/list') {
           dispatch({ type: 'saveParams', payload: query });
           dispatch({ type: 'fetchList', payload: query });
+        }
+      });
+    },
+    itemSubscriber({ dispatch, history }) {
+      return history.listen(({ pathname }) => {
+        const match = pathToRegexp('/admin/honors/edit/:id').exec(pathname);
+        if (match) {
+          const id = match[1];
+          dispatch({ type: 'fetchItem', payload: id });
         }
       });
     },
@@ -52,6 +64,32 @@ export default {
       });
       yield put({ type: 'saveList', payload: response });
     },
+    *fetchItem({ payload: id }, { put, call }) {
+      const response = yield call(fetchHonor, id);
+      yield put({ type: 'saveItem', payload: response.honor });
+    },
+    *create({ payload }, { call, put }) {
+      const response = yield call(createHonor, payload.params, payload.images);
+      if (response.honor != null) {
+        message.success('创建成功');
+        if (payload.goback) {
+          yield put(routerRedux.goBack());
+        }
+      } else {
+        message.error('创建失败');
+      }
+    },
+    *update({ payload }, { call, put }) {
+      const response = yield call(updateHonor, payload.id, payload.params, payload.images);
+      if (response.honor != null) {
+        message.success('更新成功');
+        if (payload.goback) {
+          yield put(routerRedux.goBack());
+        }
+      } else {
+        message.error('更新失败');
+      }
+    }
   },
   reducers: {
     saveParams(state, { payload }) {
@@ -65,6 +103,9 @@ export default {
         totalCount: payload.meta.total_count,
         totalPages: payload.meta.total_pages,
       };
-    }
+    },
+    saveItem(state, { payload }) {
+      return { ...state, currentItem: payload };
+    },
   }
 };

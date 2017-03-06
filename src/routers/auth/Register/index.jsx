@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'dva';
-import { Form, Input, Button, Row, Col, notification } from 'antd';
+import { Form, Input, Button, Row, Col } from 'antd';
 
 class Register extends React.PureComponent {
   constructor(props) {
@@ -22,21 +22,8 @@ class Register extends React.PureComponent {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-    const success = nextProps.registerSuccess;
-    const error = nextProps.registerErrors;
-    const waitRegister = nextProps.waitRegister;
-
-    if (error !== this.props.registerErrors && error) {
-      notification.error({ message: '登录失败', description: error });
-    }
-
-    if (!waitRegister && !error && success) {
-      notification.success({
-        message: '注册成功',
-        description: '请等待审核'
-      });
-    }
+  componentWillReceiveProps() {
+    // todo
   }
 
   render() {

@@ -1,7 +1,7 @@
 import { extractParams } from 'utils/qs';
 import { message } from 'antd';
 import {
-  fetchAccounts, createAcount, updateAccount, deleteAccount
+  fetchAccounts, updateAccount, deleteAccount
 } from 'services/spider';
 
 export const AccountStatus = {

@@ -58,7 +58,10 @@ export default ({ history }) => (
         <Route path="news/create" component={ArticleEdit} />
         <Route path="edit/:id" component={ArticleEdit} />
       </Route>
-      <Route path="resources" component={AdminResource} />
+      <Route path="resources" >
+        <IndexRedirect to="list" />
+        <Route path="list" component={AdminResource} />
+      </Route>
       <Route path="spiders">
         <IndexRedirect to="accounts" />
         <Route path="accounts" component={SpiderAccount} />

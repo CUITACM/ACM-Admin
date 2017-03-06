@@ -17,10 +17,11 @@ class ArticleEdit extends React.PureComponent {
     super(props);
     this.onSubmit = (id, params) => {
       console.log(id, params);
-      this.props.dispatch({
-        type: 'article/update',
-        payload: { id, params }
-      });
+      if (id == null) {
+        this.props.dispatch({ type: 'article/create', payload: { params, goback: true } });
+      } else {
+        this.props.dispatch({ type: 'article/update', payload: { id, params, goback: true } });
+      }
     };
   }
 

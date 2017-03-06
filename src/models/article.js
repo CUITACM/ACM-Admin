@@ -2,7 +2,7 @@ import pathToRegexp from 'path-to-regexp';
 import { routerRedux } from 'dva/router';
 import { message } from 'antd';
 import {
-  fetchArticles, fetchArticle, updateArticle, deleteArticle
+  fetchArticles, fetchArticle, createArticle, updateArticle, deleteArticle
 } from 'services/article';
 
 export const ArticleType = {
@@ -23,7 +23,7 @@ export const ArticleStatus = {
 };
 
 const extractParams = query => {
-  const { page = 1, search = '', sortField = 'id', sortOrder = 'ascend' } = query;
+  const { page = 1, search = '', sortField = 'created_at', sortOrder = 'descend' } = query;
   const filters = JSON.parse(query.filters || '{}');
   return { page: parseInt(page, 10), search, sortField, sortOrder, filters };
 };
@@ -94,11 +94,24 @@ export default {
       const response = yield call(fetchArticle, id);
       yield put({ type: 'saveItem', payload: response.article });
     },
+    *create({ payload }, { put, call }) {
+      const response = yield call(createArticle, payload.params);
+      if (response && response.article != null) {
+        message.success('创建成功');
+        if (payload.goback) {
+          yield put(routerRedux.goBack());
+        }
+      } else {
+        message.error('创建失败');
+      }
+    },
     *update({ payload }, { put, call }) {
       const response = yield call(updateArticle, payload.id, payload.params);
       if (response.article != null) {
         message.success('更新成功');
-        yield put(routerRedux.goBack());
+        if (payload.goback) {
+          yield put(routerRedux.goBack());
+        }
       } else {
         message.error('更新失败');
       }

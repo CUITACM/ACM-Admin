@@ -7,16 +7,30 @@ export function fetchHonors(page, per, params = {}) {
   return request(withParams(`${API_ROOT}/honors`, query));
 }
 
-export function createHonor(params) {
-  return requestWithToken(`${API_ROOT}/honors`, {
-    method: 'POST', body: JSON.stringify(params),
-  }, true);
+export function fetchHonor(id) {
+  return request(`${API_ROOT}/honors/${id}`);
 }
 
-export function updateHonor(id, params) {
+export function createHonor(params, images) {
+  const data = new FormData();
+  Object.keys(params).forEach(key => { data.append(key, params[key]); });
+  if (images) {
+    images.forEach(image => data.append('images[]', image));
+  }
   return requestWithToken(`${API_ROOT}/honors`, {
-    method: 'PUT', body: JSON.stringify(params),
-  }, true);
+    method: 'POST', body: data,
+  });
+}
+
+export function updateHonor(id, params, images) {
+  const data = new FormData();
+  Object.keys(params).forEach(key => { data.append(key, params[key]); });
+  if (images) {
+    images.forEach(image => data.append('images[]', image));
+  }
+  return requestWithToken(`${API_ROOT}/honors/${id}`, {
+    method: 'POST', body: data,
+  });
 }
 
 export function deleteHonor(id) {

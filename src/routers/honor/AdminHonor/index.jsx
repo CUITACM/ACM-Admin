@@ -1,11 +1,57 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'dva';
-import { routerRedux, Link } from 'dva/router';
-import { Table, Button } from 'antd';
+import { Link } from 'dva/router';
+import { Table, Button, Popconfirm } from 'antd';
 import SearchInput from 'components/SearchInput';
+import { HonorLevel } from 'models/honor';
 
-const getColumns = (filters, operations) => (
-  []
+const getColumns = (filters, sorter, operations) => (
+  [{
+    title: '比赛名称',
+    dataIndex: 'contest_name',
+    width: '20%',
+    sorter: true,
+    sortOrder: sorter.field === 'contest_name' && sorter.order,
+    render: contestName => <b>{contestName}</b>
+  }, {
+    title: '比赛等级',
+    dataIndex: 'contest_level',
+    width: '10%',
+    render: level => HonorLevel[level]
+  }, {
+    title: '队伍名',
+    dataIndex: 'team_name',
+    width: '10%'
+  }, {
+    title: '描述',
+    dataIndex: 'description',
+    width: '20%'
+  }, {
+    title: '创建/更新时间',
+    dataIndex: 'created_at',
+    width: '20%',
+    render: (createdAt, record) => (
+      <div>
+        创建: {createdAt}<br />
+        更新: {record.updated_at}
+      </div>
+    )
+  }, {
+    title: '操作',
+    width: '10%',
+    render: (_, record) => (
+      <div>
+        <Link to={`/admin/honors/edit/${record.id}`}>修改</Link>
+        <span className="ant-divider" />
+        <Popconfirm
+          title="确定要删除吗？" placement="left"
+          onConfirm={() => operations.onDelete(record)}
+        >
+          <a>删除</a>
+        </Popconfirm>
+      </div>
+    )
+  }]
 );
 
 class AdminHonor extends React.PureComponent {
@@ -14,7 +60,7 @@ class AdminHonor extends React.PureComponent {
     dispatch: PropTypes.func,
     loading: PropTypes.bool,
     list: PropTypes.array,
-    type: PropTypes.string,
+    sorter: PropTypes.object,
     filters: PropTypes.object,
     pagination: PropTypes.object,
   }
@@ -33,7 +79,7 @@ class AdminHonor extends React.PureComponent {
   }
 
   render() {
-    const columns = getColumns(this.props.filters, {
+    const columns = getColumns(this.props.filters, this.props.sorter, {
     });
     return (
       <div>
@@ -61,6 +107,10 @@ const mapStateToProps = ({ loading, honor }) => ({
   loading: loading.models.honor || false,
   list: honor.list,
   filters: honor.filters,
+  sorter: {
+    order: honor.sortOrder,
+    field: honor.sortField,
+  },
   pagination: {
     current: honor.page,
     pageSize: honor.per,

@@ -55,12 +55,13 @@ const renderOperationsByArticle = (record, operations) => {
   return <Menu>{items}</Menu>;
 };
 
-const getColumns = (filters, operations) => (
+const getColumns = (filters, sorter, operations) => (
   [{
     title: '标题',
     dataIndex: 'title',
-    sorter: true,
     width: '20%',
+    sorter: true,
+    sortOrder: sorter.field === 'title' && sorter.order,
     render: title => <b>{title}</b>
   }, {
     title: '状态',
@@ -94,13 +95,15 @@ const getColumns = (filters, operations) => (
   }, {
     title: '更新时间',
     dataIndex: 'updated_at',
+    width: '18%',
     sorter: true,
-    width: '18%'
+    sortOrder: sorter.field === 'updated_at' && sorter.order,
   }, {
     title: '创建时间',
     dataIndex: 'created_at',
+    width: '18%',
     sorter: true,
-    width: '18%'
+    sortOrder: sorter.field === 'created_at' && sorter.order,
   }, {
     title: '操作',
     key: 'operation',
@@ -142,6 +145,7 @@ class AdminArticle extends React.PureComponent {
     loading: PropTypes.bool,
     list: PropTypes.array,
     type: PropTypes.string,
+    sorter: PropTypes.object,
     filters: PropTypes.object,
     pagination: PropTypes.object,
   }
@@ -173,10 +177,7 @@ class AdminArticle extends React.PureComponent {
   onChangeStatus(record, status) {
     this.props.dispatch({
       type: 'article/changeStatus',
-      payload: {
-        id: record.id,
-        params: { status }
-      }
+      payload: { id: record.id, params: { status } }
     });
   }
 
@@ -201,7 +202,7 @@ class AdminArticle extends React.PureComponent {
   }
 
   render() {
-    const columns = getColumns(this.props.filters, {
+    const columns = getColumns(this.props.filters, this.props.sorter, {
       onDelete: this.onDelete,
       onPreview: this.onPreview,
       onChangeStatus: this.onChangeStatus
@@ -255,10 +256,15 @@ const mapStateToProps = ({ loading, article }) => ({
   list: article.list,
   type: article.type,
   filters: article.filters,
+  sorter: {
+    order: article.sortOrder,
+    field: article.sortField,
+  },
   pagination: {
     current: article.page,
     pageSize: article.per,
-    total: article.totalCount
+    total: article.totalCount,
+    showTotal: total => <span>共有 {total} 篇</span>,
   }
 });
 

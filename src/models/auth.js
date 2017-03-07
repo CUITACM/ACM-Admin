@@ -1,5 +1,7 @@
-import { fetchToken, saveToken, removeToken } from 'services/auth';
 import { routerRedux } from 'dva/router';
+import { notification } from 'antd';
+import { defaultAfterLogin } from 'src/config';
+import { fetchToken, saveToken, removeToken } from 'services/auth';
 
 export default {
   namespace: 'auth',
@@ -13,23 +15,31 @@ export default {
     loginSubscriber({ dispatch, history }) {
       history.listen(location => {
         if (location.pathname === '/auth/login') {
-          const next = location.query.next || '/admin';
-          dispatch({ type: 'saveNextPath', payload: location.query });
+          const next = location.query.next || defaultAfterLogin;
+          dispatch({ type: 'saveNextPath', payload: next });
         }
       });
     }
   },
 
   effects: {
-    *login({ payload: { nickname, password } }, { call, put }) {
-      yield put({ type: 'loginStart' });
+    *login({ payload: { nickname, password } }, { call, select }) {
       try {
         const response = yield call(fetchToken, nickname, password);
         yield call(saveToken, response);
-        yield put({ type: 'loginSuccess' });
+        const nextPath = yield select(state => state.auth.nextPath);
+        notification.success({
+          message: '登录成功',
+          description: `3秒后跳转到 ${nextPath}`,
+          duration: 3
+        });
+        window.location.href = nextPath;
       } catch (err) {
         console.error(err);
-        yield put({ type: 'loginFail', payload: err.message });
+        notification.error({
+          message: '登录失败',
+          description: `错误 ${err.message}`,
+        });
       }
     },
     *logout(action, { call, put }) {
@@ -39,16 +49,7 @@ export default {
   },
   reducers: {
     saveNextPath(state, { payload }) {
-      return { ...state, nextPath: payload.next };
-    },
-    loginStart(state) {
-      return { ...state, hasLogin: false, loginErrors: null };
-    },
-    loginSuccess(state) {
-      return { ...state, hasLogin: true, loginErrors: null };
-    },
-    loginFail(state, { payload }) {
-      return { ...state, hasLogin: false, loginErrors: payload };
+      return { ...state, nextPath: payload };
     }
   }
 };

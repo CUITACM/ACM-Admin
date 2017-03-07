@@ -11,7 +11,7 @@ process.env.NODE_ENV = 'production';
 
 module.exports = webpackMerge(baseConfig, {
   output: {
-    publicPath: './',
+    publicPath: '/frontend/admin/',
     path: path.resolve(__dirname, '../dist'),
     filename: '[name].bundle.[hash:7].js',
     chunkFilename: 'chunks/[name].chunk.[hash:7].js',

@@ -27,10 +27,7 @@ class AccountForm extends React.PureComponent {
   render() {
     const { account } = this.props;
     const { getFieldDecorator } = this.props.form;
-    const formItemLayout = {
-      labelCol: { span: 6 },
-      wrapperCol: { span: 16 },
-    };
+    const formItemLayout = { labelCol: { span: 6 }, wrapperCol: { span: 16 } };
     const ojNameDecorator = getFieldDecorator('oj_name', {
       initialValue: account && account.oj_name,
       rules: [{ required: true, message: '请选择OJ' }]
@@ -43,7 +40,7 @@ class AccountForm extends React.PureComponent {
       rules: [{ required: true, message: '请填写账号密码' }]
     });
     return (
-      <Form horizontal onSubmit={this.onSubmit}>
+      <Form horizontal>
         <FormItem {...formItemLayout} label="OJ">
           {ojNameDecorator(
             <Select placeholder="请选择OJ">

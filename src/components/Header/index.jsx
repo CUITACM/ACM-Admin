@@ -71,6 +71,9 @@ class Header extends React.PureComponent {
   renderDropdownMenu() {
     const onMenuSelect = ({ key }) => {
       switch (key) {
+        case 'to_meter':
+          window.location.href = '/meter';
+          break;
         case 'logout':
           this.props.dispatch({ type: 'auth/logout' });
           break;
@@ -80,6 +83,7 @@ class Header extends React.PureComponent {
     };
     return (
       <Menu onSelect={onMenuSelect}>
+        <Menu.Item key="to_meter">水表</Menu.Item>
         <Menu.Item key="logout">注销</Menu.Item>
       </Menu>
     );

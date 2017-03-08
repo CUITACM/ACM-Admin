@@ -99,13 +99,13 @@ const getColumns = (filters, sorter, operations) => (
 
 class AdminUser extends React.PureComponent {
   static propTypes = {
-    location: PropTypes.object,
-    dispatch: PropTypes.func,
-    loading: PropTypes.bool,
-    list: PropTypes.array,
-    sorter: PropTypes.object,
-    filters: PropTypes.object,
-    pagination: PropTypes.object
+    location: PropTypes.object.isRequired,
+    dispatch: PropTypes.func.isRequired,
+    loading: PropTypes.bool.isRequired,
+    list: PropTypes.array.isRequired,
+    sorter: PropTypes.object.isRequired,
+    filters: PropTypes.object.isRequired,
+    pagination: PropTypes.object.isRequired
   }
 
   constructor(props) {

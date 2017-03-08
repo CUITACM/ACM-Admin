@@ -7,7 +7,7 @@ import Login from './auth/Login';
 import Register from './auth/Register';
 
 // main
-import AppLayout from './main/AppLayout';
+import AdminLayout from './main/AdminLayout';
 import Dashboard from './main/Dashboard';
 
 // user
@@ -40,7 +40,7 @@ export default ({ history }) => (
   <Router history={history}>
     <Route path="/auth/login" component={Login} />
     <Route path="/auth/register" component={Register} />
-    <Route path="/admin" component={AppLayout} onEnter={validateLogin}>
+    <Route path="/admin" component={AdminLayout} onEnter={validateLogin}>
       <IndexRedirect to="/admin/main" />
       <Route path="main" >
         <IndexRedirect to="dashboard" />

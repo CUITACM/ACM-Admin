@@ -63,6 +63,8 @@ export const NavbarMenu = [
   {
     to: '/admin/honors',
     text: '荣誉墙管理',
-    children: []
+    children: [
+      { to: '/admin/honors/list', text: '荣誉列表', icon: 'bars' },
+    ]
   }
 ];

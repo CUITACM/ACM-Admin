@@ -22,7 +22,7 @@ class HonorEdit extends React.PureComponent {
     if (id == null) {
       dispatch({ type: 'honor/create', payload: { params, images, goback: true } });
     } else {
-      dispatch({ type: 'honor/update', payload: { id, params, images, goback: false } });
+      dispatch({ type: 'honor/update', payload: { id, params, images, goback: true } });
     }
   }
 

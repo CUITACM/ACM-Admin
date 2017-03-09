@@ -20,16 +20,16 @@ const renderOperationsByArticle = (record, operations) => {
       <Link onClick={() => operations.onChangeStatus(record, ArticleStatus.PUBLISH)}>发布</Link>
     </MenuItem>
   );
-  const topItem = (
+  const topItem = record.article_type === ArticleType.NEWS ? (
     <MenuItem key="top">
       <Link onClick={() => operations.onChangeStatus(record, ArticleStatus.PINNED)}>置顶</Link>
     </MenuItem>
-  );
-  const unTopItem = (
+  ) : null;
+  const unTopItem = record.article_type === ArticleType.NEWS ? (
     <MenuItem key="unTop">
       <Link onClick={() => operations.onChangeStatus(record, ArticleStatus.PUBLISH)}>取消置顶</Link>
     </MenuItem>
-  );
+  ) : null;
   const draftItem = (
     <MenuItem key="draft">
       <Link onClick={() => operations.onChangeStatus(record, ArticleStatus.DRAFT)}>移到草稿箱</Link>

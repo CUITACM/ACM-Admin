@@ -3,7 +3,8 @@ import { extractParams } from 'utils/qs';
 import { routerRedux } from 'dva/router';
 import { message } from 'antd';
 import {
-  fetchHonors, fetchHonor, createHonor, updateHonor
+  fetchHonors, fetchHonor, createHonor, updateHonor,
+  deleteHonor
 } from 'services/honor';
 
 export const HonorLevel = {
@@ -83,13 +84,24 @@ export default {
       const response = yield call(updateHonor, payload.id, payload.params, payload.images);
       if (response.honor != null) {
         message.success('更新成功');
+        yield put({ type: 'saveItem', payload: response.honor });
         if (payload.goback) {
           yield put(routerRedux.goBack());
         }
       } else {
         message.error('更新失败');
       }
-    }
+    },
+    *delete({ payload }, { put, call }) {
+      const response = yield call(deleteHonor, payload);
+      console.log(response);
+      if (response.error_code === 0) {
+        message.success('删除成功');
+        yield put({ type: 'deleteSuccess', payload });
+      } else {
+        message.success('删除失败');
+      }
+    },
   },
   reducers: {
     saveParams(state, { payload }) {
@@ -106,6 +118,9 @@ export default {
     },
     saveItem(state, { payload }) {
       return { ...state, currentItem: payload };
+    },
+    deleteSuccess(state, { payload }) {
+      return { ...state, list: state.list.filter(honor => honor.id !== payload) };
     },
   }
 };

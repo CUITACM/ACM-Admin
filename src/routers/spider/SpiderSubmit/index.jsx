@@ -129,13 +129,23 @@ class SpiderSubmit extends React.PureComponent {
       >
         {activeRecord ? (
           <div>
-            <Table
-              bordered size="small"
-              rowKey={record => record.id}
-              columns={getColumns(this.props.filters)}
-              dataSource={[activeRecord]}
-              pagination={false}
-            />
+            <div>
+              <span>用户名: {activeRecord.user_name}</span>
+              <span className="divider" />
+              <span>Run ID: {activeRecord.run_id}</span>
+              <span className="divider" />
+              <span>OJ: {OJ_MAP[activeRecord.oj_name]}</span>
+              <span className="divider" />
+              <span>题目: {activeRecord.pro_id}</span>
+              <span className="divider" />
+              <span>语言: {activeRecord.lang}</span>
+              <br />
+              <span>运行时间: {activeRecord.run_time >= 0 ? `${activeRecord.run_time} MS` : 0}</span>
+              <span className="divider" />
+              <span>内存: {activeRecord.memory >= 0 ? `${activeRecord.memory} KB` : 0}</span>
+              <span className="divider" />
+              <span>提交时间: {activeRecord.submitted_at}</span>
+            </div>
             <Highlight className="code-block">
               {activeRecord.code ? activeRecord.code : '代码正在爬取中，请稍候查看'}
             </Highlight>

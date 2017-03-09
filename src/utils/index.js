@@ -51,3 +51,8 @@ export function withParams(url, parameters = {}) {
   }
   return ret;
 }
+
+export function translateTextarea(text) {
+  if (text == null) return text;
+  return text.replace(/\n/g, '<br/>');
+}

@@ -3,8 +3,9 @@ import SimpleMDE from 'libs/simplemde';
 import 'libs/simplemde/dist/simplemde.min.css';
 import 'libs/fontawesome/css/font-awesome.min.css';
 import { Input, Modal, Tabs, message } from 'antd';
+import ImagesChooser from 'components/ImagesChooser';
 import UploadForm from 'components/form/UploadForm';
-import { CDN_ROOT } from 'src/config';
+import { joinCDN } from 'src/config';
 import { ResourceUsage } from 'models/resource';
 import { createResource } from 'services/resource';
 import './style.less';
@@ -18,6 +19,7 @@ export default class MarkdownInput extends React.PureComponent {
       showModal: false
     };
     this.drawImage = this.drawImage.bind(this);
+    this.onImageChoose = this.onImageChoose.bind(this);
     this.onImageUpload = this.onImageUpload.bind(this);
   }
 
@@ -59,12 +61,17 @@ export default class MarkdownInput extends React.PureComponent {
       .then(response => {
         const resource = response.resource;
         this.setState({ showModal: false });
-        this.drawImage(CDN_ROOT + resource.file.url);
+        this.drawImage(joinCDN(resource.file.url));
       })
       .catch(error => {
         console.log(error);
         message.error(error.message);
       });
+  }
+
+  onImageChoose(url) {
+    this.setState({ showModal: false });
+    this.drawImage(joinCDN(url));
   }
 
   drawImage(url) {
@@ -93,7 +100,9 @@ export default class MarkdownInput extends React.PureComponent {
                 onSubmit={this.onImageUpload}
               />
             </TabPane>
-            <TabPane tab="选择图片" key="2">选项卡二内容</TabPane>
+            <TabPane tab="选择图片" key="2">
+              <ImagesChooser onChoose={this.onImageChoose} />
+            </TabPane>
             <TabPane tab="远程地址获取" key="3">选项卡三内容</TabPane>
           </Tabs>
         </Modal>

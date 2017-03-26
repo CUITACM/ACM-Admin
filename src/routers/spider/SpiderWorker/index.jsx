@@ -1,10 +1,10 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'dva';
-import { routerRedux, Link } from 'dva/router';
+import { Link } from 'dva/router';
 import { Card, Button, Breadcrumb, Icon, Row, Col } from 'antd';
 import StatusPoint from 'components/StatusPoint';
 import { OJ_MAP } from 'models/account';
-import { WorkerStatus } from 'models/spiderWorker';
+import { WorkerStatus } from 'models/spider_worker';
 
 
 class SpiderWorker extends React.PureComponent {

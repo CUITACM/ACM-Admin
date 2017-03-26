@@ -29,7 +29,7 @@ export default {
     currentItem: {},
     list: [],
     page: 1,
-    per: 16,
+    per: 12,
     totalCount: 0,
     totalPages: 0,
     search: '',

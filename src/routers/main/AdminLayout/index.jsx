@@ -17,38 +17,34 @@ class AdminLayout extends React.PureComponent {
 
   componentWillReceiveProps(nextProps) {
     const { currentUser } = nextProps;
-    console.log(currentUser.is_admin);
     if (currentUser && currentUser.id && !currentUser.is_admin) {
-      window.location.href = '/403';
+      window.location.href = '/site';
     }
   }
 
   render() {
-    const { loading, currentUser } = this.props;
     return (
-      <Spin spinning={loading} delay={500}>
+      <div>
         <Header menus={NavbarMenu} location={this.props.location} />
-        {currentUser && currentUser.id && currentUser.is_admin ? (
-          <div className="layout-top">
-            <section className="layout-container">
-              <LayoutSider
-                className="layout-sider"
-                menus={NavbarMenu} location={this.props.location}
-              />
-              <div className="layout-content">
-                {this.props.children}
-              </div>
-            </section>
-          </div>
-        ) : null}
+        <div className="layout-top">
+          <section className="layout-container">
+            <LayoutSider
+              className="layout-sider"
+              menus={NavbarMenu} location={this.props.location}
+            />
+            <div className="layout-content">
+              {this.props.children}
+            </div>
+          </section>
+        </div>
         <Footer />
-      </Spin>
+      </div>
     );
   }
 }
 
 const mapStateToProps = ({ loading, user }) => ({
-  loading: loading.models.user || false,
+  loading: loading.global || false,
   currentUser: user.currentUser,
 });
 

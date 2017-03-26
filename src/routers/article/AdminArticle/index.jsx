@@ -240,7 +240,7 @@ class AdminArticle extends React.PureComponent {
                 {activeRecord.tags.map(tag => <Tag key={tag} color="blue">{tag}</Tag>)}
               </div>
               <hr />
-              <Highlight className="article-preview" innerHTML>
+              <Highlight className="article-preview markdown-content" innerHTML>
                 {marked(activeRecord.content)}
               </Highlight>
             </div>

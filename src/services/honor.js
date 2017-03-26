@@ -1,5 +1,5 @@
 import request, { requestWithToken } from 'utils/request';
-import { withParams } from 'utils/qs';
+import { withParams, toFormData } from 'utils/qs';
 import { API_ROOT } from 'src/config';
 
 export function fetchHonors(page, per, params = {}) {
@@ -12,8 +12,7 @@ export function fetchHonor(id) {
 }
 
 export function createHonor(params, images) {
-  const data = new FormData();
-  Object.keys(params).forEach(key => { data.append(key, params[key]); });
+  const data = toFormData(params);
   if (images) {
     images.forEach(image => data.append('images[]', image));
   }
@@ -23,8 +22,7 @@ export function createHonor(params, images) {
 }
 
 export function updateHonor(id, params, images) {
-  const data = new FormData();
-  Object.keys(params).forEach(key => { data.append(key, params[key]); });
+  const data = toFormData(params);
   if (images) {
     images.forEach(image => data.append('images[]', image));
   }

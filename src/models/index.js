@@ -7,7 +7,7 @@ import submit from './submit';
 import achievement from './achievement';
 import misc from './misc';
 import honor from './honor';
-import spiderWorker from './spiderWorker';
+import spiderWorker from './spider_worker';
 
 export default [
   auth, user, article, resource, account,

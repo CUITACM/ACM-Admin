@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react';
 import { Form, Input, Button, Select, Upload, Icon } from 'antd';
 import { HonorLevel } from 'models/honor';
 import { joinCDN } from 'src/config';
+import ImagesUpload from 'components/ImagesUpload';
 import './style.less';
 
 const FormItem = Form.Item;
@@ -25,16 +26,15 @@ class HonorForm extends React.PureComponent {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
-    if (nextProps.honor.images) {
+    if (nextProps.honor.images !== this.props.honor.images) {
       const { images } = nextProps.honor;
       const imageList = images.map((image, index) => ({
         index,
         uid: index,
         name: '',
         status: 'done',
-        url: joinCDN(image.origin),
-        thumb: joinCDN(image.thumb)
+        url: joinCDN(image.thumb),
+        origin: joinCDN(image.origin)
       }));
       this.setState({ imageList });
     }
@@ -82,7 +82,6 @@ class HonorForm extends React.PureComponent {
 
   render() {
     const { imageList, removeImages } = this.state;
-    console.log(imageList, removeImages);
     const { honor, form: { getFieldDecorator } } = this.props;
     const formItemLayout = { labelCol: { span: 6 }, wrapperCol: { span: 16 } };
     const contestNameDecorator = getFieldDecorator('contest_name', {
@@ -100,9 +99,8 @@ class HonorForm extends React.PureComponent {
       initialValue: honor && honor.description
     });
     const uploadProps = {
-      multiple: true,
-      listType: 'picture-card',
-      fileList: imageList,
+      limit: 5,
+      imageList,
       beforeUpload: this.onInsertImage,
       onChange: ({ file, fileList }) => {
         console.log(file, fileList);
@@ -110,7 +108,7 @@ class HonorForm extends React.PureComponent {
           console.log(file.index);
           this.setState({ removeImages: [...removeImages, file.index] });
         }
-        this.setState({ imageList: fileList });
+        this.setState({ imageList: [...fileList] });
       }
     };
     return (
@@ -140,12 +138,7 @@ class HonorForm extends React.PureComponent {
           )}
         </FormItem>
         <FormItem {...formItemLayout} label="图片资料">
-          <Upload {...uploadProps} >
-            <div>
-              <Icon type="plus" />
-              <div className="ant-upload-text">添加图片</div>
-            </div>
-          </Upload>
+          <ImagesUpload {...uploadProps} />
         </FormItem>
         <FormItem wrapperCol={{ span: 16, offset: 6 }}>
           <Button type="primary" onClick={e => this.onSubmit(e)}>保存</Button>

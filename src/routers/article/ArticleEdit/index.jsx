@@ -44,7 +44,7 @@ class ArticleEdit extends React.PureComponent {
             {article.id ? `编辑${articleType}` : '发布新闻'}
           </Breadcrumb.Item>
         </Breadcrumb>
-        <ArticleForm loading={loading} onSubmit={this.onSubmit} article={article} />
+        <ArticleForm loading={loading} onSubmit={this.onSubmit} article={article} /> 
       </div>
     );
   }

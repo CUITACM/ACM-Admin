@@ -52,3 +52,13 @@ export function extractParams(query) {
   const filters = JSON.parse(query.filters || '{}');
   return { page: parseInt(page, 10), search, sortField, sortOrder, filters };
 }
+
+export function toFormData(params) {
+  const data = new FormData();
+  Object.keys(params).forEach(key => {
+    if (params[key] != null) {
+      data.append(key, params[key]);
+    }
+  });
+  return data;
+}

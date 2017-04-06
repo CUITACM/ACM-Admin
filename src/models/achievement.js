@@ -3,7 +3,7 @@ import { extractParams } from 'utils/qs';
 import { routerRedux } from 'dva/router';
 import { message } from 'antd';
 import {
-  fetchAchievements, fetchAchievement, createAchievement
+  fetchAchievements, fetchAchievement, createAchievement, updateAchievement, deleteAchievement
 } from 'services/achievement';
 
 export const AchievementType = {
@@ -41,6 +41,13 @@ export default {
     filters: {}
   },
   subscriptions: {
+    createSubscription({ dispatch, history }) {
+      return history.listen(({ pathname }) => {
+        if (pathname === '/admin/achievements/create') {
+          dispatch({ type: 'resetCurrent' });
+        }
+      });
+    },
     listSubscription({ dispatch, history }) {
       return history.listen(({ pathname, query }) => {
         if (pathname === '/admin/achievements/list') {
@@ -85,9 +92,34 @@ export default {
       } else {
         message.error('创建失败');
       }
+    },
+    *update({ payload }, { call, put }) {
+      const response = yield call(updateAchievement, payload.id, payload.params);
+      if (response.achievement) {
+        message.success('修改成功');
+        if (payload.goback) {
+          yield put(routerRedux.goBack());
+        }
+      } else {
+        message.error('修改失败');
+      }
+    },
+    *delete({ payload }, { call, put }) {
+      const response = yield call(deleteAchievement, payload);
+      if (!response.error_code) {
+        message.success('删除成功');
+      } else {
+        message.error('删除失败');
+      }
     }
   },
   reducers: {
+    resetCurrent(state) {
+      return {
+        ...state,
+        currentItem: {}
+      }
+    },
     saveParams(state, { payload }) {
       return { ...state, ...extractParams(payload) };
     },

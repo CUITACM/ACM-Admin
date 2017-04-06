@@ -21,6 +21,10 @@ class AchievementEdit extends React.PureComponent {
       this.props.dispatch({
         type: 'achievement/create', payload: { params, goback: true }
       });
+    } else {
+      this.props.dispatch({
+        type: 'achievement/update', payload: { id, params, goback: true }
+      })
     }
   }
 

@@ -1,8 +1,6 @@
 import { extractParams } from 'utils/qs';
 import { message } from 'antd';
-import {
-  fetchWorkers
-} from 'services/spider';
+import { fetchWorkers, openWorker, closeWorker } from 'services/spider';
 
 export const WorkerStatus = {
   STOP: 0,
@@ -31,6 +29,30 @@ export default {
     *fetchList({ payload }, { put, call }) {
       const response = yield call(fetchWorkers);
       yield put({ type: 'saveList', payload: response });
+    },
+    *open({ payload }, { select, put, call }) {
+      const response = yield call(openWorker, payload.oj);
+      if (response.error === 0) {
+        message.success('已开启');
+        const workerList = yield select(state => state.spiderWorker.list);
+        yield put({ type: 'saveList', payload: { items: [...workerList, payload.oj] } });
+      } else {
+        message.error('出错啦~');
+      }
+    },
+    *close({ payload }, { select, put, call }) {
+      const response = yield call(closeWorker, payload.oj);
+      if (response.error === 0) {
+        message.success('已关闭');
+        const workerList = yield select(state => state.spiderWorker.list);
+        const pos = workerList.findIndex((oj) => oj === payload.oj);
+        if (pos !== -1) {
+          const newList = [...workerList.slice(0, pos), ...workerList.slice(pos + 1)];
+          yield put({ type: 'saveList', payload: { items: newList } });
+        }
+      } else {
+        message.error('出错啦~');
+      }
     }
   },
   reducers: {
@@ -38,6 +60,12 @@ export default {
       return { ...state, ...extractParams(payload) };
     },
     saveList(state, { payload }) {
+      return {
+        ...state,
+        list: payload.items
+      };
+    },
+    updateSuccess(state, { payload }) {
       return {
         ...state,
         list: payload.items

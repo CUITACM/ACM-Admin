@@ -9,8 +9,23 @@ import { WorkerStatus } from 'models/spider_worker';
 
 class SpiderWorker extends React.PureComponent {
   static propTypes = {
+    dispatch: PropTypes.func.isRequired,
     loading: PropTypes.bool.isRequired,
     list: PropTypes.array.isRequired,
+  }
+
+  onOpenWorker(oj) {
+    this.props.dispatch({
+      type: 'spiderWorker/open',
+      payload: { oj }
+    });
+  }
+
+  onCloseWorker(oj) {
+    this.props.dispatch({
+      type: 'spiderWorker/close',
+      payload: { oj }
+    });
   }
 
   getWorkers() {
@@ -45,9 +60,21 @@ class SpiderWorker extends React.PureComponent {
                   ? <StatusPoint color="green">运行中</StatusPoint>
                   : <StatusPoint color="red">停止</StatusPoint>}
                 <span className="pull-right">
-                  {worker.status === 0
-                    ? <Button size="small" type="primary">开启</Button>
-                    : <Button size="small" type="primary">停止运行</Button>}
+                  {worker.status === 0 ? (
+                    <Button
+                      size="small" type="primary"
+                      onClick={() => this.onOpenWorker(worker.key)}
+                    >
+                      开启
+                    </Button>
+                  ) : (
+                    <Button
+                      size="small" type="primary"
+                      onClick={() => this.onCloseWorker(worker.key)}
+                    >
+                      停止运行
+                    </Button>
+                  )}
                 </span>
               </Card>
             </Col>

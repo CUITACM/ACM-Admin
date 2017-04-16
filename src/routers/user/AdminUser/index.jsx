@@ -72,8 +72,9 @@ const getColumns = (filters, sorter, operations) => (
     render: (_, record) => (
       <div>
         {record.user_info.email}<br />
-        {record.user_info.school} {record.user_info.college}&nbsp;
-        {record.user_info.major} {record.user_info.grade}
+        {record.user_info.school || ''} {record.user_info.college || ''}
+        {record.user_info.major || ''}
+        {record.user_info.grade ? `${record.user_info.grade}级` : ''}
       </div>
     )
   }, {

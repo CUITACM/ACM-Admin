@@ -33,3 +33,15 @@ export function fetchSubmits(page, per, params) {
 export function fetchWorkers() {
   return requestWithToken(`${API_ROOT}/spiders/workers`);
 }
+
+export function openWorker(oj) {
+  return requestWithToken(`${API_ROOT}/spiders/workers/${oj}`, {
+    method: 'PUT'
+  });
+}
+
+export function closeWorker(oj) {
+  return requestWithToken(`${API_ROOT}/spiders/workers/${oj}`, {
+    method: 'DELETE'
+  });
+}

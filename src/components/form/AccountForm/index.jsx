@@ -37,6 +37,7 @@ class AccountForm extends React.PureComponent {
       rules: [{ required: true, message: '请填写账号昵称' }]
     });
     const passwordDecorator = getFieldDecorator('password', {
+      initialValue: '',
       rules: [{ required: true, message: '请填写账号密码' }]
     });
     return (

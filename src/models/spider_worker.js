@@ -60,16 +60,7 @@ export default {
       return { ...state, ...extractParams(payload) };
     },
     saveList(state, { payload }) {
-      return {
-        ...state,
-        list: payload.items
-      };
-    },
-    updateSuccess(state, { payload }) {
-      return {
-        ...state,
-        list: payload.items
-      };
+      return { ...state, list: payload.items };
     }
   }
 };

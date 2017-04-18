@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { Card, Icon, Modal } from 'antd';
 import UserForm from 'components/form/UserForm';
 import AvatarUpload from 'components/AvatarUpload';

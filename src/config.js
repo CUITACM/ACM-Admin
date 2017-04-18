@@ -11,13 +11,13 @@ export function joinCDN(url) {
 }
 
 export const NavbarMenu = [
-  {
-    to: '/admin/main',
-    text: '系统信息',
-    children: [
-      { to: '/admin/main/dashboard', text: '仪表盘', icon: 'dashboard' },
-    ]
-  },
+  // {
+  //   to: '/admin/main',
+  //   text: '系统信息',
+  //   children: [
+  //     { to: '/admin/main/dashboard', text: '仪表盘', icon: 'dashboard' },
+  //   ]
+  // },
   {
     to: '/admin/users',
     text: '用户管理',

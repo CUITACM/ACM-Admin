@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { Form, Input, InputNumber, Button, Radio, Col } from 'antd';
 
 const FormItem = Form.Item;
@@ -81,7 +82,7 @@ class UserForm extends React.PureComponent {
       initialValue: user.description
     });
     return (
-      <Form horizontal onSubmit={this.onSubmit}>
+      <Form onSubmit={this.onSubmit}>
         <FormItem {...formItemLayout} label="真实姓名">
           {displayNameDecorator(
             <Input size="default" placeholder="真实姓名" />

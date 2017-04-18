@@ -5,7 +5,7 @@ var autoprefixer = require('autoprefixer');
 
 module.exports = {
   entry: {
-    app: ['./src/main.jsx']
+    admin: ['./src/main.jsx']
   },
 
   output: {

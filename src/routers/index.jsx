@@ -41,7 +41,7 @@ export default ({ history }) => (
     <Route path="/auth/login" component={Login} />
     <Route path="/auth/register" component={Register} />
     <Route path="/admin" component={AdminLayout} onEnter={validateLogin}>
-      <IndexRedirect to="/admin/main" />
+      <IndexRedirect to="/admin/users" />
       <Route path="main" >
         <IndexRedirect to="dashboard" />
         <Route path="dashboard" component={Dashboard} />

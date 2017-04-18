@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { Form, Input, Select, Button } from 'antd';
 import { OJ_MAP } from 'models/account';
 
@@ -37,10 +38,11 @@ class AccountForm extends React.PureComponent {
       rules: [{ required: true, message: '请填写账号昵称' }]
     });
     const passwordDecorator = getFieldDecorator('password', {
+      initialValue: '',
       rules: [{ required: true, message: '请填写账号密码' }]
     });
     return (
-      <Form horizontal>
+      <Form>
         <FormItem {...formItemLayout} label="OJ">
           {ojNameDecorator(
             <Select placeholder="请选择OJ">

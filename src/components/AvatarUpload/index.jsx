@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { Upload, message } from 'antd';
 import { withToken } from 'helpers/auth';
 import { withApiRoot } from 'helpers/utils';

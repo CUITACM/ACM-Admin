@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import SimpleMDE from 'libs/simplemde';
 import 'libs/simplemde/dist/simplemde.min.css';
 import 'libs/fontawesome/css/font-awesome.min.css';

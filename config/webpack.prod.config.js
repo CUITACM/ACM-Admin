@@ -6,12 +6,13 @@ var baseConfig = require('./webpack.base.config');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var CompressionPlugin = require("compression-webpack-plugin");
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
+var AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin');
 
 process.env.NODE_ENV = 'production';
 
 module.exports = webpackMerge(baseConfig, {
   output: {
-    publicPath: '/frontend/admin/',
+    publicPath: '/frontend/',
     path: path.resolve(__dirname, '../dist'),
     filename: '[name].bundle.[hash:7].js',
     chunkFilename: 'chunks/[name].chunk.[hash:7].js',
@@ -38,7 +39,7 @@ module.exports = webpackMerge(baseConfig, {
     new HtmlWebpackPlugin({
       inject: true,
       template: 'src/index.html',
-      filename: 'index.html',
+      filename: 'admin.html',
       minify: {
         removeComments: true,
         collapseWhitespace: true
@@ -57,6 +58,15 @@ module.exports = webpackMerge(baseConfig, {
       test: /\.js$|\.css$/,
       threshold: 10240,
       minRatio: 0.8
+    }),
+    new webpack.DllReferencePlugin({
+      context: __dirname,
+      manifest: require(path.resolve(__dirname, '../vendor/manifest.json')),
+    }),
+    new AddAssetHtmlPlugin({
+      publicPath: '/frontend/vendor/',
+      filepath: require.resolve('../vendor/vendors.dll.js'),
+      includeSourcemap: false,
     })
   ]
 });

@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'dva';
 import { routerRedux, Link } from 'dva/router';
 import { Table, Modal } from 'antd';

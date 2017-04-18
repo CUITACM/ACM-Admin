@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { Upload, Icon, Modal } from 'antd';
 import './style.less';
 

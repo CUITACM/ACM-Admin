@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { Row, Col, Spin, Pagination } from 'antd';
 import { connect } from 'dva';
 import { joinCDN } from 'src/config';

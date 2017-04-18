@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { Form, Input, Button, Upload, Icon, message } from 'antd';
 import { ResourceUsage } from 'models/resource';
 import './style.less';
@@ -66,7 +67,7 @@ class UploadForm extends React.PureComponent {
       }
     };
     return (
-      <Form horizontal onSubmit={this.onSubmit}>
+      <Form onSubmit={this.onSubmit}>
         <FormItem {...formItemLayout} label="图片名">
           {filenameDecorator(
             <Input size="default" placeholder="图片名" />

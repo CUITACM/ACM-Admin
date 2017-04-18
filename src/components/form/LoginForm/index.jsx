@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'dva/router';
 import { Form, Input, Button, Icon } from 'antd';
 
@@ -32,7 +33,7 @@ class LoginForm extends React.PureComponent {
       rules: [{ required: true, whitespace: true, message: '请填写密码' }],
     });
     return (
-      <Form horizontal onSubmit={e => this.onSubmit(e)} className="auth-form">
+      <Form className="auth-form">
         <FormItem wrapperCol={formItemCol} >
           {nicknameDecorator(
             <Input prefix={<Icon type="user" />} size="large" placeholder="用户名或学号或邮箱" />

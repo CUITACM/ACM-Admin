@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { Form, Input, InputNumber, Button, Select, Col, Icon } from 'antd';
 import { OJ_MAP } from 'models/account';
 import {
@@ -170,7 +171,7 @@ class AchievementForm extends React.PureComponent {
       initialValue: achievement && achievement.description
     });
     return (
-      <Form horizontal onSubmit={this.onSubmit}>
+      <Form>
         <FormItem {...formItemLayout} label="成就名称">
           {nameDecorator(
             <Input size="default" placeholder="成就名称" />

@@ -26,6 +26,13 @@ export default {
     *login({ payload: { nickname, password } }, { call, select }) {
       try {
         const response = yield call(fetchToken, nickname, password);
+        if (response.error === 1) {
+          notification.error({
+            message: '登录失败',
+            description: `错误 ${response.message}`,
+          });
+          return;
+        }
         yield call(saveToken, response);
         const nextPath = yield select(state => state.auth.nextPath);
         notification.success({

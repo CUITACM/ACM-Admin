@@ -29,7 +29,7 @@ class Login extends React.PureComponent {
     const { loading } = this.props;
     return (
       <AuthLayout>
-        <Col className="auth-box" xs={24} sm={10} md={7} lg={6} >
+        <Col className="auth-box" xs={24} sm={10} md={8} lg={8} >
           <h1>登录</h1>
           <LoginForm loading={loading} onSubmit={this.onLoginSubmit} />
         </Col>

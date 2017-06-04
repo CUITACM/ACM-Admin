@@ -42,17 +42,17 @@ export default class ImagesUpload extends React.PureComponent {
   render() {
     const { previewImage, previewVisible } = this.state;
     const { limit, imageList, beforeUpload, onChange } = this.props;
-    console.log('ImagesUpload render', imageList);
     const uploadProps = {
-      multiple: limit > 1,
+      multiple: false,
       listType: 'picture-card',
       fileList: imageList,
       beforeUpload,
       onChange,
       onPreview: this.onPreview,
     };
+    console.log(imageList);
     return (
-      <div>
+      <div className="images-upload clear-fix">
         <Upload {...uploadProps} >
           {imageList.length >= limit ? null : this.renderUploadButton()}
         </Upload>

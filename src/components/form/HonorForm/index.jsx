@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form, Input, Button, Select, Upload, Icon } from 'antd';
+import { Form, Input, Button, Select, DatePicker, Icon } from 'antd';
 import { HonorLevel } from 'models/honor';
 import { joinCDN } from 'src/config';
+import moment from 'moment';
 import ImagesUpload from 'components/ImagesUpload';
 import './style.less';
 
@@ -47,37 +48,41 @@ class HonorForm extends React.PureComponent {
       if (!errors) {
         const params = this.props.form.getFieldsValue();
         const honor = this.props.honor;
-        console.log(params, this.fileList);
         const images = this.state.imageList.filter(i => i.file != null).map(i => i.file);
-        this.props.onSubmit(
-          honor && honor.id,
-          { ...params, remove_images: this.state.removeImages },
-          images
-        );
+        const values = {
+          ...params,
+          contest_date: params.contest_date.format('YYYY-MM-DD'),
+          remove_images: this.state.removeImages
+        };
+        this.props.onSubmit(honor && honor.id, values, images);
       }
     });
   }
 
-  onInsertImage(file) {
-    const { imageList } = this.state;
-    const isImage = file.type.indexOf('image') !== -1;
-    if (!isImage) {
-      message.error('只允许上传图片');
-      return false;
-    }
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      console.log(file.name);
-      const image = {
-        file,
-        uid: file.uid,
-        name: file.name,
-        status: 'done',
-        url: e.target.result
-      };
-      this.setState({ imageList: [...imageList, image] });
-    };
-    reader.readAsDataURL(file);
+  onInsertImage(_, fileList) {
+    const readPhotos = fileList.map(file =>
+      new Promise((resolve, reject) => {
+        const isImage = file.type.indexOf('image') !== -1;
+        if (!isImage) {
+          // message.error('只允许上传图片');
+          reject('只允许上传图片');
+        } else {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            console.log(file.name);
+            const image = {
+              file, uid: file.uid, name: file.name, status: 'done', url: e.target.result
+            };
+            resolve(image);
+          };
+          reader.readAsDataURL(file);
+        }
+      })
+    );
+    Promise.all(readPhotos).then(photos => {
+      console.log(photos);
+      this.setState({ imageList: [...this.state.imageList, ...photos] });
+    });
     return false;
   }
 
@@ -93,18 +98,24 @@ class HonorForm extends React.PureComponent {
       initialValue: honor && honor.contest_level,
       rules: [{ required: true, message: '请选择比赛等级' }]
     });
+    const contestDateDecorator = getFieldDecorator('contest_date', {
+      initialValue: honor && moment(honor.contest_date, 'YYYY-MM-DD'),
+      rules: [{ type: 'object', required: true, message: '请选择参赛日期' }]
+    });
     const teamNameDecorator = getFieldDecorator('team_name', {
-      initialValue: honor && honor.team_name
+      initialValue: honor && honor.team_name,
+    });
+    const membersDecorator = getFieldDecorator('members', {
+      initialValue: honor && honor.members,
     });
     const descriptionDecorator = getFieldDecorator('description', {
       initialValue: honor && honor.description
     });
     const uploadProps = {
-      limit: 5,
+      limit: 10,
       imageList,
       beforeUpload: this.onInsertImage,
       onChange: ({ file, fileList }) => {
-        console.log(file, fileList);
         if (file.status === 'removed' && file.index != null) {
           console.log(file.index);
           this.setState({ removeImages: [...removeImages, file.index] });
@@ -113,19 +124,24 @@ class HonorForm extends React.PureComponent {
       }
     };
     return (
-      <Form horizontal onSubmit={this.onSubmit}>
+      <Form onSubmit={this.onSubmit}>
         <FormItem {...formItemLayout} label="比赛名称">
           {contestNameDecorator(
             <Input size="default" placeholder="比赛名称" />
           )}
         </FormItem>
-        <FormItem {...formItemLayout} label="OJ">
+        <FormItem {...formItemLayout} label="获奖等级">
           {contestLevelDecorator(
-            <Select placeholder="请选择比赛等级">
+            <Select placeholder="请选择获奖等级">
               {Object.keys(HonorLevel).map(key =>
                 <Option key={key} value={key}>{HonorLevel[key]}</Option>
               )}
             </Select>
+          )}
+        </FormItem>
+        <FormItem {...formItemLayout} label="参赛日期">
+          {contestDateDecorator(
+            <DatePicker />
           )}
         </FormItem>
         <FormItem {...formItemLayout} label="队伍名">
@@ -133,12 +149,20 @@ class HonorForm extends React.PureComponent {
             <Input size="default" placeholder="队伍名" />
           )}
         </FormItem>
+        <FormItem {...formItemLayout} label="参赛成员">
+          {membersDecorator(
+            <Input size="default" placeholder="参赛成员" />
+          )}
+        </FormItem>
         <FormItem {...formItemLayout} label="描述">
           {descriptionDecorator(
             <Input type="textarea" placeholder="描述" autosize={{ minRows: 4, maxRows: 10 }} />
           )}
         </FormItem>
-        <FormItem {...formItemLayout} label="图片资料">
+        <FormItem
+          {...formItemLayout} label="图片资料"
+          extra="最多能上传10张图片"
+        >
           <ImagesUpload {...uploadProps} />
         </FormItem>
         <FormItem wrapperCol={{ span: 16, offset: 6 }}>

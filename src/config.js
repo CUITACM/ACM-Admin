@@ -34,14 +34,14 @@ export const NavbarMenu = [
       { to: '/admin/articles/solution', text: '解题报告', icon: 'bars' },
     ]
   },
-  {
-    to: '/admin/resources',
-    text: '图库管理',
-    children: [
-      { to: '/admin/resources/list', text: '所有', icon: 'bars' },
-      { to: '/admin/resources/slides', text: '首页轮播图', icon: 'bars' },
-    ]
-  },
+  // {
+  //   to: '/admin/resources',
+  //   text: '图库管理',
+  //   children: [
+  //     { to: '/admin/resources/list', text: '所有', icon: 'bars' },
+  //     { to: '/admin/resources/slides', text: '首页轮播图', icon: 'bars' },
+  //   ]
+  // },
   {
     to: '/admin/spiders',
     text: '爬虫管理',

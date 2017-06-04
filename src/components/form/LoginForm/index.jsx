@@ -49,7 +49,7 @@ class LoginForm extends React.PureComponent {
             className="btn-auth" type="primary"
             onClick={e => this.onSubmit(e)} loading={this.props.loading}
           >
-            登陆
+            登录
           </Button>
         </FormItem>
         <hr />

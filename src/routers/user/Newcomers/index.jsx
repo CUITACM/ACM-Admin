@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'dva';
 import { routerRedux, Link } from 'dva/router';
 import { Table, Tag, Popconfirm } from 'antd';
-import { CDN_ROOT } from 'src/config';
 import SearchInput from 'components/SearchInput';
 import { UserRole, UserStatus } from 'models/user';
 import './style.less';
@@ -41,13 +40,13 @@ const getColumns = (filters, operations) => (
     filteredValue: filters.status || [],
     render: (status) => (
       <div>
-        {status === UserStatus.APPLY ? <Tag color="green">排队中</Tag> : null}
+        {status === UserStatus.APPLY ? <Tag color="green">申请中</Tag> : null}
         {status === UserStatus.REJECT ? <Tag color="red">拒绝</Tag> : null}
       </div>
     )
   }, {
     title: '基本信息',
-    key: 'description',
+    dataIndex: 'description',
     width: '40%',
   }, {
     title: '申请时间',
@@ -55,23 +54,26 @@ const getColumns = (filters, operations) => (
   }, {
     title: '操作',
     key: 'operation',
-    render: (text, record) => (
-      <span>
-        <Popconfirm
-          title="确定要通过申请吗？" placement="left"
-          onConfirm={() => operations.on(record)}
-        >
-          <a>通过申请</a>
-        </Popconfirm>
-        <span className="ant-divider" />
-        <Popconfirm
-          title="确定要删除吗？" placement="left"
-          onConfirm={() => operations.onDelete(record)}
-        >
-          <a>拒绝</a>
-        </Popconfirm>
-      </span>
-    ),
+    render: (text, record) => {
+      if (record.status === UserStatus.REJECT) return null;
+      return (
+        <span>
+          <Popconfirm
+            title="确定要通过申请吗？" placement="left"
+            onConfirm={() => operations.onUpdateStatus(record, UserStatus.TRAIN)}
+          >
+            <a>通过申请</a>
+          </Popconfirm>
+          <span className="ant-divider" />
+          <Popconfirm
+            title="确定要拒绝吗？" placement="left"
+            onConfirm={() => operations.onUpdateStatus(record, UserStatus.REJECT)}
+          >
+            <a>拒绝</a>
+          </Popconfirm>
+        </span>
+      );
+    },
   }]
 );
 
@@ -89,7 +91,7 @@ class Newcomers extends React.PureComponent {
     super(props);
     this.handleTableChange = this.handleTableChange.bind(this);
     this.onSearch = this.onSearch.bind(this);
-    this.onDelete = this.onDelete.bind(this);
+    this.onUpdateStatus = this.onUpdateStatus.bind(this);
   }
 
   onSearch(value) {
@@ -99,14 +101,10 @@ class Newcomers extends React.PureComponent {
     }));
   }
 
-  onDelete(record) {
-    console.log('onDelete');
+  onUpdateStatus(record, status) {
     this.props.dispatch({
-      type: 'user/delete',
-      payload: {
-        id: record.id,
-        redirect: { pathname: '/admin/users/newcomers', query: this.props.location.query }
-      }
+      type: 'user/updateStatus',
+      payload: { id: record.id, params: { status } }
     });
   }
 
@@ -128,7 +126,7 @@ class Newcomers extends React.PureComponent {
   render() {
     const { search } = this.props.location.query;
     const columns = getColumns(this.props.filters, {
-      onDelete: this.onDelete,
+      onUpdateStatus: this.onUpdateStatus,
     });
     return (
       <div>

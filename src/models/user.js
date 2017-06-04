@@ -114,7 +114,7 @@ export default {
       const per = yield select(state => state.user.per);
       const response = yield call(fetchUsers, params.page, per, {
         search: params.search,
-        sort_field: 'status',
+        sort_field: 'created_at',
         sort_order: 'descend',
         filters: {
           ...params.filters,
@@ -133,6 +133,14 @@ export default {
         yield put(routerRedux.goBack());
       } else {
         message.error('更新失败');
+      }
+    },
+    *updateStatus({ payload }, { put, call }) {
+      const response = yield call(updateUser, payload.id, payload.params);
+      if (response.user != null) {
+        yield put({ type: 'updateSuccess', payload: response.user });
+      } else {
+        message.error('操作失败');
       }
     },
     *delete({ payload }, { put, call }) {
@@ -163,6 +171,12 @@ export default {
     },
     saveItem(state, { payload }) {
       return { ...state, currentItem: payload };
+    },
+    updateSuccess(state, { payload }) {
+      return {
+        ...state,
+        list: state.list.map(item => (item.id !== payload.id ? item : payload))
+      };
     }
   }
 };

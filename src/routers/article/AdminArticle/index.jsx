@@ -236,11 +236,13 @@ class AdminArticle extends React.PureComponent {
         >
           {activeRecord ? (
             <div>
-              <div className="tags-line">
-                <b>标签:</b>
-                {activeRecord.tags.map(tag => <Tag key={tag} color="blue">{tag}</Tag>)}
-              </div>
-              <hr />
+              {this.props.type === 'solution' ? (
+                <div className="tags-line">
+                  <b>标签:</b>
+                  {activeRecord.tags.map(tag => <Tag key={tag} color="blue">{tag}</Tag>)}
+                  <hr />
+                </div>
+              ) : null}
               <Highlight className="article-preview markdown-content" innerHTML>
                 {marked(activeRecord.content)}
               </Highlight>

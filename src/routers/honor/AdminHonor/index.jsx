@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 import { connect } from 'dva';
 import { routerRedux, Link } from 'dva/router';
 import { Table, Button, Popconfirm, Tag, Modal } from 'antd';
@@ -17,31 +18,24 @@ const getColumns = (filters, sorter, operations) => (
     className: 'text-center',
     sorter: true,
     sortOrder: sorter.field === 'contest_name' && sorter.order,
-    render: (contestName, record) => (
-      <div>
-        <b>{contestName}</b><br />
-        <Tag>{record.team_name || '未知'}</Tag>
-      </div>
-    )
+    render: contestName => <b>{contestName}</b>
   }, {
     title: '比赛等级',
     dataIndex: 'contest_level',
     width: '10%',
     render: level => HonorLevel[level]
   }, {
-    title: '队伍名',
+    title: '参赛队伍',
     dataIndex: 'team_name',
-    width: '10%'
-  }, {
-    title: '创建/更新时间',
-    dataIndex: 'created_at',
-    width: '20%',
-    render: (createdAt, record) => (
-      <div>
-        创建: {createdAt}<br />
-        更新: {record.updated_at}
-      </div>
+    width: '10%',
+    render: (team, { members }) => (
+      <div>{team ? <p>team</p> : null} {members}</div>
     )
+  }, {
+    title: '参赛日期',
+    dataIndex: 'contest_date',
+    width: '10%',
+    render: date => moment(date).format('YYYY-MM-DD')
   }, {
     title: '操作',
     width: '10%',

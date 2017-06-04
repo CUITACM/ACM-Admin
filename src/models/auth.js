@@ -1,7 +1,7 @@
 import { routerRedux } from 'dva/router';
 import { notification } from 'antd';
 import { defaultAfterLogin } from 'src/config';
-import { fetchToken, saveToken, removeToken } from 'services/auth';
+import { fetchToken, saveToken, removeToken, register } from 'services/auth';
 
 export default {
   namespace: 'auth',
@@ -38,6 +38,30 @@ export default {
         console.error(err);
         notification.error({
           message: '登录失败',
+          description: `错误 ${err.message}`,
+        });
+      }
+    },
+    *register({ payload }, { call, put }) {
+      try {
+        const response = yield call(register, payload);
+        console.log(response);
+        if (response.error === 1) {
+          notification.error({
+            message: '提交失败',
+            description: `错误 ${response.messgae}`,
+          });
+        } else {
+          notification.success({
+            message: '提交成功',
+            description: '注册信息已提交，等待系统管理员审核',
+            duration: null,
+          });
+        }
+      } catch (err) {
+        console.error(err);
+        notification.error({
+          message: '提交失败',
           description: `错误 ${err.message}`,
         });
       }

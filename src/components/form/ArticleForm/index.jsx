@@ -37,7 +37,7 @@ class ArticleForm extends React.PureComponent {
           article_type: ArticleType.NEWS,
           status: isDraft ? ArticleStatus.DRAFT : ArticleStatus.PUBLISH,
           content: this.state.contentValue || article.content,
-          tags: this.state.tags || article.tags
+          tags: this.state.tags || article.tags || []
         });
       }
     });
@@ -63,12 +63,12 @@ class ArticleForm extends React.PureComponent {
             <Input size="default" placeholder="标题" />
           )}
         </FormItem>
-        <FormItem {...formItemLayout} label="标签">
+        {/*<FormItem {...formItemLayout} label="标签">
           <TagInput
             initTags={article && article.tags}
             onChange={tags => this.setState({ tags })}
           />
-        </FormItem>
+        </FormItem>*/}
         <FormItem {...formItemLayout} label="正文">
           <MarkdownInput
             initialValue={article && article.content}

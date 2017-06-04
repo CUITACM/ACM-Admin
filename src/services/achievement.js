@@ -17,13 +17,13 @@ export function createAchievement(params) {
   }, true);
 }
 
-export function updateArticle(id, params) {
+export function updateAchievement(id, params) {
   return requestWithToken(`${API_ROOT}/achievements/${id}`, {
     method: 'PUT', body: JSON.stringify(params),
   }, true);
 }
 
-export function deleteArticle(id) {
+export function deleteAchievement(id) {
   return requestWithToken(`${API_ROOT}/achievements/${id}`, {
     method: 'DELETE'
   });

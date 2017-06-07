@@ -76,7 +76,8 @@ class AchievementForm extends React.PureComponent {
   }
 
   renderSubjectCondition(formItemLayout) {
-    const { conditions: { problems = [] } } = this.props.achievement;
+    const { conditions } = this.props.achievement;
+    const problems = conditions && conditions.problems || [];
     const { problemsInputCount } = this.state;
     const { getFieldDecorator } = this.props.form;
     const formItemLayoutWithOutLabel = {
